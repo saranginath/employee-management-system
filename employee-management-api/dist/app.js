@@ -13,11 +13,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const notFound_middleware_1 = require("./middleware/notFound.middleware");
 const error_middleware_1 = require("./middleware/error.middleware");
-const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
-const employee_routes_1 = __importDefault(require("./routes/employee.routes"));
-const department_routes_1 = __importDefault(require("./routes/department.routes"));
-const attendance_routes_1 = __importDefault(require("./routes/attendance.routes"));
-const leave_route_1 = __importDefault(require("./routes/leave.route"));
+const swagger_1 = require("./swagger");
+const routes_1 = __importDefault(require("./routes"));
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)({
     origin: "http://localhost:5173",
@@ -26,11 +23,10 @@ app.use((0, cors_1.default)({
 app.use((0, compression_1.default)());
 app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
-app.use('/api/v1/auth', auth_routes_1.default);
-app.use('/api/v1/employee', employee_routes_1.default);
-app.use('/api/v1/department', department_routes_1.default);
-app.use('/api/v1/attendance', attendance_routes_1.default);
-app.use('/api/v1/leave', leave_route_1.default);
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
+app.use("/api/v1", routes_1.default);
+(0, swagger_1.setupSwagger)(app);
 app.use(notFound_middleware_1.notFound);
 app.use(error_middleware_1.errorHandler);
 exports.default = app;

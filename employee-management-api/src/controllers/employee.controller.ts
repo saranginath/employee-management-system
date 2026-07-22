@@ -1,12 +1,11 @@
-import { asyncHanlder } from "../middleware/asyncHandler";
+import { asyncHandler } from "../middleware/asyncHandler";
 import { Request, Response, NextFunction } from "express";
 import { createEmployeeService, deleteEmployeeService, getEmployeeByIdService, getEmployeeService, updateEmployeeService } from "../services/employee.service";
 import { updateEmployeeSchema } from "../validators/employee.validator";
-import { success } from "zod";
 import { Types } from "mongoose";
 import { IEmployee } from "../interfaces/employee.interface";
 
-export const createEmployeeController = asyncHanlder(async (req: Request, res: Response, next: NextFunction) => {
+export const createEmployeeController = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const employee = await createEmployeeService(req.body);
     res.status(201).json({
         succes: true,
@@ -16,7 +15,7 @@ export const createEmployeeController = asyncHanlder(async (req: Request, res: R
 
 });
 
-export const getEmployeeController = asyncHanlder(async (req: Request, res: Response) => {
+export const getEmployeeController = asyncHandler(async (req: Request, res: Response) => {
     const employee = await getEmployeeService();
     res.json({
         success: true,
@@ -24,7 +23,7 @@ export const getEmployeeController = asyncHanlder(async (req: Request, res: Resp
     })
 })
 
-export const getEmployeeByIdController = asyncHanlder(async (req: Request, res: Response) => {
+export const getEmployeeByIdController = asyncHandler(async (req: Request, res: Response) => {
     const employee = await getEmployeeByIdService(req.params.id as string);
     res.json({
         success: true,
@@ -32,7 +31,7 @@ export const getEmployeeByIdController = asyncHanlder(async (req: Request, res: 
     })
 })
 
-export const updateEmployeeController = asyncHanlder(async (req: Request, res: Response) => {
+export const updateEmployeeController = asyncHandler(async (req: Request, res: Response) => {
 
     const data = updateEmployeeSchema.parse(req.body);
     const employeeData: Partial<IEmployee> = {
@@ -46,7 +45,7 @@ export const updateEmployeeController = asyncHanlder(async (req: Request, res: R
         data: employee
     })
 })
-export const deleteEmployeeController = asyncHanlder(async (req: Request, res: Response) => {
+export const deleteEmployeeController = asyncHandler(async (req: Request, res: Response) => {
     await deleteEmployeeService(req.params.id as string);
     res.json({
         success: true,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ROLES } from "../constants/role";
+import { ROLES } from "../constants/role.constant";
 export const employeeSchema = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),

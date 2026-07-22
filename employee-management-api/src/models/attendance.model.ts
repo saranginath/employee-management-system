@@ -1,7 +1,8 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { STATUS } from "../constants/status";
+import { STATUS } from "../constants/status.constant";
+import { IAttendance } from "../interfaces/attendance.interface";
 
-const attendanceSchema = new Schema({
+const attendanceSchema = new Schema<IAttendance>({
     employee: {
         type: Schema.Types.ObjectId,
         ref: "Employee",
@@ -15,7 +16,7 @@ const attendanceSchema = new Schema({
         type: Date,
         required: true
     },
-    checkout: {
+    checkOut: {
         type: Date
     },
     status: {
@@ -27,4 +28,4 @@ const attendanceSchema = new Schema({
 }, {
     timestamps: true
 })
-export const Attendance = mongoose.model('Attendance', attendanceSchema)
+export default mongoose.model<IAttendance>('Attendance', attendanceSchema)

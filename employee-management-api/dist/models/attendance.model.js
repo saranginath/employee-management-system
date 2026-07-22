@@ -33,9 +33,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Attendance = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const status_1 = require("../constants/status");
+const status_constant_1 = require("../constants/status.constant");
 const attendanceSchema = new mongoose_1.Schema({
     employee: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -50,16 +49,16 @@ const attendanceSchema = new mongoose_1.Schema({
         type: Date,
         required: true
     },
-    checkout: {
+    checkOut: {
         type: Date
     },
     status: {
         type: String,
-        enum: Object.values(status_1.STATUS),
-        default: status_1.STATUS.ABSENT
+        enum: Object.values(status_constant_1.STATUS),
+        default: status_constant_1.STATUS.ABSENT
     },
     location: String
 }, {
     timestamps: true
 });
-exports.Attendance = mongoose_1.default.model('Attendance', attendanceSchema);
+exports.default = mongoose_1.default.model('Attendance', attendanceSchema);

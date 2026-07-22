@@ -4,14 +4,23 @@ import './index.css'
 
 import { Provider } from 'react-redux'
 import { store } from './api/store.ts'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './router/index.tsx'
 
-createRoot(document.getElementById('root')!).render(
+import App from './App';
+import "react-phone-number-input/style.css";
+
+
+createRoot(
+  document.getElementById('root')!
+).render(
+
   <StrictMode>
+
     <Provider store={store}>
-      <RouterProvider router={router} />
+
+      <App />
+
     </Provider>
 
-  </StrictMode>,
+  </StrictMode>
+
 )

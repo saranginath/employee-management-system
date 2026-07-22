@@ -1,26 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDepartmentService = exports.createDepartmentService = void 0;
-const mongoose_1 = require("mongoose");
+exports.deleteDepartmentService = exports.updateDepartmentService = exports.getDepartmentByIdService = exports.getDepartmentsService = exports.createDepartmentService = void 0;
 const department_repository_1 = require("../repositories/department.repository");
 const createDepartmentService = async (data) => {
-    const departmentExists = await (0, department_repository_1.getDepartmentByCode)(data.code);
-    if (departmentExists) {
-        throw new Error("Department code already exists");
-    }
-    const departmentData = {
-        name: data.name,
-        code: data.code,
-        description: data.description,
-        status: data.status ?? "active",
-        manager: data.manager
-            ? new mongoose_1.Types.ObjectId(data.manager)
-            : null
-    };
-    return (0, department_repository_1.createDepartment)(departmentData);
+    return await (0, department_repository_1.createDepartment)(data);
 };
 exports.createDepartmentService = createDepartmentService;
-const getDepartmentService = async () => {
-    return await (0, department_repository_1.getDepartment)();
+const getDepartmentsService = async () => {
+    return await (0, department_repository_1.getDepartments)();
 };
-exports.getDepartmentService = getDepartmentService;
+exports.getDepartmentsService = getDepartmentsService;
+const getDepartmentByIdService = async (id) => {
+    return await (0, department_repository_1.getDepartmentById)(id);
+};
+exports.getDepartmentByIdService = getDepartmentByIdService;
+const updateDepartmentService = async (id, data) => {
+    return await (0, department_repository_1.updateDepartment)(id, data);
+};
+exports.updateDepartmentService = updateDepartmentService;
+const deleteDepartmentService = async (id) => {
+    return await (0, department_repository_1.deleteDepartment)(id);
+};
+exports.deleteDepartmentService = deleteDepartmentService;

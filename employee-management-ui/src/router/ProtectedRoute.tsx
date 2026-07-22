@@ -1,19 +1,56 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAppSelector } from "../api/hooks";
+import {
+    Navigate,
+    Outlet
+} from "react-router-dom";
+
+
+import {
+    useSelector
+} from "react-redux";
+
+
+import type { RootState } from "../app/store";
+
+
 
 const ProtectedRoute = () => {
 
-    const user = useAppSelector(
-        state => state.auth.user
+
+    const {
+        accessToken,
+        isInitialized
+    } = useSelector(
+        (state: RootState) => state.auth
     );
 
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
+
+    if (!isInitialized) {
+
+        return <div>
+            Loading...
+        </div>;
+
     }
 
 
+
+    if (!accessToken) {
+
+        return <Navigate
+            to="/login"
+            replace
+        />;
+
+    }
+
+
+
     return <Outlet />;
-};
+
+
+}
+
+
 
 export default ProtectedRoute;

@@ -1,9 +1,10 @@
-import { createUser, findUserByEmail, findUserById, removeRefreshToken, updateChangePassword, updateRefreshToken } from "../repositories/user.respository";
+import { createUser, findUserByEmail, findUserById, findUserByResetToken, removeRefreshToken, saveUser, updateChangePassword, updatePassword, updateRefreshToken } from "../repositories/user.respository";
 import { AppError } from "../utils/AppError";
 import { LoginInput, RegisterInput } from "../validators/auth.validator";
 import { comparePassword, hashedpassword } from "../utils/password";
 import { generateAccessToken, generateRefreshToken, veritfyRefreshToken } from "../config/jwt";
-import { IUser } from "../interfaces/user.interface";
+import crypto from "crypto";
+import { sendEmail } from "../utils/sendEmail";
 
 export const registerUser = async (data: any) => {
     const existingUser = await findUserByEmail(data.email)
@@ -24,7 +25,7 @@ export const registerUser = async (data: any) => {
 
 export const loginUser = async (data: LoginInput) => {
     const user = await findUserByEmail(data.email);
-    console.log(user)
+
     if (!user) {
         throw new AppError("Invalid email or password", 401)
     }
@@ -55,7 +56,7 @@ export const loginUser = async (data: LoginInput) => {
         user._id.toString(),
         refreshToken
     )
-    const { password, refreshToken: _, emailVerificationToken, passwordResetToken, passwordResetexpires, ...userResponse } = user.toObject()
+    const { password, refreshToken: _, emailVerificationToken, passwordResetToken, passwordResetExpires, ...userResponse } = user.toObject()
 
     return {
         user: userResponse, accessToken, refreshToken
@@ -115,5 +116,70 @@ export const changepasswordService = async (userId: string, oldPassword: string,
     }
     const hashedPassword = await hashedpassword(newPassword);
     await updateChangePassword(user._id.toString(), hashedPassword);
+}
+
+export const forgotPasswordService = async (email: string) => {
+    const user = await findUserByEmail(email);
+    if (!user) {
+        throw new AppError("User not found", 404);
+    }
+
+    // Generate Raw Token
+    const resetToken = crypto
+        .randomBytes(32)
+        .toString("hex");
+    // Hash Token
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    user.passwordResetToken = hashedToken;
+
+    user.passwordResetExpires = new Date(
+        Date.now() + 10 * 60 * 1000
+    );
+    await saveUser(user)
+
+    const html = `
+        <h2>Password Reset</h2>
+
+        <p>Click the button below to reset your password.</p>
+
+        <a
+            href="${resetUrl}"
+            style="
+                background:#2563eb;
+                color:white;
+                padding:12px 20px;
+                text-decoration:none;
+                border-radius:6px;
+            "
+        >
+            Reset Password
+        </a>
+
+        <p>This link expires in 10 minutes.</p>
+    `;
+    await sendEmail(
+        user.email,
+        "Reset Your Password",
+        html
+    );
+
+    return {
+        message:
+            "Password reset link sent to your email",
+    };
+}
+
+export const resetPasswordService = async (token: string, password: string) => {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await findUserByResetToken(hashedToken);
+    if (!user) {
+        throw new AppError("Invalid or expired rset link", 409)
+    }
+    const hashpassword = await hashedpassword(password);
+    await updatePassword(user._id.toString(), hashpassword);
 }
 

@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { Status } from "../constants/status";
+import { Status } from "../constants/status.constant";
 
 export interface IAttendance {
     employee: Types.ObjectId;

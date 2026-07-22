@@ -1,5 +1,5 @@
 import { IAttendance } from "../interfaces/attendance.interface";
-import { Attendance } from "../models/attendance.model";
+import Attendance from "../models/attendance.model";
 
 export const findTodayAttendance = async (employeeId: string) => {
     const start = new Date();

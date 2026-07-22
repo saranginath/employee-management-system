@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ROLES } from "../constants/role";
+import { ROLES } from "../constants/role.constant";
 
 export const registerSchema = z.object({
     firstName: z.string().min(2, "First name required"),
@@ -18,6 +18,15 @@ export const loginSchema = z.object({
     password: z.string().min(8, "password must contain minimum 8 character")
 })
 
+export const changePasswordSchema =
+    z.object({
+
+        oldPassword: z.string(),
+
+        newPassword:
+            z.string().min(8)
+
+    });
 export type RegisterInput = z.infer<typeof registerSchema>
 
 export type LoginInput = z.infer<typeof loginSchema>

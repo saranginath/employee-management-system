@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateChangePassword = exports.removeRefreshToken = exports.findUserById = exports.updateRefreshToken = exports.createUser = exports.findUserByEmail = void 0;
+exports.updatePassword = exports.findUserByResetToken = exports.saveUser = exports.updateChangePassword = exports.removeRefreshToken = exports.findUserById = exports.updateRefreshToken = exports.createUser = exports.findUserByEmail = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
 const findUserByEmail = async (email) => {
     return user_model_1.default.findOne({
@@ -44,3 +44,26 @@ const updateChangePassword = async (userId, newPassword) => {
     });
 };
 exports.updateChangePassword = updateChangePassword;
+const saveUser = async (user) => {
+    return await user.save();
+};
+exports.saveUser = saveUser;
+const findUserByResetToken = async (hashedToken) => {
+    return await user_model_1.default.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: {
+            $gt: new Date()
+        }
+    }).select("+passwordResetToken");
+};
+exports.findUserByResetToken = findUserByResetToken;
+const updatePassword = async (userId, hashedPassword) => {
+    return await user_model_1.default.findByIdAndUpdate(userId, {
+        password: hashedPassword,
+        passwordResetToken: undefined,
+        passwordResetExpires: undefined
+    }, {
+        nre: true
+    });
+};
+exports.updatePassword = updatePassword;

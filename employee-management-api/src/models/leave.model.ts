@@ -1,6 +1,6 @@
-import { model, Schema, Types } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 import { ILeave } from "../interfaces/leave.interface";
-import { LEAVE_STATUS, LEAVE_TYPES } from "../constants";
+import { LEAVE_STATUS, LEAVE_TYPES } from "../constants/leave.constnt";
 
 const leaveSchema = new Schema<ILeave>(
     {
@@ -45,4 +45,4 @@ const leaveSchema = new Schema<ILeave>(
 }
 );
 
-export const Leave = model<ILeave>("Leave", leaveSchema)
+export default mongoose.model<ILeave>("Leave", leaveSchema)

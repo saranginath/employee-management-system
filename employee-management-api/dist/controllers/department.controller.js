@@ -1,22 +1,44 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDepartmentController = exports.createDepartmentController = void 0;
+exports.deleteDepartmentController = exports.updateDepartmentController = exports.getDepartmentByIdController = exports.getDepartmentsController = exports.createDepartmentController = void 0;
 const department_service_1 = require("../services/department.service");
-const department_validator_1 = require("../validators/department.validator");
 const asyncHandler_1 = require("../middleware/asyncHandler");
-exports.createDepartmentController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
-    const data = department_validator_1.createDepartmentSchema.parse(req.body);
-    const department = await (0, department_service_1.createDepartmentService)(data);
+// CREATE
+exports.createDepartmentController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const department = await (0, department_service_1.createDepartmentService)(req.body);
     res.status(201).json({
-        sucess: true,
-        message: "Created department successfully",
+        success: true,
+        message: "Department created successfully",
         data: department
     });
 });
-exports.getDepartmentController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
-    const department = await (0, department_service_1.getDepartmentService)();
+// GET ALL
+exports.getDepartmentsController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const departments = await (0, department_service_1.getDepartmentsService)();
+    res.status(200).json({
+        success: true,
+        data: departments
+    });
+});
+exports.getDepartmentByIdController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const department = await (0, department_service_1.getDepartmentByIdService)(req.params.id);
     res.status(200).json({
         success: true,
         data: department
+    });
+});
+exports.updateDepartmentController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const department = await (0, department_service_1.updateDepartmentService)(req.params.id, req.body);
+    res.status(200).json({
+        success: true,
+        message: "Department updated",
+        data: department
+    });
+});
+exports.deleteDepartmentController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    await (0, department_service_1.deleteDepartmentService)(req.params.id);
+    res.status(200).json({
+        success: true,
+        message: "Department deleted"
     });
 });

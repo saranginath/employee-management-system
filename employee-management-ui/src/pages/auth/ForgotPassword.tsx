@@ -1,7 +1,10 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "react-router-dom";
+import { useForgotPasswordMutation } from "../../features/auth/authApi";
+
 
 const forgotPasswordSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
@@ -10,6 +13,10 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 function ForgotPassword() {
+    const [message, setMessage] = useState("");
+
+    const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
     const {
         register,
         handleSubmit,
@@ -18,55 +25,90 @@ function ForgotPassword() {
         resolver: zodResolver(forgotPasswordSchema),
     });
 
-    const onSubmit = (data: ForgotPasswordForm) => {
-        console.log("Password recovery requested for", data.email);
-    };
+    const onSubmit = async (data: ForgotPasswordForm) => {
+        try {
+            const res = await forgotPassword(data).unwrap();
+
+            setMessage(res.message);
+        } catch (err: unknown) {
+            const error = err as {
+                data?: {
+                    message?: string;
+                };
+            };
+
+            setMessage(error.data?.message ?? "Something went wrong");
+        }
+
+    }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_top_left,_#dbeafe,_#eff6ff_45%,_#f8fafc_100%)] px-4 py-10">
+        <div className="min-h-screen flex items-center justify-center  px-4 py-10 bg-linear-to-br
+            from-red-600
+            via-indigo-600
+            to-purple-500">
             <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
+
                 <div className="mb-6 flex justify-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-600">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-700 text-xl font-bold text-white">
                         EMS
                     </div>
                 </div>
 
-                <h1 className="mb-2 text-center text-3xl font-bold text-gray-800">
-                    Forgot password?
+                <h1 className="text-3xl font-bold text-center text-gray-800">
+                    Forgot Password
                 </h1>
-                <p className="mb-6 text-center text-sm text-gray-500">
-                    Enter your email and we’ll help you reset your password.
+
+                <p className="mt-2 text-center text-gray-500">
+                    Enter your registered email address.
                 </p>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                {message && (
+                    <div className="mt-5 rounded-lg bg-blue-100 p-3 text-center text-sm text-blue-700">
+                        {message}
+                    </div>
+                )}
+
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="mt-6 space-y-5"
+                >
                     <div>
                         <input
-                            className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                             type="email"
-                            placeholder="Email address"
+                            placeholder="Email Address"
                             {...register("email")}
+                            className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
                         />
+
                         {errors.email && (
-                            <p className="mt-2 text-sm text-red-500">{errors.email.message}</p>
+                            <p className="mt-1 text-sm text-red-500">
+                                {errors.email.message}
+                            </p>
                         )}
                     </div>
 
                     <button
+                        disabled={isLoading}
                         type="submit"
-                        className="rounded-lg bg-blue-600 p-3 font-semibold text-white transition hover:bg-blue-700"
+                        className="w-full rounded-lg bg-blue-600 p-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
                     >
-                        Send reset link
+                        {isLoading ? "Sending..." : "Send Reset Link"}
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
-                    <Link to="/login" className="font-medium text-blue-600 hover:underline">
-                        Back to login
+                <div className="mt-6 text-center">
+                    <Link
+                        to="/login"
+                        className="text-sm font-semibold text-blue-600 hover:underline"
+                    >
+                        ← Back to Login
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
+
 
 export default ForgotPassword;

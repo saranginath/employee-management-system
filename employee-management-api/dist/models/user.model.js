@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const role_1 = require("../constants/role");
+const role_constant_1 = require("../constants/role.constant");
 const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -62,11 +62,11 @@ const userSchema = new mongoose_1.Schema({
     role: {
         type: String,
         enum: [
-            role_1.ROLES.ADMIN,
-            role_1.ROLES.EMPLOYEE,
-            role_1.ROLES.MANAGER
+            role_constant_1.ROLES.ADMIN,
+            role_constant_1.ROLES.EMPLOYEE,
+            role_constant_1.ROLES.MANAGER
         ],
-        default: role_1.ROLES.EMPLOYEE
+        default: role_constant_1.ROLES.EMPLOYEE
     },
     isEmailVerified: {
         type: Boolean,
@@ -75,9 +75,6 @@ const userSchema = new mongoose_1.Schema({
     refreshToken: {
         type: String
     },
-    passwordResetToken: {
-        type: Date
-    },
     emailVerificationToken: {
         type: String,
         default: null
@@ -85,6 +82,12 @@ const userSchema = new mongoose_1.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    passwordResetToken: {
+        type: String
+    },
+    passwordResetExpires: {
+        type: String
     }
 }, {
     timestamps: true

@@ -1,10 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changepasswordService = exports.logoutUser = exports.refreshAccessToken = exports.loginUser = exports.registerUser = void 0;
+exports.resetPasswordService = exports.forgotPasswordService = exports.changepasswordService = exports.logoutUser = exports.refreshAccessToken = exports.loginUser = exports.registerUser = void 0;
 const user_respository_1 = require("../repositories/user.respository");
 const AppError_1 = require("../utils/AppError");
 const password_1 = require("../utils/password");
 const jwt_1 = require("../config/jwt");
+const crypto_1 = __importDefault(require("crypto"));
+const sendEmail_1 = require("../utils/sendEmail");
 const registerUser = async (data) => {
     const existingUser = await (0, user_respository_1.findUserByEmail)(data.email);
     if (existingUser) {
@@ -20,7 +25,6 @@ const registerUser = async (data) => {
 exports.registerUser = registerUser;
 const loginUser = async (data) => {
     const user = await (0, user_respository_1.findUserByEmail)(data.email);
-    console.log(user);
     if (!user) {
         throw new AppError_1.AppError("Invalid email or password", 401);
     }
@@ -44,7 +48,7 @@ const loginUser = async (data) => {
         id: user._id
     });
     await (0, user_respository_1.updateRefreshToken)(user._id.toString(), refreshToken);
-    const { password, refreshToken: _, emailVerificationToken, passwordResetToken, passwordResetexpires, ...userResponse } = user.toObject();
+    const { password, refreshToken: _, emailVerificationToken, passwordResetToken, passwordResetExpires, ...userResponse } = user.toObject();
     return {
         user: userResponse, accessToken, refreshToken
     };
@@ -100,3 +104,57 @@ const changepasswordService = async (userId, oldPassword, newPassword) => {
     await (0, user_respository_1.updateChangePassword)(user._id.toString(), hashedPassword);
 };
 exports.changepasswordService = changepasswordService;
+const forgotPasswordService = async (email) => {
+    const user = await (0, user_respository_1.findUserByEmail)(email);
+    if (!user) {
+        throw new AppError_1.AppError("User not found", 404);
+    }
+    // Generate Raw Token
+    const resetToken = crypto_1.default
+        .randomBytes(32)
+        .toString("hex");
+    // Hash Token
+    const hashedToken = crypto_1.default
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+    await (0, user_respository_1.saveUser)(user);
+    const html = `
+        <h2>Password Reset</h2>
+
+        <p>Click the button below to reset your password.</p>
+
+        <a
+            href="${resetUrl}"
+            style="
+                background:#2563eb;
+                color:white;
+                padding:12px 20px;
+                text-decoration:none;
+                border-radius:6px;
+            "
+        >
+            Reset Password
+        </a>
+
+        <p>This link expires in 10 minutes.</p>
+    `;
+    await (0, sendEmail_1.sendEmail)(user.email, "Reset Your Password", html);
+    return {
+        message: "Password reset link sent to your email",
+    };
+};
+exports.forgotPasswordService = forgotPasswordService;
+const resetPasswordService = async (token, password) => {
+    const hashedToken = crypto_1.default.createHash("sha256").update(token).digest("hex");
+    const user = await (0, user_respository_1.findUserByResetToken)(hashedToken);
+    if (!user) {
+        throw new AppError_1.AppError("Invalid or expired rset link", 409);
+    }
+    const hashpassword = await (0, password_1.hashedpassword)(password);
+    await (0, user_respository_1.updatePassword)(user._id.toString(), hashpassword);
+};
+exports.resetPasswordService = resetPasswordService;

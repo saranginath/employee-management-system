@@ -33,7 +33,6 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Department = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const departmentSchema = new mongoose_1.Schema({
     name: {
@@ -67,4 +66,4 @@ const departmentSchema = new mongoose_1.Schema({
 }, {
     timestamps: true
 });
-exports.Department = mongoose_1.default.model("Department", departmentSchema);
+exports.default = mongoose_1.default.model("Department", departmentSchema);

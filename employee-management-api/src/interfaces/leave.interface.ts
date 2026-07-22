@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { LeaveStatus, LeaveType } from "../constants";
+import { LeaveStatus, LeaveType } from "../constants/leave.constnt";
 
 
 export interface ILeave {

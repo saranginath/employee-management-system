@@ -4,35 +4,48 @@ import type { User } from "./types";
 interface AuthState {
     user: User | null;
     accessToken: string | null;
-    refreshToken: string | null
+    isInitialized: boolean;
 }
 
 const initialState: AuthState = {
     user: null,
     accessToken: null,
-    refreshToken: null
-}
-export const authSlice = createSlice({
+    isInitialized: false
+};
+
+const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setCredentials: (state, action: PayloadAction<{
-            user: User, accessToken: string;
-            refreshToken: string
-        }>) => {
+        setCredentials: (
+            state,
+            action: PayloadAction<{
+                user: User;
+                accessToken: string;
+            }>) => {
             state.user = action.payload.user;
             state.accessToken = action.payload.accessToken;
-            state.refreshToken = action.payload.refreshToken
-
+        },
+        setAccessToken: (
+            state,
+            action: PayloadAction<string>) => {
+            state.accessToken = action.payload;
         },
         logout: (state) => {
             state.user = null;
             state.accessToken = null;
-            state.refreshToken = null
+        },
+        setInitialized: (state) => {
+            state.isInitialized = true;
         }
     }
+});
 
-})
-export const { setCredentials, logout } = authSlice.actions;
+export const {
+    setCredentials,
+    setAccessToken,
+    logout, setInitialized,
+} = authSlice.actions;
 
-export default authSlice;
+
+export default authSlice.reducer;

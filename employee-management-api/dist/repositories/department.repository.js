@@ -1,38 +1,32 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDepartmentByManager = exports.getDepartmentByCode = exports.getDepartmentByName = exports.deleteDepartment = exports.updateDepartment = exports.getDepartmentById = exports.getDepartment = exports.createDepartment = void 0;
-const department_model_1 = require("../models/department.model");
+exports.deleteDepartment = exports.updateDepartment = exports.getDepartmentById = exports.getDepartments = exports.createDepartment = void 0;
+const department_model_1 = __importDefault(require("../models/department.model"));
 const createDepartment = async (data) => {
-    return department_model_1.Department.create(data);
+    return await department_model_1.default.create(data);
 };
 exports.createDepartment = createDepartment;
-const getDepartment = () => {
-    return department_model_1.Department.find().populate("manager");
+const getDepartments = async () => {
+    return await department_model_1.default.find()
+        .populate("manager", "firstName lastName email");
 };
-exports.getDepartment = getDepartment;
-const getDepartmentById = (id) => {
-    return department_model_1.Department.findById(id).populate("manager");
+exports.getDepartments = getDepartments;
+const getDepartmentById = async (id) => {
+    return await department_model_1.default.findById(id)
+        .populate("manager", "firstName lastName email");
 };
 exports.getDepartmentById = getDepartmentById;
-const updateDepartment = (id, data) => {
-    return department_model_1.Department.findByIdAndUpdate(id, data, { new: true, runValidators: true });
-};
-exports.updateDepartment = updateDepartment;
-const deleteDepartment = (id) => {
-    return department_model_1.Department.findByIdAndDelete(id);
-};
-exports.deleteDepartment = deleteDepartment;
-const getDepartmentByName = (name) => {
-    return department_model_1.Department.findOne({ name });
-};
-exports.getDepartmentByName = getDepartmentByName;
-const getDepartmentByCode = (code) => {
-    return department_model_1.Department.findOne({ code });
-};
-exports.getDepartmentByCode = getDepartmentByCode;
-const getDepartmentByManager = (managerId) => {
-    return department_model_1.Department.findOne({
-        manager: managerId,
+const updateDepartment = async (id, data) => {
+    return await department_model_1.default.findByIdAndUpdate(id, data, {
+        new: true,
+        runValidators: true
     });
 };
-exports.getDepartmentByManager = getDepartmentByManager;
+exports.updateDepartment = updateDepartment;
+const deleteDepartment = async (id) => {
+    return await department_model_1.default.findByIdAndDelete(id);
+};
+exports.deleteDepartment = deleteDepartment;

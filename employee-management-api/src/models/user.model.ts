@@ -1,7 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "../interfaces/user.interface";
-import { required } from "zod/mini";
-import { ROLES } from "../constants/role";
+import { ROLES } from "../constants/role.constant";
 
 const userSchema = new Schema<IUser>(
     {
@@ -20,7 +19,7 @@ const userSchema = new Schema<IUser>(
             required: true,
             unique: true,
             lowercase: true,
-            trime: true
+            trim: true
         },
         password: {
             type: String,
@@ -45,9 +44,7 @@ const userSchema = new Schema<IUser>(
         refreshToken: {
             type: String
         },
-        passwordResetToken: {
-            type: Date
-        },
+
         emailVerificationToken: {
             type: String,
             default: null
@@ -55,6 +52,25 @@ const userSchema = new Schema<IUser>(
         isActive: {
             type: Boolean,
             default: true
+        },
+        passwordResetToken: {
+            type: String
+        },
+        address: {
+            type: String,
+            trim: true,
+            default: null
+        },
+        passwordResetExpires: {
+            type: String
+        },
+        isFirstLogin: {
+            type: Boolean,
+            default: true,
+        },
+        profilePicture: {
+            type: String,
+            default: null
         }
     },
     {

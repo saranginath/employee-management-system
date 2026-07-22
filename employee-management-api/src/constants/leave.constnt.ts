@@ -1,4 +1,3 @@
-
 export const ROLES = {
     ADMIN: "admin",
     MANAGER: "manager",
@@ -6,7 +5,6 @@ export const ROLES = {
 } as const;
 
 export type Role = typeof ROLES[keyof typeof ROLES];
-
 
 export const STATUS = {
     PRESENT: "present",
@@ -17,16 +15,16 @@ export const STATUS = {
 
 export type Status = typeof STATUS[keyof typeof STATUS];
 
-
 export const LEAVE_STATUS = {
     PENDING: "pending",
     APPROVED: "approved",
     REJECTED: "rejected",
+    CANCELLED: "cancelled",
 } as const;
 
-export type LeaveStatus =
-    typeof LEAVE_STATUS[keyof typeof LEAVE_STATUS];
+export type LeaveStatus = typeof LEAVE_STATUS[keyof typeof LEAVE_STATUS];
 
+export const LEAVE_ALLOWANCE_DAYS = 20;
 
 export const LEAVE_TYPES = {
     CASUAL: "casual",
@@ -35,5 +33,4 @@ export const LEAVE_TYPES = {
     UNPAID: "unpaid",
 } as const;
 
-export type LeaveType =
-    typeof LEAVE_TYPES[keyof typeof LEAVE_TYPES];
+export type LeaveType = typeof LEAVE_TYPES[keyof typeof LEAVE_TYPES];

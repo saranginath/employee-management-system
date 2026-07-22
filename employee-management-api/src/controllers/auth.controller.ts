@@ -1,8 +1,8 @@
-import { asyncHanlder } from "../middleware/asyncHandler";
+import { asyncHandler } from "../middleware/asyncHandler";
 import { Response, Request } from "express";
-import { loginSchema, registerSchema } from "../validators/auth.validator";
-import { changepasswordService, loginUser, logoutUser, refreshAccessToken, registerUser } from "../services/auth.service";
-export const register = asyncHanlder(
+import { changePasswordSchema, loginSchema, registerSchema } from "../validators/auth.validator";
+import { changepasswordService, forgotPasswordService, loginUser, logoutUser, refreshAccessToken, registerUser, resetPasswordService } from "../services/auth.service";
+export const register = asyncHandler(
     async (req: Request, res: Response) => {
         const data = registerSchema.parse(req.body);
         const user = await registerUser(data);
@@ -14,7 +14,7 @@ export const register = asyncHanlder(
     }
 )
 
-export const login = asyncHanlder(async (req: Request, res: Response) => {
+export const login = asyncHandler(async (req: Request, res: Response) => {
 
     const data = loginSchema.parse(req.body);
     const result = await loginUser(data);
@@ -36,7 +36,7 @@ export const login = asyncHanlder(async (req: Request, res: Response) => {
     })
 
 })
-export const refreshToken = asyncHanlder(async (req: Request, res: Response) => {
+export const refreshToken = asyncHandler(async (req: Request, res: Response) => {
     const token = req.cookies.refreshToken;
     const result = await refreshAccessToken(token);
     res.cookie("refreshToken", result.refreshToken, {
@@ -53,7 +53,7 @@ export const refreshToken = asyncHanlder(async (req: Request, res: Response) => 
     })
 })
 
-export const logout = asyncHanlder(async (req: Request, res: Response) => {
+export const logout = asyncHandler(async (req: Request, res: Response) => {
     const token = req.cookies.refreshToken;
     await logoutUser(token);
     res.clearCookie("refreshToken", {
@@ -68,12 +68,13 @@ export const logout = asyncHanlder(async (req: Request, res: Response) => {
     })
 })
 
-export const changePassword = asyncHanlder(async (req: Request, res: Response) => {
-    const { oldPassword, newPassword } = req.body;
+export const changePassword = asyncHandler(async (req: Request, res: Response) => {
+
+    const data = await changePasswordSchema.parse(req.body)
     await changepasswordService(
         req.user!.id,
-        oldPassword,
-        newPassword
+        data.oldPassword,
+        data.newPassword
     )
     res.status(200).json({
         success: true,
@@ -81,3 +82,29 @@ export const changePassword = asyncHanlder(async (req: Request, res: Response) =
     })
 
 })
+
+
+
+
+export const forgotPasswordController = asyncHandler(async (
+    req: Request,
+    res: Response
+) => {
+
+    const { email } = req.body;
+
+    const result = await forgotPasswordService(email);
+
+    res.status(200).json(result);
+}
+)
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const password = req.body.password;
+    const result = await resetPasswordService(token as string, password);
+    res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
+    })
+}

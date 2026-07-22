@@ -5,7 +5,7 @@ const asyncHandler_1 = require("../middleware/asyncHandler");
 const employee_service_1 = require("../services/employee.service");
 const employee_validator_1 = require("../validators/employee.validator");
 const mongoose_1 = require("mongoose");
-exports.createEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, res, next) => {
+exports.createEmployeeController = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
     const employee = await (0, employee_service_1.createEmployeeService)(req.body);
     res.status(201).json({
         succes: true,
@@ -13,21 +13,21 @@ exports.createEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, 
         data: employee
     });
 });
-exports.getEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
+exports.getEmployeeController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const employee = await (0, employee_service_1.getEmployeeService)();
     res.json({
         success: true,
         data: employee
     });
 });
-exports.getEmployeeByIdController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
+exports.getEmployeeByIdController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const employee = await (0, employee_service_1.getEmployeeByIdService)(req.params.id);
     res.json({
         success: true,
         data: employee
     });
 });
-exports.updateEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
+exports.updateEmployeeController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const data = employee_validator_1.updateEmployeeSchema.parse(req.body);
     const employeeData = {
         ...data,
@@ -40,7 +40,7 @@ exports.updateEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, 
         data: employee
     });
 });
-exports.deleteEmployeeController = (0, asyncHandler_1.asyncHanlder)(async (req, res) => {
+exports.deleteEmployeeController = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     await (0, employee_service_1.deleteEmployeeService)(req.params.id);
     res.json({
         success: true,

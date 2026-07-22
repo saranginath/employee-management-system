@@ -1,43 +1,54 @@
-import { CreatedepartmentData, IDepartment } from "../interfaces/department.interface";
-import { Department } from "../models/department.model";
+import Department from "../models/department.model";
 
-import { Types } from "mongoose";
+export const createDepartment =
+    async (data: any) => {
 
+        return await Department.create(data);
 
+    };
 
-export const createDepartment = async (
-    data: Partial<IDepartment>
-) => {
+export const getDepartments =
+    async () => {
 
-    return Department.create(data);
-};
+        return await Department.find()
+            .populate(
+                "manager",
+                "firstName lastName email"
+            );
 
-export const getDepartment = () => {
-    return Department.find().populate("manager")
-}
+    };
 
-export const getDepartmentById = (id: string) => {
-    return Department.findById(id).populate("manager");
-}
+export const getDepartmentById =
+    async (id: string) => {
 
-export const updateDepartment = (id: string, data: Partial<IDepartment>) => {
-    return Department.findByIdAndUpdate(id, data, { new: true, runValidators: true })
-}
+        return await Department.findById(id)
+            .populate(
+                "manager",
+                "firstName lastName email"
+            );
 
-export const deleteDepartment = (id: string) => {
-    return Department.findByIdAndDelete(id)
-}
+    };
 
-export const getDepartmentByName = (name: string) => {
-    return Department.findOne({ name })
-}
-export const getDepartmentByCode = (code: string) => {
-    return Department.findOne({ code })
-}
-export const getDepartmentByManager = (
-    managerId: Types.ObjectId
-) => {
-    return Department.findOne({
-        manager: managerId,
-    });
-};
+export const updateDepartment =
+    async (
+        id: string,
+        data: any
+    ) => {
+
+        return await Department.findByIdAndUpdate(
+            id,
+            data,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+    };
+
+export const deleteDepartment =
+    async (id: string) => {
+
+        return await Department.findByIdAndDelete(id);
+
+    };

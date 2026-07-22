@@ -1,31 +1,59 @@
-import { Types } from "mongoose";
-import { createDepartment, getDepartment, getDepartmentByCode } from "../repositories/department.repository";
-
-
-import { CreateDepartmentInput } from "../validators/department.validator";
-
-
-export const createDepartmentService = async (
-    data: CreateDepartmentInput
-) => {
-    const departmentExists =
-        await getDepartmentByCode(data.code);
-
-    if (departmentExists) {
-        throw new Error("Department code already exists");
-    }
-    const departmentData = {
-        name: data.name,
-        code: data.code,
-        description: data.description,
-        status: data.status ?? "active",
-        manager: data.manager
-            ? new Types.ObjectId(data.manager)
-            : null
-    };
-    return createDepartment(departmentData);
-};
-
-export const getDepartmentService = async () => {
-    return await getDepartment()
+import {
+    createDepartment,
+    getDepartments,
+    getDepartmentById,
+    updateDepartment,
+    deleteDepartment
 }
+    from "../repositories/department.repository";
+
+
+
+export const createDepartmentService =
+    async (data: any) => {
+
+        return await createDepartment(data);
+
+    };
+
+
+
+export const getDepartmentsService =
+    async () => {
+
+        return await getDepartments();
+
+    };
+
+
+
+export const getDepartmentByIdService =
+    async (id: string) => {
+
+        return await getDepartmentById(id);
+
+    };
+
+
+
+export const updateDepartmentService =
+    async (
+        id: string,
+        data: any
+    ) => {
+
+        return await updateDepartment(
+            id,
+            data
+        );
+
+    };
+
+
+
+export const deleteDepartmentService =
+    async (id: string) => {
+
+        return await deleteDepartment(id);
+
+    };

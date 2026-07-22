@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IEmployee } from "../interfaces/employee.interface";
-import { ROLES } from "../constants/role";
-import { object } from "zod";
+
 
 const employeeSchema = new Schema<IEmployee>(
     {
@@ -9,37 +8,56 @@ const employeeSchema = new Schema<IEmployee>(
             type: String,
             required: true
         },
+
         lastName: {
             type: String,
             required: true
         },
+
         email: {
             type: String,
-            unique: true,
-            required: true
+            required: true,
+            unique: true
         },
+
         phone: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         },
+
         department: {
             type: Schema.Types.ObjectId,
-            ref: "Department"
+            ref: "Department",
+            required: true
         },
+
         designation: {
-            type: String, required: true
-        },
-        role: {
             type: String,
-            enum: Object.values(ROLES),
-            default: ROLES.EMPLOYEE
+            required: true
         },
+
         salary: {
             type: Number,
             required: true
+        },
+
+        // Reference to login account
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+            unique: true
         }
-    }, {
-    timestamps: true
-}
-)
-export default mongoose.model<IEmployee>("Employee", employeeSchema)
+
+    },
+    {
+        timestamps: true
+    }
+);
+
+
+export default mongoose.model<IEmployee>(
+    "Employee",
+    employeeSchema
+);
