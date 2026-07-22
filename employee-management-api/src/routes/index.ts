@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-
 import authRoutes from "./auth.routes";
 import employeeRoutes from "./employee.routes";
 import departmentRoutes from "./department.routes";
@@ -20,9 +19,7 @@ import documentRoutes from "./document.routes";
 import rolePermissionRoutes from "./role-permission.routes";
 import auditLogRoutes from "./audit-log.routes";
 
-
 const router = Router();
-
 
 // ===========================
 // CORE MODULES
@@ -37,7 +34,6 @@ router.use("/departments", departmentRoutes);
 router.use("/attendance", attendanceRoutes);
 
 router.use("/leave", leaveRoutes);
-
 
 // ===========================
 // EMS MODULES
@@ -67,7 +63,5 @@ router.use("/documents", documentRoutes);
 router.use("/roles", rolePermissionRoutes);
 
 router.use("/audit-logs", auditLogRoutes);
-
-
 
 export default router;

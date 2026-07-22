@@ -1,171 +1,74 @@
 import { Request, Response } from "express";
 
-
 import {
-    getProfileService,
-    updateProfileService,
-    uploadProfilePictureService,
-    changePasswordService
-}
-    from "../services/profile.service";
-
-
-
+  getProfileService,
+  updateProfileService,
+  uploadProfilePictureService,
+  changePasswordService,
+} from "../services/profile.service";
 
 // GET PROFILE
 
-export const getProfile =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+export const getProfile = async (req: Request, res: Response) => {
+  const user = await getProfileService(req.user!.id);
 
+  res.status(200).json({
+    success: true,
 
-        const user =
-            await getProfileService(
-                req.user!.id
-            );
-
-
-
-        res.status(200).json({
-
-            success: true,
-
-            data: user
-
-        });
-
-
-    };
-
-
-
+    data: user,
+  });
+};
 
 // UPDATE PROFILE
 
-export const updateProfile =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+export const updateProfile = async (req: Request, res: Response) => {
+  const user = await updateProfileService(req.user!.id, req.body);
 
+  res.status(200).json({
+    success: true,
 
-        const user =
-            await updateProfileService(
-                req.user!.id,
-                req.body
-            );
+    message: "Profile updated successfully",
 
-
-
-        res.status(200).json({
-
-            success: true,
-
-            message:
-                "Profile updated successfully",
-
-            data: user
-
-        });
-
-
-    };
-
-
-
+    data: user,
+  });
+};
 
 // UPLOAD PROFILE IMAGE
 
-export const uploadProfilePicture =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+export const uploadProfilePicture = async (req: Request, res: Response) => {
+  const image = req.file?.path;
 
+  if (!image) {
+    res.status(400).json({
+      success: false,
 
-        const image =
-            req.file?.path;
+      message: "Image required",
+    });
 
+    return;
+  }
 
+  const user = await uploadProfilePictureService(req.user!.id, image);
 
-        if (!image) {
+  res.status(200).json({
+    success: true,
 
-            res.status(400).json({
+    message: "Profile picture uploaded",
 
-                success: false,
-
-                message:
-                    "Image required"
-
-            });
-
-            return;
-
-        }
-
-
-
-        const user =
-            await uploadProfilePictureService(
-                req.user!.id,
-                image
-            );
-
-
-
-        res.status(200).json({
-
-            success: true,
-
-            message:
-                "Profile picture uploaded",
-
-            data: user
-
-        });
-
-
-    };
-
-
-
+    data: user,
+  });
+};
 
 // CHANGE PASSWORD
 
-export const changePassword =
-    async (
-        req: Request,
-        res: Response
-    ) => {
+export const changePassword = async (req: Request, res: Response) => {
+  const { currentPassword, newPassword } = req.body;
 
+  await changePasswordService(req.user!.id, currentPassword, newPassword);
 
-        const {
-            currentPassword,
-            newPassword
-        }
-            =
-            req.body;
+  res.status(200).json({
+    success: true,
 
-
-
-        await changePasswordService(
-            req.user!.id,
-            currentPassword,
-            newPassword
-        );
-
-
-
-        res.status(200).json({
-
-            success: true,
-
-            message:
-                "Password changed successfully"
-
-        });
-
-
-    };
+    message: "Password changed successfully",
+  });
+};

@@ -1,129 +1,65 @@
 import {
-    getTotalEmployees,
-    getEmployeeStatus,
-    getTotalDepartments,
-    getPendingLeaves,
-    getTodayAttendance,
-    getEmployeeGrowth,
-    getDepartmentStats
-}
-    from "../repositories/dashboard.repository";
+  getTotalEmployees,
+  getEmployeeStatus,
+  getTotalDepartments,
+  getPendingLeaves,
+  getTodayAttendance,
+  getEmployeeGrowth,
+  getDepartmentStats,
+} from "../repositories/dashboard.repository";
 
+export const getAdminDashboardService = async () => {
+  const totalEmployees = await getTotalEmployees();
 
+  const employeeStatus = await getEmployeeStatus();
+  console.log(employeeStatus);
 
-export const getAdminDashboardService =
-    async () => {
+  const totalDepartments = await getTotalDepartments();
 
+  const pendingLeaves = await getPendingLeaves();
 
-        const totalEmployees =
-            await getTotalEmployees();
+  const today = new Date();
 
+  today.setHours(0, 0, 0, 0);
 
+  const attendance = await getTodayAttendance(today);
 
-        const employeeStatus =
-            await getEmployeeStatus();
-        console.log(employeeStatus)
+  const attendanceRate =
+    attendance.total === 0
+      ? 0
+      : Math.round((attendance.present / attendance.total) * 100);
 
+  const employeeGrowth = await getEmployeeGrowth();
 
+  const departmentStats = await getDepartmentStats();
 
-        const totalDepartments =
-            await getTotalDepartments();
+  return {
+    employees: {
+      total: totalEmployees,
 
+      active: employeeStatus[0]?.active || 0,
 
+      inactive: employeeStatus[0]?.inactive || 0,
+    },
 
-        const pendingLeaves =
-            await getPendingLeaves();
+    departments: {
+      total: totalDepartments,
+    },
 
+    leaves: {
+      pending: pendingLeaves,
+    },
 
+    attendance: {
+      present: attendance.present,
 
-        const today = new Date();
+      absent: attendance.total - attendance.present,
 
-        today.setHours(
-            0,
-            0,
-            0,
-            0
-        );
+      rate: attendanceRate,
+    },
 
+    employeeGrowth,
 
-
-        const attendance =
-            await getTodayAttendance(today);
-
-
-
-        const attendanceRate =
-            attendance.total === 0
-                ? 0
-                :
-                Math.round(
-                    (attendance.present /
-                        attendance.total)
-                    * 100
-                );
-
-
-
-        const employeeGrowth =
-            await getEmployeeGrowth();
-
-
-
-        const departmentStats =
-            await getDepartmentStats();
-
-
-
-        return {
-
-
-            employees: {
-
-                total: totalEmployees,
-
-                active:
-                    employeeStatus[0]?.active || 0,
-
-                inactive:
-                    employeeStatus[0]?.inactive || 0
-
-            },
-
-
-
-            departments: {
-                total: totalDepartments
-            },
-
-
-
-            leaves: {
-                pending: pendingLeaves
-            },
-
-
-
-            attendance: {
-
-                present: attendance.present,
-
-                absent:
-                    attendance.total -
-                    attendance.present,
-
-                rate: attendanceRate
-
-            },
-
-
-
-            employeeGrowth,
-
-            departmentStats
-
-
-
-        };
-
-
-    };
+    departmentStats,
+  };
+};

@@ -1,131 +1,76 @@
 import { useNavigate } from "react-router-dom";
 import {
-    useGetEmployeesQuery,
-    useDeleteEmployeeMutation
+  useGetEmployeesQuery,
+  useDeleteEmployeeMutation,
 } from "../../features/employee/employeeApi";
 
-
 function Employee() {
+  const navigate = useNavigate();
 
+  const { data, isLoading, isError } = useGetEmployeesQuery();
 
-    const navigate = useNavigate();
+  const [deleteEmployee, { isLoading: isDeleting }] =
+    useDeleteEmployeeMutation();
 
+  const employees = data?.data ?? [];
 
-    const {
-        data,
-        isLoading,
-        isError
-    } = useGetEmployeesQuery();
+  const handleDeleteEmployee = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this employee?",
+    );
 
+    if (!confirmDelete) return;
 
+    try {
+      await deleteEmployee(id).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const [
-        deleteEmployee,
-        {
-            isLoading: isDeleting
-        }
-    ] = useDeleteEmployeeMutation();
-
-
-
-    const employees = data?.data ?? [];
-
-
-
-
-
-    const handleDeleteEmployee = async (id: string) => {
-
-
-        const confirmDelete =
-            window.confirm(
-                "Are you sure you want to delete this employee?"
-            );
-
-
-        if (!confirmDelete) return;
-
-
-        try {
-
-            await deleteEmployee(id).unwrap();
-
-        }
-        catch (error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-
-
-
-
-    if (isLoading) {
-
-        return (
-
-            <div className="p-6">
-
-                <div className="
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div
+          className="
                     rounded-2xl
                     bg-white
                     p-6
                     shadow
-                ">
-                    Loading employees...
-                </div>
+                "
+        >
+          Loading employees...
+        </div>
+      </div>
+    );
+  }
 
-            </div>
-
-        );
-    }
-
-
-
-
-
-    if (isError) {
-
-        return (
-
-            <div className="
+  if (isError) {
+    return (
+      <div
+        className="
                 rounded-xl
                 bg-red-50
                 p-5
                 text-red-600
-            ">
+            "
+      >
+        Failed to load employees
+      </div>
+    );
+  }
 
-                Failed to load employees
-
-            </div>
-
-        );
-
-    }
-
-
-
-
-
-
-    return (
-
-        <div className="
+  return (
+    <div
+      className="
             space-y-6
             p-6
-        ">
+        "
+    >
+      {/* Header */}
 
-
-
-
-
-            {/* Header */}
-
-
-            <div className="
+      <div
+        className="
             flex
             flex-col
             gap-5
@@ -138,28 +83,28 @@ function Employee() {
             md:flex-row
             md:items-center
             md:justify-between
-        ">
-
-
-                <div>
-
-
-                    <div className="
+        "
+      >
+        <div>
+          <div
+            className="
                     flex
                     items-center
                     gap-3
-                ">
-
-                        <h1 className="
+                "
+          >
+            <h1
+              className="
                         text-3xl
                         font-bold
                         text-slate-800
-                    ">
-                            Employees
-                        </h1>
+                    "
+            >
+              Employees
+            </h1>
 
-
-                        <span className="
+            <span
+              className="
                         rounded-full
                         bg-blue-100
                         px-3
@@ -167,38 +112,26 @@ function Employee() {
                         text-sm
                         font-medium
                         text-blue-700
-                    ">
-                            {employees.length}
-                        </span>
+                    "
+            >
+              {employees.length}
+            </span>
+          </div>
 
-
-                    </div>
-
-
-
-                    <p className="
+          <p
+            className="
                     mt-2
                     text-slate-500
-                ">
-                        Manage employees, roles and organization details.
-                    </p>
+                "
+          >
+            Manage employees, roles and organization details.
+          </p>
+        </div>
 
+        <button
+          onClick={() => navigate("/dashboard/employees/create")}
 
-                </div>
-
-
-
-
-
-                <button
-
-                    onClick={() =>
-                        navigate(
-                            "/dashboard/employees/create"
-                        )
-                    }
-
-                    className="
+          className="
             rounded-xl
             bg-blue-600
             px-5
@@ -209,167 +142,96 @@ function Employee() {
             transition
             hover:bg-blue-700
             "
+        >
+          + Add Employee
+        </button>
+      </div>
 
-                >
+      {/* Table */}
 
-                    + Add Employee
-
-                </button>
-
-
-
-            </div>
-
-
-
-
-
-
-
-            {/* Table */}
-
-
-
-            <div className="
+      <div
+        className="
             overflow-hidden
             rounded-3xl
             border
             border-slate-200
             bg-white
             shadow-sm
-        ">
-
-
-                <div className="
+        "
+      >
+        <div
+          className="
             overflow-x-auto
-        ">
-
-
-
-                    <table className="
+        "
+        >
+          <table
+            className="
             min-w-full
             text-left
-        ">
-
-
-
-                        <thead>
-
-
-                            <tr className="
+        "
+          >
+            <thead>
+              <tr
+                className="
             bg-slate-50
             text-sm
             text-slate-600
-        ">
+        "
+              >
+                <th className="px-6 py-4">Employee</th>
 
+                <th className="px-6 py-4">Role</th>
 
-                                <th className="px-6 py-4">
-                                    Employee
-                                </th>
+                <th className="px-6 py-4">Designation</th>
 
+                <th className="px-6 py-4">Email</th>
 
-                                <th className="px-6 py-4">
-                                    Role
-                                </th>
+                <th className="px-6 py-4 text-center">Actions</th>
+              </tr>
+            </thead>
 
-
-                                <th className="px-6 py-4">
-                                    Designation
-                                </th>
-
-
-                                <th className="px-6 py-4">
-                                    Email
-                                </th>
-
-
-                                <th className="px-6 py-4 text-center">
-                                    Actions
-                                </th>
-
-
-                            </tr>
-
-
-                        </thead>
-
-
-
-
-
-
-
-                        <tbody>
-
-
-
-                            {
-                                employees.length === 0
-
-                                    ?
-
-                                    (
-
-                                        <tr>
-
-                                            <td
-                                                colSpan={5}
-                                                className="
+            <tbody>
+              {employees.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="
                 py-12
                 text-center
                 text-slate-500
                 "
-                                            >
+                  >
+                    No employees found
+                  </td>
+                </tr>
+              ) : (
+                employees.map((employee) => (
+                  <tr
+                    key={employee._id}
 
-                                                No employees found
-
-                                            </td>
-
-
-                                        </tr>
-
-                                    )
-
-
-                                    :
-
-
-                                    employees.map((employee) => (
-
-
-                                        <tr
-
-                                            key={employee._id}
-
-                                            className="
+                    className="
             border-t
             hover:bg-slate-50
             transition
             "
+                  >
+                    {/* Employee */}
 
-                                        >
-
-
-
-
-
-                                            {/* Employee */}
-
-
-                                            <td className="
+                    <td
+                      className="
                 px-6
                 py-4
-            ">
-
-
-                                                <div className="
+            "
+                    >
+                      <div
+                        className="
                 flex
                 items-center
                 gap-3
-            ">
-
-
-                                                    <div className="
+            "
+                      >
+                        <div
+                          className="
                 flex
                 h-11
                 w-11
@@ -379,176 +241,101 @@ function Employee() {
                 bg-blue-600
                 font-bold
                 text-white
-            ">
+            "
+                        >
+                          {employee.firstName?.charAt(0)}
 
-                                                        {
-                                                            employee.firstName
-                                                                ?.charAt(0)
-                                                        }
+                          {employee.lastName?.charAt(0)}
+                        </div>
 
-                                                        {
-                                                            employee.lastName
-                                                                ?.charAt(0)
-                                                        }
-
-
-                                                    </div>
-
-
-
-
-
-                                                    <div>
-
-                                                        <p className="
+                        <div>
+                          <p
+                            className="
                     font-semibold
                     text-slate-800
-                ">
+                "
+                          >
+                            {employee.firstName} {employee.lastName}
+                          </p>
 
-                                                            {
-                                                                employee.firstName
-                                                            }
-                                                            {" "}
-                                                            {
-                                                                employee.lastName
-                                                            }
-
-                                                        </p>
-
-
-
-                                                        <p className="
+                          <p
+                            className="
                     text-xs
                     text-slate-400
-                ">
+                "
+                          >
+                            Employee ID: {employee._id.slice(-6)}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
 
-                                                            Employee ID:
-                                                            {" "}
-                                                            {employee._id.slice(-6)}
+                    {/* Role */}
 
-                                                        </p>
-
-
-                                                    </div>
-
-
-                                                </div>
-
-
-
-                                            </td>
-
-
-
-
-
-
-
-
-                                            {/* Role */}
-
-
-                                            <td className="px-6 py-4">
-
-
-                                                <span
-                                                    className={`
+                    <td className="px-6 py-4">
+                      <span
+                        className={`
                 rounded-full
                 px-3
                 py-1
                 text-xs
                 font-semibold
 
-                ${employee.user?.role === "admin"
-
-                                                            ?
-                                                            "bg-purple-100 text-purple-700"
-
-                                                            :
-
-                                                            employee.user?.role === "manager"
-
-                                                                ?
-
-                                                                "bg-green-100 text-green-700"
-
-                                                                :
-
-                                                                "bg-blue-100 text-blue-700"
-
-                                                        }
+                ${
+                  employee.user?.role === "admin"
+                    ? "bg-purple-100 text-purple-700"
+                    : employee.user?.role === "manager"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-blue-100 text-blue-700"
+                }
 
                 `}
-                                                >
+                      >
+                        {employee.user?.role}
+                      </span>
+                    </td>
 
-                                                    {employee.user?.role}
-
-                                                </span>
-
-
-                                            </td>
-
-
-
-
-
-
-
-
-                                            <td className="
+                    <td
+                      className="
                 px-6
                 py-4
                 text-slate-600
-            ">
+            "
+                    >
+                      {employee.designation || "-"}
+                    </td>
 
-                                                {employee.designation || "-"}
-
-                                            </td>
-
-
-
-
-
-
-
-                                            <td className="
+                    <td
+                      className="
                 px-6
                 py-4
                 text-slate-600
-            ">
+            "
+                    >
+                      {employee.email}
+                    </td>
 
-                                                {employee.email}
-
-                                            </td>
-
-
-
-
-
-
-
-                                            <td className="
+                    <td
+                      className="
                 px-6
                 py-4
-            ">
-
-
-                                                <div className="
+            "
+                    >
+                      <div
+                        className="
                 flex
                 justify-center
                 gap-3
-            ">
+            "
+                      >
+                        <button
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/employees/${employee._id}/edit`,
+                            )
+                          }
 
-
-                                                    <button
-
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `/dashboard/employees/${employee._id}/edit`
-                                                            )
-                                                        }
-
-                                                        className="
+                          className="
             rounded-xl
             bg-blue-50
             px-4
@@ -558,29 +345,16 @@ function Employee() {
             text-blue-600
             hover:bg-blue-100
             "
+                        >
+                          Edit
+                        </button>
 
-                                                    >
+                        <button
+                          disabled={isDeleting}
 
-                                                        Edit
+                          onClick={() => handleDeleteEmployee(employee._id)}
 
-                                                    </button>
-
-
-
-
-
-
-                                                    <button
-
-                                                        disabled={isDeleting}
-
-                                                        onClick={() =>
-                                                            handleDeleteEmployee(
-                                                                employee._id
-                                                            )
-                                                        }
-
-                                                        className="
+                          className="
             rounded-xl
             bg-red-50
             px-4
@@ -591,59 +365,20 @@ function Employee() {
             hover:bg-red-100
             disabled:opacity-50
             "
-
-                                                    >
-
-                                                        {
-                                                            isDeleting
-                                                                ?
-                                                                "..."
-                                                                :
-                                                                "Delete"
-                                                        }
-
-
-                                                    </button>
-
-
-
-                                                </div>
-
-
-                                            </td>
-
-
-
-
-
-
-                                        </tr>
-
-
-                                    ))
-
-                            }
-
-
-
-
-                        </tbody>
-
-
-                    </table>
-
-
-
-                </div>
-
-
-            </div>
-
-
+                        >
+                          {isDeleting ? "..." : "Delete"}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-
-    );
+      </div>
+    </div>
+  );
 }
-
 
 export default Employee;

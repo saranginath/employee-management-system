@@ -1,78 +1,63 @@
 export interface Settings {
+  _id: string;
 
-    _id: string;
+  companyName: string;
 
-    companyName: string;
+  companyLogo?: string;
 
-    companyLogo?: string;
+  companyEmail?: string;
 
-    companyEmail?: string;
+  companyPhone?: string;
 
-    companyPhone?: string;
+  address?: string;
 
-    address?: string;
+  currency: string;
 
+  timezone: string;
 
-    currency: string;
+  workingHours: {
+    startTime: string;
 
-    timezone: string;
+    endTime: string;
 
+    workingDays: string[];
 
-    workingHours: {
+    weeklyOff: string[];
 
-        startTime: string;
+    lateAfterMinutes: number;
+  };
 
-        endTime: string;
+  leavePolicy: {
+    casualLeave: number;
 
-        workingDays: string[];
+    sickLeave: number;
 
-        weeklyOff: string[];
+    earnedLeave: number;
 
-        lateAfterMinutes: number;
+    carryForward: boolean;
 
-    };
+    maxCarryForward: number;
+  };
 
+  notifications: {
+    email: boolean;
 
-    leavePolicy: {
+    push: boolean;
+  };
 
-        casualLeave: number;
+  emailSettings: {
+    smtpHost: string;
 
-        sickLeave: number;
+    smtpPort: number;
 
-        earnedLeave: number;
+    secure: boolean;
 
-        carryForward: boolean;
+    username: string;
 
-        maxCarryForward: number;
+    password: string;
 
-    };
+    senderName: string;
 
-
-    notifications: {
-
-        email: boolean;
-
-        push: boolean;
-
-    };
-
-
-    emailSettings: {
-
-        smtpHost: string;
-
-        smtpPort: number;
-
-        secure: boolean;
-
-        username: string;
-
-        password: string;
-
-        senderName: string;
-
-        senderEmail: string;
-
-    };
-
+    senderEmail: string;
+  };
 }

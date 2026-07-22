@@ -1,8 +1,7 @@
 import {
-    useGetSettingsQuery,
-    useUpdateSettingsMutation
+  useGetSettingsQuery,
+  useUpdateSettingsMutation,
 } from "../../features/settings/settingApi";
-
 
 import CompanyForm from "../../components/settings/CompanyForm";
 
@@ -12,90 +11,46 @@ import LeavePolicyForm from "../../components/settings/LeavePolicyForm";
 
 import EmailSettingsForm from "../../components/settings/EmailSettingsForm";
 
-
-
 const Settings = () => {
+  const { data, isLoading } = useGetSettingsQuery();
 
+  const [updateSettings] = useUpdateSettingsMutation();
 
-    const {
-        data,
-        isLoading
-    } = useGetSettingsQuery();
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
+  const settings = data?.data;
 
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">System Settings</h1>
 
-    const [
-        updateSettings
-    ] = useUpdateSettingsMutation();
+      <CompanyForm
+        data={settings}
 
+        onSave={updateSettings}
+      />
 
+      <WorkingHoursForm
+        data={settings}
 
-    if (isLoading) {
-        return <p>Loading...</p>
-    }
+        onSave={updateSettings}
+      />
 
+      <LeavePolicyForm
+        data={settings}
 
+        onSave={updateSettings}
+      />
 
-    const settings = data?.data;
+      <EmailSettingsForm
+        data={settings}
 
-
-
-    return (
-
-        <div className="p-6 space-y-6">
-
-
-            <h1 className="text-2xl font-bold">
-                System Settings
-            </h1>
-
-
-
-            <CompanyForm
-
-                data={settings}
-
-                onSave={updateSettings}
-
-            />
-
-
-
-            <WorkingHoursForm
-
-                data={settings}
-
-                onSave={updateSettings}
-
-            />
-
-
-
-            <LeavePolicyForm
-
-                data={settings}
-
-                onSave={updateSettings}
-
-            />
-
-
-
-            <EmailSettingsForm
-
-                data={settings}
-
-                onSave={updateSettings}
-
-            />
-
-
-
-        </div>
-
-    )
-
-}
-
+        onSave={updateSettings}
+      />
+    </div>
+  );
+};
 
 export default Settings;

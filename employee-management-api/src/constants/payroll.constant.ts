@@ -1,4 +1,4 @@
 export const PAYROLL_STATUS = {
-    PENDING: "pending",
-    PAID: "paid",
+  PENDING: "pending",
+  PAID: "paid",
 } as const;

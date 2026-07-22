@@ -1,131 +1,81 @@
 import { Request, Response } from "express";
 
 import {
-    createDepartmentService,
-    getDepartmentsService,
-    getDepartmentByIdService,
-    updateDepartmentService,
-    deleteDepartmentService
-}
-    from "../services/department.service";
+  createDepartmentService,
+  getDepartmentsService,
+  getDepartmentByIdService,
+  updateDepartmentService,
+  deleteDepartmentService,
+} from "../services/department.service";
 
 import { asyncHandler } from "../middleware/asyncHandler";
 
-
-
-
 // CREATE
 
-export const createDepartmentController =
-    asyncHandler(
-        async (req: Request, res: Response) => {
+export const createDepartmentController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const department = await createDepartmentService(req.body);
 
+    res.status(201).json({
+      success: true,
 
-            const department =
-                await createDepartmentService(
-                    req.body
-                );
+      message: "Department created successfully",
 
-
-            res.status(201).json({
-
-                success: true,
-
-                message: "Department created successfully",
-
-                data: department
-
-            });
-
-        }
-    );
-
-
-
-
+      data: department,
+    });
+  },
+);
 
 // GET ALL
 
-export const getDepartmentsController =
-    asyncHandler(
-        async (req: Request, res: Response) => {
+export const getDepartmentsController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const departments = await getDepartmentsService();
 
+    res.status(200).json({
+      success: true,
 
-            const departments =
-                await getDepartmentsService();
+      data: departments,
+    });
+  },
+);
 
+export const getDepartmentByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const department = await getDepartmentByIdService(req.params.id as string);
+    res.status(200).json({
+      success: true,
 
-            res.status(200).json({
+      data: department,
+    });
+  },
+);
 
-                success: true,
-
-                data: departments
-
-            });
-
-        }
+export const updateDepartmentController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const department = await updateDepartmentService(
+      req.params.id as string,
+      req.body,
     );
 
-export const getDepartmentByIdController =
-    asyncHandler(
-        async (req: Request, res: Response) => {
-            const department =
-                await getDepartmentByIdService(
-                    req.params.id as string
-                );
-            res.status(200).json({
+    res.status(200).json({
+      success: true,
 
-                success: true,
+      message: "Department updated",
 
-                data: department
+      data: department,
+    });
+  },
+);
 
-            });
+export const deleteDepartmentController = asyncHandler(
+  async (req: Request, res: Response) => {
+    await deleteDepartmentService(req.params.id as string);
 
-        }
-    );
+    res.status(200).json({
+      success: true,
 
-export const updateDepartmentController =
-    asyncHandler(
-        async (req: Request, res: Response) => {
-
-
-            const department =
-                await updateDepartmentService(
-                    req.params.id as string,
-                    req.body
-                );
-
-
-            res.status(200).json({
-
-                success: true,
-
-                message: "Department updated",
-
-                data: department
-
-            });
-
-        }
-    );
-
-export const deleteDepartmentController =
-    asyncHandler(
-        async (req: Request, res: Response) => {
-
-
-            await deleteDepartmentService(
-                req.params.id as string
-            );
-
-
-            res.status(200).json({
-
-                success: true,
-
-                message: "Department deleted"
-
-            });
-
-        }
-    );
+      message: "Department deleted",
+    });
+  },
+);

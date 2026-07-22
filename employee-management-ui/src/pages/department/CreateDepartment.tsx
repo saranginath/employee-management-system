@@ -4,97 +4,75 @@ import { FiBriefcase, FiCode, FiFileText } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 import {
-    useCreateDepartmentMutation,
-    useUpdateDepartmentMutation,
-    useGetDepartmentByIdQuery
+  useCreateDepartmentMutation,
+  useUpdateDepartmentMutation,
+  useGetDepartmentByIdQuery,
 } from "../../features/department/departmentApi";
 import { useEffect } from "react";
 
-
 interface DepartmentForm {
-    name: string;
-    code: string;
-    description?: string;
-    status: "active" | "inactive";
+  name: string;
+  code: string;
+  description?: string;
+  status: "active" | "inactive";
 }
 
 const CreateDepartment = () => {
-    const { id } = useParams();
-    console.log(id)
-    const isEditMode = Boolean(id);
-    const navigate = useNavigate();
-    const [
-        createDepartment,
-        {
-            isLoading: isCreating
-        }
-    ] = useCreateDepartmentMutation();
-    const [
-        updateDepartment,
-        {
-            isLoading: isUpdating
-        }
-    ] = useUpdateDepartmentMutation();
+  const { id } = useParams();
+  console.log(id);
+  const isEditMode = Boolean(id);
+  const navigate = useNavigate();
+  const [createDepartment, { isLoading: isCreating }] =
+    useCreateDepartmentMutation();
+  const [updateDepartment, { isLoading: isUpdating }] =
+    useUpdateDepartmentMutation();
 
+  const isLoading = isCreating || isUpdating;
 
-    const isLoading = isCreating || isUpdating;
+  const { data: response } = useGetDepartmentByIdQuery(id!, {
+    skip: !id,
+  });
 
-    const {
-        data: response,
-    } = useGetDepartmentByIdQuery(id!, {
-        skip: !id,
-    });
+  const department = response?.data;
 
-    const department = response?.data;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<DepartmentForm>({
+    defaultValues: {
+      status: "active",
+    },
+  });
+  useEffect(() => {
+    if (department) {
+      reset({
+        name: department.name,
+        code: department.code,
+        description: department.description,
+        status: department.status,
+      });
+    }
+  }, [department, reset]);
 
+  const onSubmit = async (data: DepartmentForm) => {
+    try {
+      if (isEditMode) {
+        await updateDepartment({
+          id: id!,
+          data,
+        }).unwrap();
+      } else {
+        await createDepartment(data).unwrap();
+      }
+      navigate("/dashboard/departments");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-
-
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: {
-            errors
-        }
-
-    } = useForm<DepartmentForm>({
-
-        defaultValues: {
-            status: "active"
-        }
-
-    });
-    useEffect(() => {
-        if (department) {
-            reset({
-                name: department.name,
-                code: department.code,
-                description: department.description,
-                status: department.status,
-            });
-        }
-    }, [department, reset]);
-
-    const onSubmit = async (data: DepartmentForm) => {
-        try {
-            if (isEditMode) {
-                await updateDepartment({
-                    id: id!,
-                    data
-                }).unwrap();
-            }
-            else {
-                await createDepartment(data).unwrap();
-            }
-            navigate("/dashboard/departments");
-        }
-        catch (error) {
-            console.log(error);
-        }
-    };
-
-    const inputClass = `
+  const inputClass = `
 
         mt-2
         w-full
@@ -116,11 +94,7 @@ const CreateDepartment = () => {
 
     `;
 
-
-
-
-
-    const labelClass = `
+  const labelClass = `
 
         text-sm
         font-semibold
@@ -128,18 +102,16 @@ const CreateDepartment = () => {
 
     `;
 
-
-
-
-
-
-    return (
-        <div className="
+  return (
+    <div
+      className="
         min-h-screen
         bg-slate-50
         p-5
-        md:p-8">
-            <div className="
+        md:p-8"
+    >
+      <div
+        className="
             mx-auto
             max-w-4xl
             overflow-hidden
@@ -148,16 +120,12 @@ const CreateDepartment = () => {
             shadow-xl
             border
             border-slate-100
-        ">
+        "
+      >
+        {/* Header */}
 
-
-
-
-
-                {/* Header */}
-
-
-                <div className="
+        <div
+          className="
                 bg-gradient-to-r
                 from-blue-600
                 via-indigo-600
@@ -165,18 +133,17 @@ const CreateDepartment = () => {
                 px-8
                 py-10
                 text-white
-            ">
-
-
-
-                    <div className="
+            "
+        >
+          <div
+            className="
                     flex
                     items-center
                     gap-4
-                ">
-
-
-                        <div className="
+                "
+          >
+            <div
+              className="
                         flex
                         h-16
                         w-16
@@ -185,79 +152,49 @@ const CreateDepartment = () => {
                         rounded-2xl
                         bg-white/20
                         backdrop-blur
-                    ">
+                    "
+            >
+              <FiBriefcase size={32} />
+            </div>
 
-                            <FiBriefcase size={32} />
-
-
-                        </div>
-
-
-
-
-                        <div>
-
-                            <h1 className="
+            <div>
+              <h1
+                className="
                             text-3xl
                             font-bold
-                        ">
-                                {isEditMode ? "Update Department" : "Create Department"}
-                            </h1>
+                        "
+              >
+                {isEditMode ? "Update Department" : "Create Department"}
+              </h1>
 
-
-                            <p className="
+              <p
+                className="
                             mt-2
                             text-blue-100
-                        ">
-                                {
-                                    isEditMode
-                                        ? "Update department information."
-                                        : "Add and manage company departments."
-                                }
-                            </p>
+                        "
+              >
+                {isEditMode
+                  ? "Update department information."
+                  : "Add and manage company departments."}
+              </p>
+            </div>
+          </div>
+        </div>
 
-                        </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
 
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-
-
-
-                <form
-
-                    onSubmit={
-                        handleSubmit(onSubmit)
-                    }
-
-                    className="
+          className="
                     space-y-8
                     p-6
                     md:p-10
                 "
+        >
+          {/* Basic Information */}
 
-                >
-
-
-
-
-
-
-                    {/* Basic Information */}
-
-
-                    <div>
-
-
-                        <h2 className="
+          <div>
+            <h2
+              className="
                     mb-5
                     flex
                     items-center
@@ -265,129 +202,71 @@ const CreateDepartment = () => {
                     text-lg
                     font-bold
                     text-slate-800
-                ">
+                "
+            >
+              <FiBriefcase />
+              Department Information
+            </h2>
 
-
-                            <FiBriefcase />
-
-                            Department Information
-
-
-                        </h2>
-
-
-
-
-
-                        <div className="
+            <div
+              className="
                     grid
                     grid-cols-1
                     gap-6
                     md:grid-cols-2
-                ">
+                "
+            >
+              {/* Name */}
 
+              <div>
+                <label className={labelClass}>Department Name</label>
 
+                <input
+                  {...register("name", {
+                    required: "Department name is required",
+                  })}
 
+                  placeholder="Engineering"
 
-                            {/* Name */}
+                  className={inputClass}
+                />
 
-
-                            <div>
-
-
-                                <label className={labelClass}>
-                                    Department Name
-                                </label>
-
-
-
-                                <input
-
-                                    {...register(
-                                        "name",
-                                        {
-                                            required:
-                                                "Department name is required"
-                                        }
-                                    )}
-
-                                    placeholder="Engineering"
-
-                                    className={inputClass}
-
-                                />
-
-
-
-                                {
-                                    errors.name &&
-
-                                    <p className="
+                {errors.name && (
+                  <p
+                    className="
                             mt-1
                             text-xs
                             text-red-500
-                        ">
+                        "
+                  >
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
 
-                                        {errors.name.message}
+              {/* Code */}
 
-                                    </p>
+              <div>
+                <label className={labelClass}>Department Code</label>
 
-                                }
-
-
-
-                            </div>
-
-
-
-
-
-
-
-
-
-                            {/* Code */}
-
-
-
-                            <div>
-
-
-                                <label className={labelClass}>
-                                    Department Code
-                                </label>
-
-
-
-                                <div className="relative">
-
-
-                                    <FiCode
-                                        className="
+                <div className="relative">
+                  <FiCode
+                    className="
                         absolute
                         left-4
                         top-6
                         text-slate-400
                     "
-                                    />
+                  />
 
+                  <input
+                    {...register("code", {
+                      required: "Department code is required",
+                    })}
 
-                                    <input
+                    placeholder="ENG"
 
-
-                                        {...register(
-                                            "code",
-                                            {
-                                                required:
-                                                    "Department code is required"
-                                            }
-                                        )}
-
-
-                                        placeholder="ENG"
-
-
-                                        className="
+                    className="
                     pl-11
                     mt-2
                     w-full
@@ -398,97 +277,49 @@ const CreateDepartment = () => {
                     py-3
                     uppercase
                     "
+                  />
+                </div>
 
-
-                                    />
-
-                                </div>
-
-
-
-
-                                {
-                                    errors.code &&
-
-                                    <p className="
+                {errors.code && (
+                  <p
+                    className="
                         mt-1
                         text-xs
                         text-red-500
-                        ">
+                        "
+                  >
+                    {errors.code.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
 
-                                        {errors.code.message}
+          {/* Description */}
 
-                                    </p>
-                                }
+          <div>
+            <label className={labelClass}>Description</label>
 
-
-
-
-                            </div>
-
-
-
-
-
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-                    {/* Description */}
-
-
-                    <div>
-
-
-                        <label className={labelClass}>
-
-                            Description
-
-                        </label>
-
-
-
-                        <div className="relative">
-
-
-                            <FiFileText
-                                className="
+            <div className="relative">
+              <FiFileText
+                className="
                     absolute
                     left-4
                     top-5
                     text-slate-400
                     "
-                            />
+              />
 
+              <textarea
+                {...register("description")}
 
-                            <textarea
+                rows={4}
 
-
-                                {...register(
-                                    "description"
-                                )}
-
-
-                                rows={4}
-
-
-                                placeholder="
+                placeholder="
                 Describe department responsibility
                 "
 
-
-                                className="
+                className="
                 mt-2
                 w-full
                 rounded-xl
@@ -499,92 +330,42 @@ const CreateDepartment = () => {
                 focus:ring-4
                 focus:ring-blue-100
                 "
+              />
+            </div>
+          </div>
 
-                            />
+          {/* Status */}
 
+          <div>
+            <label className={labelClass}>Status</label>
 
+            <select
+              {...register("status")}
 
-                        </div>
+              className={inputClass}
+            >
+              <option value="active">Active</option>
 
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
 
-                    </div>
+          {/* Buttons */}
 
-
-
-
-
-
-
-
-                    {/* Status */}
-
-
-                    <div>
-
-
-                        <label className={labelClass}>
-                            Status
-                        </label>
-
-
-
-                        <select
-
-                            {...register(
-                                "status"
-                            )}
-
-                            className={inputClass}
-
-                        >
-
-
-                            <option value="active">
-                                Active
-                            </option>
-
-
-                            <option value="inactive">
-                                Inactive
-                            </option>
-
-
-                        </select>
-
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-                    {/* Buttons */}
-
-
-
-                    <div className="
+          <div
+            className="
                 flex
                 gap-4
                 border-t
                 pt-6
-            ">
+            "
+          >
+            <button
+              type="button"
 
+              onClick={() => navigate("/dashboard/departments")}
 
-
-                        <button
-
-                            type="button"
-
-                            onClick={() => navigate(
-                                "/dashboard/departments"
-                            )}
-
-                            className="
+              className="
                 flex-1
                 rounded-xl
                 bg-slate-200
@@ -593,24 +374,14 @@ const CreateDepartment = () => {
                 text-slate-700
                 hover:bg-slate-300
                 "
+            >
+              Cancel
+            </button>
 
-                        >
+            <button
+              disabled={isLoading}
 
-                            Cancel
-
-
-                        </button>
-
-
-
-
-
-
-                        <button
-
-                            disabled={isLoading}
-
-                            className="
+              className="
                 flex-1
                 rounded-xl
                 bg-blue-600
@@ -620,49 +391,18 @@ const CreateDepartment = () => {
                 hover:bg-blue-700
                 disabled:opacity-50
                 "
-
-                        >
-
-
-                            {
-                                isLoading
-                                    ?
-                                    "Saving..."
-                                    :
-                                    isEditMode
-                                        ?
-                                        "Update Department"
-                                        :
-                                        "Create Department"
-                            }
-
-
-                        </button>
-
-
-
-                    </div>
-
-
-
-
-
-
-
-                </form>
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-    );
-
+            >
+              {isLoading
+                ? "Saving..."
+                : isEditMode
+                  ? "Update Department"
+                  : "Create Department"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
-
 
 export default CreateDepartment;

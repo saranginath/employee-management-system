@@ -1,7 +1,9 @@
 import { Router } from "express";
 
 import {
-    createSettings, getSettings, updateSettings,
+  createSettings,
+  getSettings,
+  updateSettings,
 } from "../controllers/settings.controller";
 import { ROLES } from "../constants/role.constant";
 import { authorize } from "../middleware/authorize.middleare";

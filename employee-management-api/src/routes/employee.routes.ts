@@ -1,10 +1,16 @@
 import Router from "express";
 import { authenticate } from "../middleware/auth.middleware";
-import { createEmployeeController, deleteEmployeeController, getEmployeeByIdController, getEmployeesController, updateEmployeeController } from "../controllers/employee.controller";
+import {
+  createEmployeeController,
+  deleteEmployeeController,
+  getEmployeeByIdController,
+  getEmployeesController,
+  updateEmployeeController,
+} from "../controllers/employee.controller";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/role.constant";
 
-const router = Router()
+const router = Router();
 
 /**
  * @openapi
@@ -105,11 +111,27 @@ const router = Router()
  *       200:
  *         description: Employee deleted successfully
  */
-router.use(authenticate)
-router.post('/', authorize(ROLES.ADMIN, ROLES.MANAGER), createEmployeeController);
-router.get('/', authorize(ROLES.ADMIN, ROLES.MANAGER), getEmployeesController);
-router.get('/:id', authorize(ROLES.ADMIN, ROLES.MANAGER), getEmployeeByIdController);
-router.patch('/:id', authorize(ROLES.ADMIN, ROLES.MANAGER), updateEmployeeController)
-router.delete('/:id', authorize(ROLES.ADMIN, ROLES.MANAGER), deleteEmployeeController);
+router.use(authenticate);
+router.post(
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createEmployeeController,
+);
+router.get("/", authorize(ROLES.ADMIN, ROLES.MANAGER), getEmployeesController);
+router.get(
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  getEmployeeByIdController,
+);
+router.patch(
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updateEmployeeController,
+);
+router.delete(
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  deleteEmployeeController,
+);
 
 export default router;

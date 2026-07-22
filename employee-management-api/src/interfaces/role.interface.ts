@@ -1,9 +1,8 @@
 import { Types } from "mongoose";
 
-
 export interface IRole {
-    name: string;
-    description?: string;
-    permissions: Types.ObjectId[];
-    status: "active" | "inactive";
+  name: string;
+  description?: string;
+  permissions: Types.ObjectId[];
+  status: "active" | "inactive";
 }

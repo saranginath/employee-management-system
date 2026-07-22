@@ -2,7 +2,10 @@ import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/role.constant";
-import { checkInController, checkOutController } from "../controllers/attendance.controller";
+import {
+  checkInController,
+  checkOutController,
+} from "../controllers/attendance.controller";
 
 const router = Router();
 
@@ -39,7 +42,7 @@ const router = Router();
  *       200:
  *         description: Check out successfully
  */
-router.post('/check-in', authenticate, checkInController);
-router.post('/check-out', authenticate, checkOutController)
+router.post("/check-in", authenticate, checkInController);
+router.post("/check-out", authenticate, checkOutController);
 
 export default router;

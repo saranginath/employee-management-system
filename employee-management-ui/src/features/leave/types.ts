@@ -1,173 +1,97 @@
-export type LeaveType =
-    | "casual"
-    | "sick"
-    | "earned"
-    | "unpaid";
+export type LeaveType = "casual" | "sick" | "earned" | "unpaid";
 
-
-export type LeaveStatus =
-    | "pending"
-    | "approved"
-    | "rejected"
-    | "cancelled";
-
-
+export type LeaveStatus = "pending" | "approved" | "rejected" | "cancelled";
 
 export interface Employee {
+  _id: string;
 
-    _id: string;
+  firstName: string;
 
-    firstName: string;
+  lastName: string;
 
-    lastName: string;
-
-    email: string;
-
+  email: string;
 }
-
-
 
 export interface Leave {
+  _id: string;
 
+  employee: Employee | string;
 
-    _id: string;
+  startDate: string;
 
+  endDate: string;
 
-    employee: Employee | string;
+  type: LeaveType;
 
+  reason: string;
 
-    startDate: string;
+  status: LeaveStatus;
 
+  approvedBy?: Employee | string | null;
 
-    endDate: string;
+  rejectionReason?: string | null;
 
+  createdAt: string;
 
-    type: LeaveType;
-
-
-    reason: string;
-
-
-    status: LeaveStatus;
-
-
-    approvedBy?: Employee | string | null;
-
-
-    rejectionReason?: string | null;
-
-
-    createdAt: string;
-
-
-    updatedAt: string;
-
+  updatedAt: string;
 }
-
-
-
-
 
 export interface ApplyLeaveRequest {
+  startDate: string;
 
+  endDate: string;
 
-    startDate: string;
+  type: LeaveType;
 
-
-    endDate: string;
-
-
-    type: LeaveType;
-
-
-    reason: string;
-
-
+  reason: string;
 }
-
-
-
-
 
 export interface UpdateLeaveRequest {
+  startDate?: string;
 
+  endDate?: string;
 
-    startDate?: string;
+  type?: LeaveType;
 
-
-    endDate?: string;
-
-
-    type?: LeaveType;
-
-
-    reason?: string;
-
-
+  reason?: string;
 }
-
-
-
-
 
 export interface RejectLeaveRequest {
+  id: string;
 
-
-    id: string;
-
-
-    rejectionReason: string;
-
+  rejectionReason: string;
 }
 
-
-
-
-
 export interface LeaveBalance {
+  casual: {
+    allocated: number;
 
+    used: number;
 
-    casual: {
+    remaining: number;
+  };
 
-        allocated: number;
+  sick: {
+    allocated: number;
 
-        used: number;
+    used: number;
 
-        remaining: number;
+    remaining: number;
+  };
 
-    };
+  earned: {
+    allocated: number;
 
+    used: number;
 
-    sick: {
+    remaining: number;
+  };
 
-        allocated: number;
+  unpaid?: {
+    allocated: number;
 
-        used: number;
+    used: number;
 
-        remaining: number;
-
-    };
-
-
-    earned: {
-
-        allocated: number;
-
-        used: number;
-
-        remaining: number;
-
-    };
-
-
-    unpaid?: {
-
-        allocated: number;
-
-        used: number;
-
-        remaining: number;
-
-    };
-
+    remaining: number;
+  };
 }

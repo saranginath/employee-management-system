@@ -1,17 +1,15 @@
 import { Router } from "express";
 
 import {
-    createPerformanceController,
-    deletePerformanceController,
-    getPerformanceByIdController,
-    getPerformanceController,
-    updatePerformanceController,
+  createPerformanceController,
+  deletePerformanceController,
+  getPerformanceByIdController,
+  getPerformanceController,
+  updatePerformanceController,
 } from "../controllers/performance.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/leave.constnt";
-
-
 
 const router = Router();
 
@@ -95,33 +93,29 @@ const router = Router();
 router.use(authenticate);
 
 router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createPerformanceController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createPerformanceController,
 );
 
 router.get(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getPerformanceController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  getPerformanceController,
 );
 
 router.get(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getPerformanceByIdController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  getPerformanceByIdController,
 );
 
 router.put(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    updatePerformanceController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updatePerformanceController,
 );
 
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deletePerformanceController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deletePerformanceController);
 
 export default router;

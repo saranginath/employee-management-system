@@ -1,180 +1,165 @@
 import {
-    FiGrid,
-    FiUsers,
-    FiLayers,
-    FiClock,
-    FiCalendar,
-    FiDollarSign,
-    FiBarChart2,
-    FiUserPlus,
-    FiTrendingUp,
-    FiShield,
-    FiFileText,
-    FiFolder,
-    FiSettings,
-    FiBriefcase,
-    FiUserCheck,
-    FiAward,
-    FiDatabase,
-    FiBell,
-    FiMessageSquare,
-    FiActivity,
-    FiMapPin
+  FiGrid,
+  FiUsers,
+  FiLayers,
+  FiClock,
+  FiCalendar,
+  FiDollarSign,
+  FiBarChart2,
+  FiUserPlus,
+  FiTrendingUp,
+  FiShield,
+  FiFileText,
+  FiFolder,
+  FiSettings,
+  FiBriefcase,
+  FiUserCheck,
+  FiAward,
+  FiDatabase,
+  FiBell,
+  FiMessageSquare,
+  FiActivity,
+  FiMapPin,
 } from "react-icons/fi";
 
-
 export const adminMenu = [
+  // Dashboard
+  {
+    name: "Dashboard",
+    path: "/dashboard",
+    icon: FiGrid,
+  },
 
-    // Dashboard
-    {
-        name: "Dashboard",
-        path: "/dashboard",
-        icon: FiGrid
-    },
+  // Employee Management
+  {
+    name: "Employees",
+    path: "/dashboard/employees",
+    icon: FiUsers,
+  },
 
+  {
+    name: "Employee Directory",
+    path: "/employee-directory",
+    icon: FiUserCheck,
+  },
 
-    // Employee Management
-    {
-        name: "Employees",
-        path: "/dashboard/employees",
-        icon: FiUsers
-    },
+  // Organization
+  {
+    name: "Departments",
+    path: "/dashboard/departments",
+    icon: FiLayers,
+  },
 
-    {
-        name: "Employee Directory",
-        path: "/employee-directory",
-        icon: FiUserCheck
-    },
+  {
+    name: "Designations",
+    path: "/dashboard/designations",
+    icon: FiBriefcase,
+  },
 
+  {
+    name: "Locations",
+    path: "/dashboard/locations",
+    icon: FiMapPin,
+  },
 
-    // Organization
-    {
-        name: "Departments",
-        path: "/dashboard/departments",
-        icon: FiLayers
-    },
+  // Attendance
+  {
+    name: "Attendance",
+    path: "/dashboard/attendance",
+    icon: FiClock,
+  },
 
-    {
-        name: "Designations",
-        path: "/dashboard/designations",
-        icon: FiBriefcase
-    },
+  {
+    name: "Shift Management",
+    path: "/dashboard/shifts",
+    icon: FiActivity,
+  },
 
-    {
-        name: "Locations",
-        path: "/dashboard/locations",
-        icon: FiMapPin
-    },
+  // Leave
+  {
+    name: "Leave Management",
+    path: "/dashboard/leaves",
+    icon: FiCalendar,
+  },
 
+  // Payroll
+  {
+    name: "Payroll",
+    path: "/dashboard/payroll",
+    icon: FiDollarSign,
+  },
 
-    // Attendance
-    {
-        name: "Attendance",
-        path: "/dashboard/attendance",
-        icon: FiClock
-    },
+  {
+    name: "Salary Structure",
+    path: "/dashboard/salary-structure",
+    icon: FiDatabase,
+  },
 
-    {
-        name: "Shift Management",
-        path: "/dashboard/shifts",
-        icon: FiActivity
-    },
+  // Recruitment
+  {
+    name: "Recruitment",
+    path: "/dashboard/recruitment",
+    icon: FiUserPlus,
+  },
 
+  // Performance
+  {
+    name: "Performance",
+    path: "/dashboard/performance",
+    icon: FiTrendingUp,
+  },
 
-    // Leave
-    {
-        name: "Leave Management",
-        path: "/dashboard/leaves",
-        icon: FiCalendar
-    },
+  {
+    name: "Training & Development",
+    path: "/dashboard/training",
+    icon: FiAward,
+  },
 
+  // Reports
+  {
+    name: "Reports",
+    path: "/dashboard/reports",
+    icon: FiBarChart2,
+  },
 
-    // Payroll
-    {
-        name: "Payroll",
-        path: "/dashboard/payroll",
-        icon: FiDollarSign
-    },
+  // Roles & Security
+  {
+    name: "Roles & Permissions",
+    path: "/dashboard/roles",
+    icon: FiShield,
+  },
 
-    {
-        name: "Salary Structure",
-        path: "/dashboard/salary-structure",
-        icon: FiDatabase
-    },
+  // Documents
+  {
+    name: "Documents",
+    path: "/dashboard/documents",
+    icon: FiFolder,
+  },
 
+  // Communication
+  {
+    name: "Announcements",
+    path: "/dashboard/announcements",
+    icon: FiBell,
+  },
 
-    // Recruitment
-    {
-        name: "Recruitment",
-        path: "/dashboard/recruitment",
-        icon: FiUserPlus
-    },
+  {
+    name: "Messages",
+    path: "/dashboard/messages",
+    icon: FiMessageSquare,
+  },
 
+  // Audit
+  {
+    name: "Audit Logs",
+    path: "/dashboard/audit-logs",
+    icon: FiFileText,
+  },
 
-    // Performance
-    {
-        name: "Performance",
-        path: "/dashboard/performance",
-        icon: FiTrendingUp
-    },
-
-    {
-        name: "Training & Development",
-        path: "/dashboard/training",
-        icon: FiAward
-    },
-
-
-    // Reports
-    {
-        name: "Reports",
-        path: "/dashboard/reports",
-        icon: FiBarChart2
-    },
-
-
-    // Roles & Security
-    {
-        name: "Roles & Permissions",
-        path: "/dashboard/roles",
-        icon: FiShield
-    },
-
-
-    // Documents
-    {
-        name: "Documents",
-        path: "/dashboard/documents",
-        icon: FiFolder
-    },
-
-
-    // Communication
-    {
-        name: "Announcements",
-        path: "/dashboard/announcements",
-        icon: FiBell
-    },
-
-    {
-        name: "Messages",
-        path: "/dashboard/messages",
-        icon: FiMessageSquare
-    },
-
-
-    // Audit
-    {
-        name: "Audit Logs",
-        path: "/dashboard/audit-logs",
-        icon: FiFileText
-    },
-
-
-    // System
-    {
-        name: "Settings",
-        path: "/dashboard/settings",
-        icon: FiSettings
-    }
+  // System
+  {
+    name: "Settings",
+    path: "/dashboard/settings",
+    icon: FiSettings,
+  },
 ];

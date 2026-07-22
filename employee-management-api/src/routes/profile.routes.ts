@@ -1,23 +1,15 @@
 import { Router } from "express";
 
 import {
-    getProfile,
-    updateProfile,
-    uploadProfilePicture,
-    changePassword
-}
-    from "../controllers/profile.controller";
+  getProfile,
+  updateProfile,
+  uploadProfilePicture,
+  changePassword,
+} from "../controllers/profile.controller";
 
-import {
-    authenticate
-}
-    from "../middleware/auth.middleware";
+import { authenticate } from "../middleware/auth.middleware";
 
-import {
-    uploadProfile
-}
-    from "../middleware/upload.middleware";
-
+import { uploadProfile } from "../middleware/upload.middleware";
 
 const router = Router();
 
@@ -103,35 +95,12 @@ const router = Router();
 
 router.use(authenticate);
 
+router.get("/", getProfile);
 
+router.patch("/", updateProfile);
 
-router.get(
-    "/",
-    getProfile
-);
+router.patch("/picture", uploadProfile.single("image"), uploadProfilePicture);
 
-
-
-router.patch(
-    "/",
-    updateProfile
-);
-
-
-
-router.patch(
-    "/picture",
-    uploadProfile.single("image"),
-    uploadProfilePicture
-);
-
-
-
-router.patch(
-    "/change-password",
-    changePassword
-);
-
-
+router.patch("/change-password", changePassword);
 
 export default router;

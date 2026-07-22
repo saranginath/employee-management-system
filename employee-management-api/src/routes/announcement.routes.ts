@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {
-    createAnnouncementController,
-    deleteAnnouncementController,
-    getAnnouncementByIdController,
-    getAnnouncementsController,
-    updateAnnouncementController,
+  createAnnouncementController,
+  deleteAnnouncementController,
+  getAnnouncementByIdController,
+  getAnnouncementsController,
+  updateAnnouncementController,
 } from "../controllers/announcement.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { ROLES } from "../constants/leave.constnt";
@@ -92,41 +92,29 @@ const router = Router();
 router.use(authenticate);
 
 router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createAnnouncementController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createAnnouncementController,
 );
 
 router.get(
-    "/",
-    authorize(
-        ROLES.ADMIN,
-        ROLES.MANAGER,
-        ROLES.EMPLOYEE
-    ),
-    getAnnouncementsController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getAnnouncementsController,
 );
 
 router.get(
-    "/:id",
-    authorize(
-        ROLES.ADMIN,
-        ROLES.MANAGER,
-        ROLES.EMPLOYEE
-    ),
-    getAnnouncementByIdController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getAnnouncementByIdController,
 );
 
 router.put(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    updateAnnouncementController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updateAnnouncementController,
 );
 
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteAnnouncementController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deleteAnnouncementController);
 
 export default router;

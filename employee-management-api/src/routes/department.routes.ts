@@ -1,16 +1,14 @@
 import { Router } from "express";
 
 import {
-    createDepartmentController,
-    getDepartmentsController,
-    getDepartmentByIdController,
-    updateDepartmentController,
-    deleteDepartmentController
-}
-    from "../controllers/department.controller";
+  createDepartmentController,
+  getDepartmentsController,
+  getDepartmentByIdController,
+  updateDepartmentController,
+  deleteDepartmentController,
+} from "../controllers/department.controller";
 
 import { authenticate } from "../middleware/auth.middleware";
-
 
 const router = Router();
 
@@ -100,43 +98,16 @@ const router = Router();
  *         description: Department deleted successfully
  */
 
-router.use(authenticate)
+router.use(authenticate);
 
+router.post("/", createDepartmentController);
 
+router.get("/", getDepartmentsController);
 
-router.post(
-    "/",
-    createDepartmentController
-);
+router.get("/:id", getDepartmentByIdController);
 
+router.patch("/:id", updateDepartmentController);
 
-
-router.get(
-    "/",
-    getDepartmentsController
-);
-
-
-
-router.get(
-    "/:id",
-    getDepartmentByIdController
-);
-
-
-
-router.patch(
-    "/:id",
-    updateDepartmentController
-);
-
-
-
-router.delete(
-    "/:id",
-    deleteDepartmentController
-);
-
-
+router.delete("/:id", deleteDepartmentController);
 
 export default router;

@@ -1,29 +1,22 @@
 import nodemailer from "nodemailer";
 
-
 export const createTransporter = (
-    smtpHost: string,
-    smtpPort: number,
-    username: string,
-    password: string,
-    secure: boolean
+  smtpHost: string,
+  smtpPort: number,
+  username: string,
+  password: string,
+  secure: boolean,
 ) => {
+  return nodemailer.createTransport({
+    host: smtpHost,
 
+    port: smtpPort,
 
-    return nodemailer.createTransport({
+    secure,
 
-        host: smtpHost,
-
-        port: smtpPort,
-
-        secure,
-
-        auth: {
-            user: username,
-            pass: password
-        }
-
-    });
-
-
+    auth: {
+      user: username,
+      pass: password,
+    },
+  });
 };

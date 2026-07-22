@@ -10,22 +10,18 @@ import { notFound } from "./middleware/notFound.middleware";
 import { errorHandler } from "./middleware/error.middleware";
 import path from "path";
 
-
-import { setupSwagger } from './swagger';
+import { setupSwagger } from "./swagger";
 import routes from "./routes";
-
 
 app.use(helmet());
 
 app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true
-    })
-)
-app.use(
-    compression()
-)
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+app.use(compression());
 
 app.use(morgan("dev"));
 
@@ -34,12 +30,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    "/uploads",
-    express.static(
-        path.join(__dirname, "../uploads")
-    )
-);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/api/v1", routes);
 

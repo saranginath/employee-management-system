@@ -1,98 +1,31 @@
-import {
-    useEffect
-}
-    from "react";
+import { useEffect } from "react";
 
-import {
-    useDispatch
-}
-    from "react-redux";
+import { useDispatch } from "react-redux";
 
-import {
-    useRefreshTokenMutation
-}
-    from "../../features/auth/authApi";
+import { useRefreshTokenMutation } from "../../features/auth/authApi";
 
-import {
-    setAccessToken
-}
-    from "../../features/auth/authSlice";
+import { setAccessToken } from "../../features/auth/authSlice";
 
+const AuthInitializer = ({ children }: { children: React.ReactNode }) => {
+  const dispatch = useDispatch();
 
+  const [refreshToken] = useRefreshTokenMutation();
 
-const AuthInitializer = ({
+  useEffect(() => {
+    const refresh = async () => {
+      try {
+        const result = await refreshToken().unwrap();
 
-    children
+        dispatch(setAccessToken(result.data.accessToken));
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-}: {
-    children: React.ReactNode
-}) => {
+    refresh();
+  }, []);
 
-
-    const dispatch = useDispatch();
-
-
-    const [
-        refreshToken
-    ] = useRefreshTokenMutation();
-
-
-
-    useEffect(() => {
-
-
-        const refresh = async () => {
-
-
-            try {
-
-
-                const result =
-                    await refreshToken()
-                        .unwrap();
-
-
-
-                dispatch(
-
-                    setAccessToken(
-
-                        result.data.accessToken
-
-                    )
-
-                );
-
-
-            }
-
-            catch (error) {
-
-
-                console.log(
-                    error
-                );
-
-
-            }
-
-
-        };
-
-
-
-        refresh();
-
-
-
-    }, []);
-
-
-
-    return children;
-
-
+  return children;
 };
-
 
 export default AuthInitializer;

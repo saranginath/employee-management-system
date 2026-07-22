@@ -1,54 +1,54 @@
 import { Document } from "mongoose";
 
 export interface IWorkingHours {
-    startTime: string;
-    endTime: string;
-    workingDays: string[];
-    weeklyOff: string[];
-    lateAfterMinutes: number;
+  startTime: string;
+  endTime: string;
+  workingDays: string[];
+  weeklyOff: string[];
+  lateAfterMinutes: number;
 }
 
 export interface ILeavePolicy {
-    casualLeave: number;
-    sickLeave: number;
-    earnedLeave: number;
-    carryForward: boolean;
-    maxCarryForward: number;
+  casualLeave: number;
+  sickLeave: number;
+  earnedLeave: number;
+  carryForward: boolean;
+  maxCarryForward: number;
 }
 
 export interface INotificationSettings {
-    email: boolean;
-    push: boolean;
+  email: boolean;
+  push: boolean;
 }
 
 export interface IEmailSettings {
-    smtpHost: string;
-    smtpPort: number;
-    secure: boolean;
-    username: string;
-    password: string;
-    senderName: string;
-    senderEmail: string;
+  smtpHost: string;
+  smtpPort: number;
+  secure: boolean;
+  username: string;
+  password: string;
+  senderName: string;
+  senderEmail: string;
 }
 
 export interface ISettings extends Document {
-    companyName: string;
-    companyLogo?: string;
-    companyEmail?: string;
-    companyPhone?: string;
-    address?: string;
+  companyName: string;
+  companyLogo?: string;
+  companyEmail?: string;
+  companyPhone?: string;
+  address?: string;
 
-    currency: string;
-    timezone: string;
+  currency: string;
+  timezone: string;
 
-    workingHours: IWorkingHours;
+  workingHours: IWorkingHours;
 
-    leavePolicy: ILeavePolicy;
+  leavePolicy: ILeavePolicy;
 
-    notifications: INotificationSettings;
+  notifications: INotificationSettings;
 
-    emailSettings: IEmailSettings;
+  emailSettings: IEmailSettings;
 
-    createdAt: Date;
-    updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

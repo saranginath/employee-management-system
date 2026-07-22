@@ -1,32 +1,21 @@
 const storage = {
+  getItem: (key: string) => {
+    const value = localStorage.getItem(key);
 
-    getItem: (key: string) => {
+    return Promise.resolve(value);
+  },
 
-        const value = localStorage.getItem(key);
+  setItem: (key: string, value: string) => {
+    localStorage.setItem(key, value);
 
-        return Promise.resolve(value);
+    return Promise.resolve();
+  },
 
-    },
+  removeItem: (key: string) => {
+    localStorage.removeItem(key);
 
-
-    setItem: (key: string, value: string) => {
-
-        localStorage.setItem(key, value);
-
-        return Promise.resolve();
-
-    },
-
-
-    removeItem: (key: string) => {
-
-        localStorage.removeItem(key);
-
-        return Promise.resolve();
-
-    }
-
+    return Promise.resolve();
+  },
 };
-
 
 export default storage;

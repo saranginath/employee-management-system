@@ -1,134 +1,93 @@
 import { useState } from "react";
 
+const CompanyForm = ({ data, onSave }: any) => {
+  const [form, setForm] = useState({
+    companyName: data?.companyName || "",
 
-const CompanyForm = ({
-    data,
-    onSave
-}: any) => {
+    companyEmail: data?.companyEmail || "",
 
+    companyPhone: data?.companyPhone || "",
 
-    const [form, setForm] = useState({
+    address: data?.address || "",
+  });
 
-        companyName: data?.companyName || "",
+  const submit = () => {
+    onSave(form);
+  };
 
-        companyEmail: data?.companyEmail || "",
+  return (
+    <div className="bg-white rounded-xl shadow p-5">
+      <h2 className="text-lg font-semibold mb-4">Company Information</h2>
 
-        companyPhone: data?.companyPhone || "",
+      <input
+        className="border p-2 w-full mb-3"
 
-        address: data?.address || ""
+        placeholder="Company Name"
 
-    });
+        value={form.companyName}
 
+        onChange={(e) =>
+          setForm({
+            ...form,
+            companyName: e.target.value,
+          })
+        }
+      />
 
+      <input
+        className="border p-2 w-full mb-3"
 
-    const submit = () => {
+        placeholder="Email"
 
-        onSave(form);
+        value={form.companyEmail}
 
-    };
+        onChange={(e) =>
+          setForm({
+            ...form,
+            companyEmail: e.target.value,
+          })
+        }
+      />
 
+      <input
+        className="border p-2 w-full mb-3"
 
+        placeholder="Phone"
 
-    return (
+        value={form.companyPhone}
 
-        <div className="bg-white rounded-xl shadow p-5">
+        onChange={(e) =>
+          setForm({
+            ...form,
+            companyPhone: e.target.value,
+          })
+        }
+      />
 
+      <textarea
+        className="border p-2 w-full"
 
-            <h2 className="text-lg font-semibold mb-4">
-                Company Information
-            </h2>
+        placeholder="Address"
 
+        value={form.address}
 
-            <input
+        onChange={(e) =>
+          setForm({
+            ...form,
+            address: e.target.value,
+          })
+        }
+      />
 
-                className="border p-2 w-full mb-3"
+      <button
+        onClick={submit}
 
-                placeholder="Company Name"
-
-                value={form.companyName}
-
-                onChange={
-                    e => setForm({
-                        ...form,
-                        companyName: e.target.value
-                    })
-                }
-
-            />
-
-
-            <input
-
-                className="border p-2 w-full mb-3"
-
-                placeholder="Email"
-
-                value={form.companyEmail}
-
-                onChange={
-                    e => setForm({
-                        ...form,
-                        companyEmail: e.target.value
-                    })
-                }
-
-            />
-
-
-            <input
-
-                className="border p-2 w-full mb-3"
-
-                placeholder="Phone"
-
-                value={form.companyPhone}
-
-                onChange={
-                    e => setForm({
-                        ...form,
-                        companyPhone: e.target.value
-                    })
-                }
-
-            />
-
-
-
-            <textarea
-
-                className="border p-2 w-full"
-
-                placeholder="Address"
-
-                value={form.address}
-
-                onChange={
-                    e => setForm({
-                        ...form,
-                        address: e.target.value
-                    })
-                }
-
-            />
-
-
-
-            <button
-
-                onClick={submit}
-
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-
-            >
-                Save Company
-            </button>
-
-
-        </div>
-
-    )
-
-}
-
+        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Save Company
+      </button>
+    </div>
+  );
+};
 
 export default CompanyForm;

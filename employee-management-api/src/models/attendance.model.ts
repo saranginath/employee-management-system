@@ -2,30 +2,33 @@ import mongoose, { Schema, Types } from "mongoose";
 import { STATUS } from "../constants/status.constant";
 import { IAttendance } from "../interfaces/attendance.interface";
 
-const attendanceSchema = new Schema<IAttendance>({
+const attendanceSchema = new Schema<IAttendance>(
+  {
     employee: {
-        type: Schema.Types.ObjectId,
-        ref: "Employee",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Employee",
+      required: true,
     },
     date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
     },
     checkIn: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
     },
     checkOut: {
-        type: Date
+      type: Date,
     },
     status: {
-        type: String,
-        enum: Object.values(STATUS),
-        default: STATUS.ABSENT
+      type: String,
+      enum: Object.values(STATUS),
+      default: STATUS.ABSENT,
     },
-    location: String
-}, {
-    timestamps: true
-})
-export default mongoose.model<IAttendance>('Attendance', attendanceSchema)
+    location: String,
+  },
+  {
+    timestamps: true,
+  },
+);
+export default mongoose.model<IAttendance>("Attendance", attendanceSchema);

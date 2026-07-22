@@ -1,18 +1,9 @@
 import { z } from "zod";
 
+export const createRoleSchema = z.object({
+  name: z.string(),
 
-export const createRoleSchema =
-    z.object({
+  description: z.string().optional(),
 
-        name: z.string(),
-
-        description: z.string()
-            .optional(),
-
-        permissions: z.array(
-            z.string()
-        )
-            .optional()
-
-
-    });
+  permissions: z.array(z.string()).optional(),
+});

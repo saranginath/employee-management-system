@@ -1,18 +1,17 @@
 import { z } from "zod";
 
 export const createShiftSchema = z.object({
-    name: z.string().min(2),
+  name: z.string().min(2),
 
-    startTime: z.string(),
+  startTime: z.string(),
 
-    endTime: z.string(),
+  endTime: z.string(),
 
-    workingHours: z.number().positive(),
+  workingHours: z.number().positive(),
 
-    graceTime: z.number().optional(),
+  graceTime: z.number().optional(),
 
-    isActive: z.boolean().optional(),
+  isActive: z.boolean().optional(),
 });
 
-export const updateShiftSchema =
-    createShiftSchema.partial();
+export const updateShiftSchema = createShiftSchema.partial();

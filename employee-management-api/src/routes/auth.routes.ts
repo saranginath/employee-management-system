@@ -1,5 +1,13 @@
 import { Router } from "express";
-import { changePassword, forgotPasswordController, login, logout, refreshToken, register, resetPasswordController } from "../controllers/auth.controller";
+import {
+  changePassword,
+  forgotPasswordController,
+  login,
+  logout,
+  refreshToken,
+  register,
+  resetPasswordController,
+} from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
@@ -35,7 +43,7 @@ const router = Router();
  *       200:
  *         description: User registered successfully
  */
-router.post('/register', register);
+router.post("/register", register);
 
 /**
  * @openapi
@@ -61,7 +69,7 @@ router.post('/register', register);
  *       200:
  *         description: Login successful
  */
-router.post('/login', login)
+router.post("/login", login);
 
 /**
  * @openapi
@@ -73,7 +81,7 @@ router.post('/login', login)
  *       200:
  *         description: Access token refreshed successfully
  */
-router.post('/refresh-token', refreshToken);
+router.post("/refresh-token", refreshToken);
 
 /**
  * @openapi
@@ -87,7 +95,7 @@ router.post('/refresh-token', refreshToken);
  *       200:
  *         description: Logout successful
  */
-router.post('/logout', authenticate, logout)
+router.post("/logout", authenticate, logout);
 
 /**
  * @openapi
@@ -114,7 +122,7 @@ router.post('/logout', authenticate, logout)
  *       200:
  *         description: Password changed successfully
  */
-router.patch('/change-password', authenticate, changePassword);
+router.patch("/change-password", authenticate, changePassword);
 
 /**
  * @openapi
@@ -137,10 +145,7 @@ router.patch('/change-password', authenticate, changePassword);
  *       200:
  *         description: Password reset request accepted
  */
-router.post(
-    "/forgot-password",
-    forgotPasswordController
-);
+router.post("/forgot-password", forgotPasswordController);
 
 /**
  * @openapi
@@ -169,6 +174,6 @@ router.post(
  *       200:
  *         description: Password reset successfully
  */
-router.post('/reset-password/:token', resetPasswordController)
+router.post("/reset-password/:token", resetPasswordController);
 
 export default router;

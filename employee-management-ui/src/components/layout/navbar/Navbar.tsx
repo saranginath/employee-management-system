@@ -1,10 +1,10 @@
 import {
-    FiBell,
-    FiChevronDown,
-    FiLock,
-    FiLogOut,
-    FiSearch,
-    FiUser,
+  FiBell,
+  FiChevronDown,
+  FiLock,
+  FiLogOut,
+  FiSearch,
+  FiUser,
 } from "react-icons/fi";
 
 import { useEffect, useRef, useState } from "react";
@@ -16,63 +16,57 @@ import { useLogoutMutation } from "../../../features/auth/authApi";
 import { useGetProfileQuery } from "../../../features/profile/profileApi";
 
 function Navbar() {
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const [logoutUser, { isLoading }] = useLogoutMutation();
-    const {
-        data: profileData,
-        refetch
-    } = useGetProfileQuery(undefined, {
-        refetchOnMountOrArgChange: true,
-    });
+  const [logoutUser, { isLoading }] = useLogoutMutation();
+  const { data: profileData, refetch } = useGetProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
-    const profile = profileData?.data;
+  const profile = profileData?.data;
 
-    const fullName =
-        `${profile?.firstName ?? ""} ${profile?.lastName ?? ""}`.trim();
+  const fullName =
+    `${profile?.firstName ?? ""} ${profile?.lastName ?? ""}`.trim();
 
-    const initials = `${profile?.firstName?.[0] ?? ""}${profile?.lastName?.[0] ?? ""
-        }`.toUpperCase();
+  const initials = `${profile?.firstName?.[0] ?? ""}${
+    profile?.lastName?.[0] ?? ""
+  }`.toUpperCase();
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
-                setOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () =>
-            document.removeEventListener(
-                "mousedown",
-                handleClickOutside
-            );
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            await logoutUser().unwrap();
-
-            dispatch(logout());
-
-            navigate("/login");
-        } catch (error) {
-            console.error(error);
-        }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
     };
 
-    return (
-        <header
-            className="
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+
+      dispatch(logout());
+
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <header
+      className="
                 fixed
                 top-0
                 left-0
@@ -85,31 +79,27 @@ function Navbar() {
                 backdrop-blur-md
                 shadow-sm
             "
-        >
-            <div className="mx-auto flex h-full items-center justify-between px-6">
-                {/* Left */}
+    >
+      <div className="mx-auto flex h-full items-center justify-between px-6">
+        {/* Left */}
 
-                <div className="flex w-64 items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow">
-                        EMS
-                    </div>
+        <div className="flex w-64 items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow">
+            EMS
+          </div>
 
-                    <div>
-                        <h1 className="text-lg font-bold text-slate-800">
-                            EMS
-                        </h1>
+          <div>
+            <h1 className="text-lg font-bold text-slate-800">EMS</h1>
 
-                        <p className="text-xs text-slate-500">
-                            Employee Management
-                        </p>
-                    </div>
-                </div>
+            <p className="text-xs text-slate-500">Employee Management</p>
+          </div>
+        </div>
 
-                {/* Search */}
+        {/* Search */}
 
-                <div className="hidden flex-1 justify-center px-10 lg:flex">
-                    <div
-                        className="
+        <div className="hidden flex-1 justify-center px-10 lg:flex">
+          <div
+            className="
                             flex
                             w-full
                             max-w-xl
@@ -126,38 +116,35 @@ function Navbar() {
                             focus-within:bg-white
                             focus-within:shadow-md
                         "
-                    >
-                        <FiSearch className="text-slate-400" />
+          >
+            <FiSearch className="text-slate-400" />
 
-                        <input
-                            type="text"
-                            placeholder="Search employees..."
-                            className="w-full bg-transparent text-sm outline-none"
-                        />
-                    </div>
-                </div>
+            <input
+              type="text"
+              placeholder="Search employees..."
+              className="w-full bg-transparent text-sm outline-none"
+            />
+          </div>
+        </div>
 
-                {/* Right */}
+        {/* Right */}
 
-                <div className="flex items-center gap-5">
-                    {/* Notification */}
+        <div className="flex items-center gap-5">
+          {/* Notification */}
 
-                    <button
-                        className="
+          <button
+            className="
                             relative
                             rounded-xl
                             p-2.5
                             transition
                             hover:bg-slate-100
                         "
-                    >
-                        <FiBell
-                            size={21}
-                            className="text-slate-600"
-                        />
+          >
+            <FiBell size={21} className="text-slate-600" />
 
-                        <span
-                            className="
+            <span
+              className="
                                 absolute
                                 -right-1
                                 -top-1
@@ -172,20 +159,17 @@ function Navbar() {
                                 font-semibold
                                 text-white
                             "
-                        >
-                            3
-                        </span>
-                    </button>
+            >
+              3
+            </span>
+          </button>
 
-                    {/* Profile */}
+          {/* Profile */}
 
-                    <div
-                        ref={dropdownRef}
-                        className="relative"
-                    >
-                        <button
-                            onClick={() => setOpen(!open)}
-                            className="
+          <div ref={dropdownRef} className="relative">
+            <button
+              onClick={() => setOpen(!open)}
+              className="
                                 flex
                                 items-center
                                 gap-3
@@ -195,9 +179,9 @@ function Navbar() {
                                 transition
                                 hover:bg-slate-100
                             "
-                        >
-                            <div
-                                className="
+            >
+              <div
+                className="
                                     flex
                                     h-11
                                     w-11
@@ -210,17 +194,17 @@ function Navbar() {
                                     ring-2
                                     ring-blue-100
                                 "
-                            >
-                                {initials || "U"}
-                            </div>
+              >
+                {initials || "U"}
+              </div>
 
-                            <div className="hidden text-left md:block">
-                                <p className="text-sm font-semibold text-slate-800">
-                                    {fullName || "User"}
-                                </p>
+              <div className="hidden text-left md:block">
+                <p className="text-sm font-semibold text-slate-800">
+                  {fullName || "User"}
+                </p>
 
-                                <span
-                                    className="
+                <span
+                  className="
                                         rounded-full
                                         bg-blue-100
                                         px-2
@@ -230,20 +214,19 @@ function Navbar() {
                                         capitalize
                                         text-blue-700
                                     "
-                                >
-                                    {profile?.role}
-                                </span>
-                            </div>
+                >
+                  {profile?.role}
+                </span>
+              </div>
 
-                            <FiChevronDown
-                                className={`transition-transform ${open ? "rotate-180" : ""
-                                    }`}
-                            />
-                        </button>
+              <FiChevronDown
+                className={`transition-transform ${open ? "rotate-180" : ""}`}
+              />
+            </button>
 
-                        {open && (
-                            <div
-                                className="
+            {open && (
+              <div
+                className="
                                     absolute
                                     right-0
                                     mt-3
@@ -255,12 +238,12 @@ function Navbar() {
                                     bg-white
                                     shadow-2xl
                                 "
-                            >
-                                {/* User */}
+              >
+                {/* User */}
 
-                                <div className="flex items-center gap-3 border-b p-5">
-                                    <div
-                                        className="
+                <div className="flex items-center gap-3 border-b p-5">
+                  <div
+                    className="
                                             flex
                                             h-12
                                             w-12
@@ -273,63 +256,57 @@ function Navbar() {
                                             font-semibold
                                             text-white
                                         "
-                                    >
-                                        {initials}
-                                    </div>
+                  >
+                    {initials}
+                  </div>
 
-                                    <div>
-                                        <h3 className="font-semibold">
-                                            {fullName}
-                                        </h3>
+                  <div>
+                    <h3 className="font-semibold">{fullName}</h3>
 
-                                        <p className="text-sm text-slate-500">
-                                            {profile?.email}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={() => {
-                                        setOpen(false);
-                                        navigate("/dashboard/profile");
-                                    }}
-                                    className="flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50"
-                                >
-                                    <FiUser />
-                                    My Profile
-                                </button>
-
-                                <button
-                                    onClick={() => {
-                                        setOpen(false);
-                                        navigate("/dashboard/profile/change-password");
-                                    }}
-                                    className="flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50"
-                                >
-                                    <FiLock />
-                                    Change Password
-                                </button>
-
-                                <div className="border-t" />
-
-                                <button
-                                    disabled={isLoading}
-                                    onClick={handleLogout}
-                                    className="flex w-full items-center gap-3 px-5 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50"
-                                >
-                                    <FiLogOut />
-
-                                    {isLoading
-                                        ? "Logging out..."
-                                        : "Logout"}
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                    <p className="text-sm text-slate-500">{profile?.email}</p>
+                  </div>
                 </div>
-            </div>
-        </header>
-    );
+
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/dashboard/profile");
+                  }}
+                  className="flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50"
+                >
+                  <FiUser />
+                  My Profile
+                </button>
+
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/dashboard/profile/change-password");
+                  }}
+                  className="flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50"
+                >
+                  <FiLock />
+                  Change Password
+                </button>
+
+                <div className="border-t" />
+
+                <button
+                  disabled={isLoading}
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 px-5 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                >
+                  <FiLogOut />
+
+                  {isLoading ? "Logging out..." : "Logout"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 }
 
 export default Navbar;

@@ -1,16 +1,14 @@
 import { Router } from "express";
 import {
-    createRecruitmentController,
-    deleteRecruitmentController,
-    getRecruitmentByIdController,
-    getRecruitmentController,
-    updateRecruitmentController,
+  createRecruitmentController,
+  deleteRecruitmentController,
+  getRecruitmentByIdController,
+  getRecruitmentController,
+  updateRecruitmentController,
 } from "../controllers/recruitment.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/leave.constnt";
-
-
 
 /**
  * @openapi
@@ -94,33 +92,29 @@ const router = Router();
 router.use(authenticate);
 
 router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createRecruitmentController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createRecruitmentController,
 );
 
 router.get(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
-    getRecruitmentController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getRecruitmentController,
 );
 
 router.get(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
-    getRecruitmentByIdController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getRecruitmentByIdController,
 );
 
 router.put(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    updateRecruitmentController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updateRecruitmentController,
 );
 
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteRecruitmentController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deleteRecruitmentController);
 
 export default router;

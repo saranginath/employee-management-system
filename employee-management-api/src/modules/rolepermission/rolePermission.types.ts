@@ -1,11 +1,9 @@
 export interface IPermission {
+  name: string;
 
-    name: string;
+  module: string;
 
-    module: string;
+  actions: string[];
 
-    actions: string[];
-
-    description?: string;
-
+  description?: string;
 }

@@ -1,17 +1,15 @@
 import { Router } from "express";
 
 import {
-    createDocumentController,
-    deleteDocumentController,
-    getDocumentByIdController,
-    getDocumentsController,
-    updateDocumentController,
+  createDocumentController,
+  deleteDocumentController,
+  getDocumentByIdController,
+  getDocumentsController,
+  updateDocumentController,
 } from "../controllers/document.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/leave.constnt";
-
-
 
 /**
  * @openapi
@@ -95,33 +93,25 @@ const router = Router();
 router.use(authenticate);
 
 router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createDocumentController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createDocumentController,
 );
 
-router.get(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getDocumentsController
-);
+router.get("/", authorize(ROLES.ADMIN, ROLES.MANAGER), getDocumentsController);
 
 router.get(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getDocumentByIdController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  getDocumentByIdController,
 );
 
 router.put(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    updateDocumentController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updateDocumentController,
 );
 
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteDocumentController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deleteDocumentController);
 
 export default router;

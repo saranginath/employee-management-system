@@ -1,172 +1,98 @@
 import { useState } from "react";
-import {
-    useCreateLeaveMutation
-} from "../../features/leave/leaveApi";
-
+import { useCreateLeaveMutation } from "../../features/leave/leaveApi";
 
 const ApplyLeave = () => {
+  const [createLeave] = useCreateLeaveMutation();
 
+  const [form, setForm] = useState({
+    type: "sick",
 
-    const [createLeave] = useCreateLeaveMutation();
+    startDate: "",
 
+    endDate: "",
 
-    const [form, setForm] = useState({
+    reason: "",
+  });
 
-        type: "sick",
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        startDate: "",
+    await createLeave(form);
 
-        endDate: "",
+    alert("Leave Applied");
+  };
 
-        reason: ""
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Apply Leave</h1>
 
-    });
+      <form onSubmit={submit} className="space-y-4 mt-5">
+        <select
+          className="border p-2 w-full"
 
+          value={form.type}
 
+          onChange={(e) =>
+            setForm({
+              ...form,
+              type: e.target.value as any,
+            })
+          }
+        >
+          <option value="sick">Sick Leave</option>
 
-    const submit = async (e: React.FormEvent) => {
+          <option value="casual">Casual Leave</option>
 
-        e.preventDefault();
+          <option value="earned">Earned Leave</option>
 
-        await createLeave(form);
+          <option value="unpaid">Unpaid Leave</option>
+        </select>
 
-        alert("Leave Applied");
+        <input
+          type="date"
 
+          className="border p-2 w-full"
 
-    };
+          onChange={(e) =>
+            setForm({
+              ...form,
+              startDate: e.target.value,
+            })
+          }
+        />
 
+        <input
+          type="date"
 
+          className="border p-2 w-full"
 
-    return (
+          onChange={(e) =>
+            setForm({
+              ...form,
+              endDate: e.target.value,
+            })
+          }
+        />
 
-        <div className="p-6">
+        <textarea
+          placeholder="Reason"
 
+          className="border p-2 w-full"
 
-            <h1 className="text-2xl font-bold">
-                Apply Leave
-            </h1>
+          onChange={(e) =>
+            setForm({
+              ...form,
+              reason: e.target.value,
+            })
+          }
+        />
 
-
-
-            <form
-                onSubmit={submit}
-                className="space-y-4 mt-5"
-            >
-
-
-                <select
-
-                    className="border p-2 w-full"
-
-                    value={form.type}
-
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            type: e.target.value as any
-                        })
-                    }
-
-                >
-
-                    <option value="sick">
-                        Sick Leave
-                    </option>
-
-
-                    <option value="casual">
-                        Casual Leave
-                    </option>
-
-
-                    <option value="earned">
-                        Earned Leave
-                    </option>
-
-
-                    <option value="unpaid">
-                        Unpaid Leave
-                    </option>
-
-
-                </select>
-
-
-
-
-                <input
-
-                    type="date"
-
-                    className="border p-2 w-full"
-
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            startDate: e.target.value
-                        })
-                    }
-
-                />
-
-
-
-
-                <input
-
-                    type="date"
-
-                    className="border p-2 w-full"
-
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            endDate: e.target.value
-                        })
-                    }
-
-                />
-
-
-
-
-                <textarea
-
-                    placeholder="Reason"
-
-                    className="border p-2 w-full"
-
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            reason: e.target.value
-                        })
-                    }
-
-                />
-
-
-
-                <button
-
-                    className="bg-blue-600 text-white px-5 py-2 rounded"
-
-                >
-
-                    Apply Leave
-
-                </button>
-
-
-
-            </form>
-
-
-        </div>
-
-    )
-
-}
-
+        <button className="bg-blue-600 text-white px-5 py-2 rounded">
+          Apply Leave
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default ApplyLeave;

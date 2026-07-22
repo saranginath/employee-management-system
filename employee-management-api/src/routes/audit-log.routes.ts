@@ -1,23 +1,14 @@
 import { Router } from "express";
 
-
 import {
-
-    getAuditLogsController,
-    getAuditLogByIdController,
-    getUserAuditLogsController,
-    deleteAuditLogController
-
-}
-    from "../controllers/auditLog.controller";
+  getAuditLogsController,
+  getAuditLogByIdController,
+  getUserAuditLogsController,
+  deleteAuditLogController,
+} from "../controllers/auditLog.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/leave.constnt";
-
-
-
-
-
 
 const router = Router();
 
@@ -80,50 +71,16 @@ const router = Router();
 
 router.use(authenticate);
 
-
-
 /*
 Admin & HR can view audit history
 */
 
-router.get(
-    "/",
-    authorize(
-        ROLES.ADMIN
-    ),
-    getAuditLogsController
-);
+router.get("/", authorize(ROLES.ADMIN), getAuditLogsController);
 
+router.get("/:id", authorize(ROLES.ADMIN), getAuditLogByIdController);
 
+router.get("/user/:userId", authorize(ROLES.ADMIN), getUserAuditLogsController);
 
-router.get(
-    "/:id",
-    authorize(
-        ROLES.ADMIN
-    ),
-    getAuditLogByIdController
-);
-
-
-
-router.get(
-    "/user/:userId",
-    authorize(
-        ROLES.ADMIN
-    ),
-    getUserAuditLogsController
-);
-
-
-
-router.delete(
-    "/:id",
-    authorize(
-        ROLES.ADMIN
-    ),
-    deleteAuditLogController
-);
-
-
+router.delete("/:id", authorize(ROLES.ADMIN), deleteAuditLogController);
 
 export default router;

@@ -7,18 +7,18 @@ import { employeeMenu } from "./EmployeeMenu";
 import type { RootState } from "../../../api/store";
 
 export default function Sidebar() {
-    const user = useSelector((state: RootState) => state.auth.user);
-    console.log(user)
-    const menu =
-        user?.role === "admin"
-            ? adminMenu
-            : user?.role === "manager"
-                ? managerMenu
-                : employeeMenu;
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log(user);
+  const menu =
+    user?.role === "admin"
+      ? adminMenu
+      : user?.role === "manager"
+        ? managerMenu
+        : employeeMenu;
 
-    return (
-        <aside
-            className="
+  return (
+    <aside
+      className="
                 fixed
                 top-16
                 left-0
@@ -32,12 +32,12 @@ export default function Sidebar() {
                 flex
                 flex-col
             "
-        >
-            {/* Logo */}
-            <div className="border-b border-slate-200 px-6 py-6">
-                <div className="flex items-center gap-4">
-                    <div
-                        className="
+    >
+      {/* Logo */}
+      <div className="border-b border-slate-200 px-6 py-6">
+        <div className="flex items-center gap-4">
+          <div
+            className="
                             flex
                             h-12
                             w-12
@@ -47,38 +47,36 @@ export default function Sidebar() {
                             bg-blue-700
                             shadow-lg
                         "
-                    >
-                        <FiGrid size={22} />
-                    </div>
+          >
+            <FiGrid size={22} />
+          </div>
 
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-800">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800"></h2>
 
-                        </h2>
+            <p className="text-2xl text-slate-500 capitalize ">
+              {user?.firstName} {user?.lastName}
+            </p>
+          </div>
+        </div>
+      </div>
 
-                        <p className="text-2xl text-slate-500 capitalize ">
-                            {user?.firstName} {user?.lastName}
-                        </p>
-                    </div>
-                </div>
-            </div>
+      {/* Menu */}
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+          Navigation
+        </p>
 
-            {/* Menu */}
-            <div className="flex-1 overflow-y-auto px-4 py-6">
-                <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Navigation
-                </p>
+        <nav className="space-y-2">
+          {menu.map((item) => {
+            const Icon = item.icon;
 
-                <nav className="space-y-2">
-                    {menu.map((item) => {
-                        const Icon = item.icon;
-
-                        return (
-                            <NavLink
-                                key={item.path}
-                                to={item.path}
-                                className={({ isActive }) =>
-                                    `
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `
                                     group
                                     relative
                                     flex
@@ -91,26 +89,25 @@ export default function Sidebar() {
                                     transition-all
                                     duration-300
 
-                                    ${isActive
+                                    ${
+                                      isActive
                                         ? "bg-blue-600 text-white shadow-lg scale-[1.02]"
                                         : "text-slate-600 hover:bg-white hover:text-indigo-600 hover:shadow-md hover:translate-x-1"
                                     }
                     `
-                                }
-                            >
-                                <Icon
-                                    size={21}
-                                    className="transition-transform duration-300 group-hover:scale-110"
-                                />
+                }
+              >
+                <Icon
+                  size={21}
+                  className="transition-transform duration-300 group-hover:scale-110"
+                />
 
-                                <span>{item.name}</span>
-                            </NavLink>
-                        );
-                    })}
-                </nav>
-            </div>
-
-
-        </aside >
-    );
+                <span>{item.name}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
+    </aside>
+  );
 }

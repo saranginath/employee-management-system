@@ -2,14 +2,11 @@ import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { router } from "./router";
-import {
-  useRefreshTokenMutation
-} from "./features/auth/authApi";
+import { useRefreshTokenMutation } from "./features/auth/authApi";
 
 import { setAccessToken, setInitialized } from "./features/auth/authSlice";
 
 import type { RootState } from "./app/store";
-
 
 function App() {
   const dispatch = useDispatch();
@@ -25,28 +22,16 @@ function App() {
       } catch (error) {
         console.log("Refresh failed", error);
       } finally {
-        dispatch(
-          setInitialized()
-        );
+        dispatch(setInitialized());
       }
     };
     checkAuth();
   }, [dispatch, refreshToken]);
 
   if (!isInitialized) {
-
-    return (
-      <div>
-        Loading...
-      </div>
-    );
-
+    return <div>Loading...</div>;
   }
-  return (
-    <RouterProvider router={router} />
-  );
-
+  return <RouterProvider router={router} />;
 }
-
 
 export default App;

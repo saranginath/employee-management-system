@@ -1,15 +1,14 @@
 import { Router } from "express";
 import {
-    createPayrollController,
-    deletePayrollController,
-    getPayrollByIdController,
-    getPayrollController,
-    updatePayrollController,
+  createPayrollController,
+  deletePayrollController,
+  getPayrollByIdController,
+  getPayrollController,
+  updatePayrollController,
 } from "../controllers/payroll.controller";
 import { authorize } from "../middleware/authorize.middleare";
 import { authenticate } from "../middleware/auth.middleware";
 import { ROLES } from "../constants/leave.constnt";
-
 
 const router = Router();
 
@@ -90,38 +89,24 @@ const router = Router();
  *         description: Payroll deleted successfully
  */
 
-
-
 router.use(authenticate);
 
 router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createPayrollController
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  createPayrollController,
 );
+
+router.get("/", authorize(ROLES.ADMIN, ROLES.MANAGER), getPayrollController);
 
 router.get(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getPayrollController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  getPayrollByIdController,
 );
 
-router.get(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    getPayrollByIdController
-);
+router.put("/:id", authorize(ROLES.ADMIN), updatePayrollController);
 
-router.put(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    updatePayrollController
-);
-
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deletePayrollController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deletePayrollController);
 
 export default router;

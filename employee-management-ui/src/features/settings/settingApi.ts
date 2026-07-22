@@ -1,100 +1,59 @@
 import { baseApi } from "../../api/baseApi";
 
+export const settingsApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getSettings: builder.query({
+      query: () => ({
+        url: "/settings",
 
-export const settingsApi =
-    baseApi.injectEndpoints({
+        method: "GET",
+      }),
 
-        endpoints: (builder) => ({
+      providesTags: ["Settings"],
+    }),
 
-            getSettings:
+    createSettings: builder.mutation({
+      query: (data) => ({
+        url: "/settings",
 
-                builder.query({
+        method: "POST",
 
-                    query: () => ({
+        body: data,
+      }),
 
-                        url: "/settings",
+      invalidatesTags: ["Settings"],
+    }),
 
-                        method: "GET"
+    updateSettings: builder.mutation({
+      query: (data) => ({
+        url: "/settings",
 
-                    }),
+        method: "PATCH",
 
-                    providesTags: ["Settings"]
+        body: data,
+      }),
 
-                }),
+      invalidatesTags: ["Settings"],
+    }),
 
+    testEmail: builder.mutation({
+      query: (data) => ({
+        url: "/settings/email/test",
 
+        method: "POST",
 
-            createSettings:
-
-                builder.mutation({
-
-                    query: (data) => ({
-
-                        url: "/settings",
-
-                        method: "POST",
-
-                        body: data
-
-                    }),
-
-                    invalidatesTags: ["Settings"]
-
-                }),
-
-
-
-            updateSettings:
-
-                builder.mutation({
-
-                    query: (data) => ({
-
-                        url: "/settings",
-
-                        method: "PATCH",
-
-                        body: data
-
-                    }),
-
-                    invalidatesTags: ["Settings"]
-
-                }),
-
-
-
-            testEmail:
-
-                builder.mutation({
-
-                    query: (data) => ({
-
-                        url: "/settings/email/test",
-
-                        method: "POST",
-
-                        body: data
-
-                    })
-
-                })
-
-
-        })
-
-    });
-
+        body: data,
+      }),
+    }),
+  }),
+});
 
 export const {
+  useGetSettingsQuery,
 
-    useGetSettingsQuery,
+  useCreateSettingsMutation,
 
-    useCreateSettingsMutation,
+  useUpdateSettingsMutation,
 
-    useUpdateSettingsMutation,
-
-    useTestEmailMutation
-
-
+  useTestEmailMutation,
 } = settingsApi;

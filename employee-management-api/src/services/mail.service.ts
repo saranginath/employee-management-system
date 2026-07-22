@@ -1,61 +1,45 @@
 import { createTransporter } from "../config/mail";
 
-
 interface SendMailProps {
+  smtpHost: string;
 
-    smtpHost: string;
+  smtpPort: number;
 
-    smtpPort: number;
+  secure: boolean;
 
-    secure: boolean;
+  username: string;
 
-    username: string;
+  password: string;
 
-    password: string;
+  senderEmail: string;
 
-    senderEmail: string;
+  senderName: string;
 
-    senderName: string;
-
-    receiverEmail: string;
-
+  receiverEmail: string;
 }
 
+export const sendTestEmail = async (data: SendMailProps) => {
+  const transporter = createTransporter(
+    data.smtpHost,
+    data.smtpPort,
+    data.username,
+    data.password,
+    data.secure,
+  );
 
+  await transporter.sendMail({
+    from: `${data.senderName} <${data.senderEmail}>`,
 
-export const sendTestEmail = async (
-    data: SendMailProps
-) => {
+    to: data.receiverEmail,
 
+    subject: "EMS Email Configuration Test",
 
-    const transporter =
-        createTransporter(
-            data.smtpHost,
-            data.smtpPort,
-            data.username,
-            data.password,
-            data.secure
-        );
-
-
-
-    await transporter.sendMail({
-
-        from: `${data.senderName} <${data.senderEmail}>`,
-
-        to: data.receiverEmail,
-
-        subject: "EMS Email Configuration Test",
-
-        html: `
+    html: `
             <h2>Email Configuration Successful</h2>
 
             <p>
             Your EMS email settings are working correctly.
             </p>
-        `
-
-    });
-
-
+        `,
+  });
 };

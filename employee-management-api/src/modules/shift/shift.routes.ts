@@ -1,17 +1,15 @@
 import { Router } from "express";
 
 import {
-    createShiftController,
-    deleteShiftController,
-    getShiftByIdController,
-    getShiftsController,
-    updateShiftController,
+  createShiftController,
+  deleteShiftController,
+  getShiftByIdController,
+  getShiftsController,
+  updateShiftController,
 } from "./shift.controller";
 import { authenticate } from "../../middleware/auth.middleware";
 import { ROLES } from "../../constants/leave.constnt";
 import { authorize } from "../../middleware/authorize.middleare";
-
-
 
 /**
  * @openapi
@@ -94,42 +92,26 @@ const router = Router();
 
 router.use(authenticate);
 
-router.post(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    createShiftController
+router.post("/", authorize(ROLES.ADMIN, ROLES.MANAGER), createShiftController);
+
+router.get(
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getShiftsController,
 );
 
 router.get(
-    "/",
-    authorize(
-        ROLES.ADMIN,
-        ROLES.MANAGER,
-        ROLES.EMPLOYEE
-    ),
-    getShiftsController
-);
-
-router.get(
-    "/:id",
-    authorize(
-        ROLES.ADMIN,
-        ROLES.MANAGER,
-        ROLES.EMPLOYEE
-    ),
-    getShiftByIdController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getShiftByIdController,
 );
 
 router.put(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER),
-    updateShiftController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  updateShiftController,
 );
 
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteShiftController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deleteShiftController);
 
 export default router;

@@ -1,131 +1,56 @@
 import {
+  getEmployeeByUserId,
+  getTodayAttendance,
+  getAttendanceSummary,
+  getLeaveSummary,
+  getRecentLeaves,
+} from "../repositories/employeeDashboard.repository";
 
-    getEmployeeByUserId,
-    getTodayAttendance,
-    getAttendanceSummary,
-    getLeaveSummary,
-    getRecentLeaves
+export const getEmployeeDashboardService = async (userId: string) => {
+  const employee = await getEmployeeByUserId(userId);
 
-}
-    from "../repositories/employeeDashboard.repository";
+  if (!employee) {
+    throw new Error("Employee profile not found");
+  }
 
+  const today = new Date();
 
+  today.setHours(0, 0, 0, 0);
 
+  const todayAttendance = await getTodayAttendance(
+    employee._id.toString(),
+    today,
+  );
 
-export const getEmployeeDashboardService =
-    async (
-        userId: string
-    ) => {
+  const attendance = await getAttendanceSummary(employee._id.toString());
 
+  const leaves = await getLeaveSummary(employee._id.toString());
 
-        const employee =
-            await getEmployeeByUserId(userId);
+  const recentLeaves = await getRecentLeaves(employee._id.toString());
 
+  return {
+    profile: {
+      name: `${employee.firstName} ${employee.lastName}`,
 
+      email: employee.email,
 
-        if (!employee) {
-            throw new Error(
-                "Employee profile not found"
-            );
-        }
+      designation: employee.designation,
 
+      department: employee.department,
+    },
 
+    attendance: {
+      percentage: attendance.percentage,
 
-        const today = new Date();
+      today: todayAttendance,
+    },
 
+    leaves: {
+      pending: leaves.pending,
 
-        today.setHours(
-            0,
-            0,
-            0,
-            0
-        );
+      approved: leaves.approved,
+    },
 
-
-
-        const todayAttendance =
-            await getTodayAttendance(
-                employee._id.toString(),
-                today
-            );
-
-
-
-        const attendance =
-            await getAttendanceSummary(
-                employee._id.toString()
-            );
-
-
-
-        const leaves =
-            await getLeaveSummary(
-                employee._id.toString()
-            );
-
-
-
-        const recentLeaves =
-            await getRecentLeaves(
-                employee._id.toString()
-            );
-
-
-
-
-        return {
-
-
-            profile: {
-
-                name:
-                    `${employee.firstName} ${employee.lastName}`,
-
-                email:
-                    employee.email,
-
-                designation:
-                    employee.designation,
-
-                department:
-                    employee.department
-
-            },
-
-
-
-            attendance: {
-
-
-                percentage:
-                    attendance.percentage,
-
-
-                today:
-                    todayAttendance
-
-            },
-
-
-
-            leaves: {
-
-
-                pending:
-                    leaves.pending,
-
-
-                approved:
-                    leaves.approved
-
-            },
-
-
-
-            recentLeaves
-
-
-        };
-
-
-    };
+    recentLeaves,
+  };
+};

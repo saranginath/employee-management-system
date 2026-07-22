@@ -1,54 +1,73 @@
 import { asyncHandler } from "../../middleware/asyncHandler";
 import { Request, Response, NextFunction } from "express";
-import { createEmployeeService, deleteEmployeeService, getEmployeeByIdService, getEmployeeService, updateEmployeeService } from "./employee.service";
+import {
+  createEmployeeService,
+  deleteEmployeeService,
+  getEmployeeByIdService,
+  getEmployeeService,
+  updateEmployeeService,
+} from "./employee.service";
 import { updateEmployeeSchema } from "./employee.validator";
 import { Types } from "mongoose";
 import { IEmployee } from "./employee.types";
 
-export const createEmployeeController = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const createEmployeeController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     const employee = await createEmployeeService(req.body);
     res.status(201).json({
-        succes: true,
-        message: "Employee created successfully",
-        data: employee
-    })
+      succes: true,
+      message: "Employee created successfully",
+      data: employee,
+    });
+  },
+);
 
-});
-
-export const getEmployeeController = asyncHandler(async (req: Request, res: Response) => {
+export const getEmployeeController = asyncHandler(
+  async (req: Request, res: Response) => {
     const employee = await getEmployeeService();
     res.json({
-        success: true,
-        data: employee
-    })
-})
+      success: true,
+      data: employee,
+    });
+  },
+);
 
-export const getEmployeeByIdController = asyncHandler(async (req: Request, res: Response) => {
+export const getEmployeeByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
     const employee = await getEmployeeByIdService(req.params.id as string);
     res.json({
-        success: true,
-        data: employee
-    })
-})
+      success: true,
+      data: employee,
+    });
+  },
+);
 
-export const updateEmployeeController = asyncHandler(async (req: Request, res: Response) => {
-
+export const updateEmployeeController = asyncHandler(
+  async (req: Request, res: Response) => {
     const data = updateEmployeeSchema.parse(req.body);
     const employeeData: Partial<IEmployee> = {
-        ...data,
-        department: data.department ? new Types.ObjectId(data.department) : undefined
-    }
-    const employee = await updateEmployeeService(req.params.id as string, employeeData);
+      ...data,
+      department: data.department
+        ? new Types.ObjectId(data.department)
+        : undefined,
+    };
+    const employee = await updateEmployeeService(
+      req.params.id as string,
+      employeeData,
+    );
     res.json({
-        success: true,
-        message: "Employee updated successfully",
-        data: employee
-    })
-})
-export const deleteEmployeeController = asyncHandler(async (req: Request, res: Response) => {
+      success: true,
+      message: "Employee updated successfully",
+      data: employee,
+    });
+  },
+);
+export const deleteEmployeeController = asyncHandler(
+  async (req: Request, res: Response) => {
     await deleteEmployeeService(req.params.id as string);
     res.json({
-        success: true,
-        message: "Employee deleted successfully"
-    })
-})
+      success: true,
+      message: "Employee deleted successfully",
+    });
+  },
+);

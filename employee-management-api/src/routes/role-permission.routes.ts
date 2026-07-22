@@ -1,13 +1,12 @@
 import { Router } from "express";
 
 import {
-    createRolePermissionController,
-    getRolesController,
-    getRoleByIdController,
-    updateRolePermissionController,
-    deleteRolePermissionController
-}
-    from "../controllers/rolePermission.controller";
+  createRolePermissionController,
+  getRolesController,
+  getRoleByIdController,
+  updateRolePermissionController,
+  deleteRolePermissionController,
+} from "../controllers/rolePermission.controller";
 
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
@@ -104,40 +103,14 @@ const router = Router();
 
 router.use(authenticate);
 
-router.post(
-    "/",
-    authorize(ROLES.ADMIN),
-    createRolePermissionController
-);
+router.post("/", authorize(ROLES.ADMIN), createRolePermissionController);
 
-router.get(
-    "/",
-    authorize(
-        ROLES.ADMIN,
-        ROLES.MANAGER
-    ),
-    getRolesController
-);
+router.get("/", authorize(ROLES.ADMIN, ROLES.MANAGER), getRolesController);
 
+router.get("/:id", authorize(ROLES.ADMIN), getRoleByIdController);
 
+router.patch("/:id", authorize(ROLES.ADMIN), updateRolePermissionController);
 
-router.get(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    getRoleByIdController
-);
-
-
-
-router.patch("/:id", authorize(ROLES.ADMIN), updateRolePermissionController
-);
-
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteRolePermissionController
-);
-
-
+router.delete("/:id", authorize(ROLES.ADMIN), deleteRolePermissionController);
 
 export default router;

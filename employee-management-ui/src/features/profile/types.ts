@@ -1,21 +1,19 @@
 export interface UserProfile {
+  _id: string;
 
-    _id: string;
+  firstName: string;
 
-    firstName: string;
+  lastName: string;
 
-    lastName: string;
+  email: string;
 
-    email: string;
+  role: string;
 
-    role: string;
+  phone?: string;
 
-    phone?: string;
+  address?: string;
 
-    address?: string;
+  profilePicture?: string;
 
-    profilePicture?: string;
-
-    createdAt: string;
-
+  createdAt: string;
 }

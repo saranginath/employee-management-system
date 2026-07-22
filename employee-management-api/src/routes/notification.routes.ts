@@ -1,11 +1,11 @@
 import { Router } from "express";
 import {
-    createNotificationController,
-    deleteNotificationController,
-    getNotificationByIdController,
-    getNotificationsController,
-    markNotificationReadController,
-    updateNotificationController,
+  createNotificationController,
+  deleteNotificationController,
+  getNotificationByIdController,
+  getNotificationsController,
+  markNotificationReadController,
+  updateNotificationController,
 } from "../controllers/notification.controller";
 import { authenticate } from "../middleware/auth.middleware";
 

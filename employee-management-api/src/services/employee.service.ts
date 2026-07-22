@@ -1,170 +1,141 @@
 import { CreateEmployeeDTO, IEmployee } from "../interfaces/employee.interface";
 
-import { createEmployee, deleteEmployee, getEmployeeById, getEmployeeByPhone, getEmployees, updateEmployee } from "../repositories/employee.repository";
+import {
+  createEmployee,
+  deleteEmployee,
+  getEmployeeById,
+  getEmployeeByPhone,
+  getEmployees,
+  updateEmployee,
+} from "../repositories/employee.repository";
 import { AppError } from "../utils/AppError";
-import { getDepartmentById, updateDepartment } from "../repositories/department.repository";
+import {
+  getDepartmentById,
+  updateDepartment,
+} from "../repositories/department.repository";
 import { createUser, findUserByEmail } from "../repositories/user.respository";
 import { hashedpassword } from "../utils/password";
 import { ROLES } from "../constants/role.constant";
 
+export const createEmployeeService = async (data: CreateEmployeeDTO) => {
+  // Check department
+  const department = await getDepartmentById(data.department.toString());
 
-export const createEmployeeService = async (
-    data: CreateEmployeeDTO
-) => {
+  if (!department) {
+    throw new AppError("Department not found", 404);
+  }
 
-    // Check department
-    const department = await getDepartmentById(
-        data.department.toString()
-    );
+  // Check duplicate email in User
+  const emailExists = await findUserByEmail(data.email);
 
-    if (!department) {
-        throw new AppError(
-            "Department not found",
-            404
-        );
-    }
+  if (emailExists) {
+    throw new AppError("Email already exists", 409);
+  }
 
+  // Check duplicate phone in Employee
+  const phoneExists = await getEmployeeByPhone(data.phone);
 
-    // Check duplicate email in User
-    const emailExists = await findUserByEmail(data.email);
+  if (phoneExists) {
+    throw new AppError("Phone number already exists", 409);
+  }
 
-    if (emailExists) {
-        throw new AppError(
-            "Email already exists",
-            409
-        );
-    }
+  const password = "Temp@1234";
 
+  const hashedPassword = await hashedpassword(password);
 
-    // Check duplicate phone in Employee
-    const phoneExists = await getEmployeeByPhone(data.phone);
+  // Create User
+  const user = await createUser({
+    firstName: data.firstName,
 
-    if (phoneExists) {
-        throw new AppError(
-            "Phone number already exists",
-            409
-        );
-    }
+    lastName: data.lastName,
 
+    email: data.email,
 
-    const password = "Temp@1234";
+    password: hashedPassword,
 
-    const hashedPassword = await hashedpassword(password);
+    role: data.role,
 
+    phone: Number(data.phone),
 
+    isFirstLogin: true,
 
-    // Create User
-    const user = await createUser({
+    isActive: true,
+  });
 
-        firstName: data.firstName,
+  // Create Employee
+  const employee = await createEmployee({
+    firstName: data.firstName,
 
-        lastName: data.lastName,
+    lastName: data.lastName,
 
-        email: data.email,
+    email: data.email,
 
-        password: hashedPassword,
+    phone: data.phone,
 
-        role: data.role,
+    department: data.department,
 
-        phone: Number(data.phone),
+    designation: data.designation,
 
-        isFirstLogin: true,
+    salary: data.salary,
 
-        isActive: true
+    user: user._id,
+  });
 
+  // Assign manager
+  if (data.role === ROLES.MANAGER) {
+    await updateDepartment(data.department.toString(), {
+      manager: employee._id,
     });
+  }
 
-
-
-    // Create Employee
-    const employee = await createEmployee({
-
-        firstName: data.firstName,
-
-        lastName: data.lastName,
-
-        email: data.email,
-
-        phone: data.phone,
-
-        department: data.department,
-
-        designation: data.designation,
-
-        salary: data.salary,
-
-        user: user._id
-
-    });
-
-
-
-    // Assign manager
-    if (data.role === ROLES.MANAGER) {
-
-        await updateDepartment(
-            data.department.toString(),
-            {
-                manager: employee._id
-            }
-        );
-
-    }
-
-
-    return employee;
+  return employee;
 };
 
-
-
-export const getEmployeeService = async (page: number, limit: number, search?: string) => {
-
-    const { employees, totalRecords } = await getEmployees(page, limit);
-    return {
-        employees, pagination: {
-            currentPage: page,
-            totalpages: Math.ceil(totalRecords / limit),
-            totalRecords,
-            limit
-        }
-    }
-}
+export const getEmployeeService = async (
+  page: number,
+  limit: number,
+  search?: string,
+) => {
+  const { employees, totalRecords } = await getEmployees(page, limit);
+  return {
+    employees,
+    pagination: {
+      currentPage: page,
+      totalpages: Math.ceil(totalRecords / limit),
+      totalRecords,
+      limit,
+    },
+  };
+};
 
 export const getEmployeeByIdService = async (id: string) => {
-    const employee = await getEmployeeById(id);
-    if (!employee) {
-        throw new AppError("Empployee not found", 404)
-    }
-    return employee;
-}
+  const employee = await getEmployeeById(id);
+  if (!employee) {
+    throw new AppError("Empployee not found", 404);
+  }
+  return employee;
+};
 
 export const updateEmployeeService = async (
-    id: string,
-    data: Partial<IEmployee> & {
-        email?: string;
-        role?: string;
-    }
+  id: string,
+  data: Partial<IEmployee> & {
+    email?: string;
+    role?: string;
+  },
 ) => {
+  const employee = await getEmployeeById(id);
 
-    const employee = await getEmployeeById(id);
-
-    if (!employee) {
-        throw new AppError(
-            "Employee not found",
-            404
-        );
-    }
-    const updatedEmployee = await updateEmployee(
-        id,
-        data
-    );
-    return updatedEmployee;
+  if (!employee) {
+    throw new AppError("Employee not found", 404);
+  }
+  const updatedEmployee = await updateEmployee(id, data);
+  return updatedEmployee;
 };
 
 export const deleteEmployeeService = async (id: string) => {
-    const employee = await deleteEmployee(id);
-    if (!employee) {
-        throw new AppError("Employee Not found", 404)
-    }
-    return;
-}
+  const employee = await deleteEmployee(id);
+  if (!employee) {
+    throw new AppError("Employee Not found", 404);
+  }
+  return;
+};

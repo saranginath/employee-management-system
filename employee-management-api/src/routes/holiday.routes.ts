@@ -1,17 +1,15 @@
 import { Router } from "express";
 
 import {
-    createHolidayController,
-    deleteHolidayController,
-    getHolidayByIdController,
-    getHolidayController,
-    updateHolidayController,
+  createHolidayController,
+  deleteHolidayController,
+  getHolidayByIdController,
+  getHolidayController,
+  updateHolidayController,
 } from "../controllers/holiday.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/authorize.middleare";
 import { ROLES } from "../constants/leave.constnt";
-
-
 
 /**
  * @openapi
@@ -95,34 +93,22 @@ const router = Router();
 
 router.use(authenticate);
 
-router.post(
-    "/",
-    authorize(ROLES.ADMIN),
-    createHolidayController
+router.post("/", authorize(ROLES.ADMIN), createHolidayController);
+
+router.get(
+  "/",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getHolidayController,
 );
 
 router.get(
-    "/",
-    authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
-    getHolidayController
+  "/:id",
+  authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
+  getHolidayByIdController,
 );
 
-router.get(
-    "/:id",
-    authorize(ROLES.ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE),
-    getHolidayByIdController
-);
+router.put("/:id", authorize(ROLES.ADMIN), updateHolidayController);
 
-router.put(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    updateHolidayController
-);
-
-router.delete(
-    "/:id",
-    authorize(ROLES.ADMIN),
-    deleteHolidayController
-);
+router.delete("/:id", authorize(ROLES.ADMIN), deleteHolidayController);
 
 export default router;

@@ -1,21 +1,15 @@
 import { z } from "zod";
 
 export const createDocumentSchema = z.object({
-    employee: z.string(),
+  employee: z.string(),
 
-    title: z.string().min(3),
+  title: z.string().min(3),
 
-    type: z.enum([
-        "contract",
-        "id-proof",
-        "certificate",
-        "other",
-    ]),
+  type: z.enum(["contract", "id-proof", "certificate", "other"]),
 
-    fileUrl: z.string().url(),
+  fileUrl: z.string().url(),
 
-    description: z.string().optional(),
+  description: z.string().optional(),
 });
 
-export const updateDocumentSchema =
-    createDocumentSchema.partial();
+export const updateDocumentSchema = createDocumentSchema.partial();

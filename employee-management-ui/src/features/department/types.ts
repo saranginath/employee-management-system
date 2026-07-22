@@ -1,50 +1,40 @@
 export interface Department {
+  _id: string;
 
+  name: string;
+
+  code: string;
+
+  description?: string;
+
+  manager?: {
     _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  } | null;
 
-    name: string;
+  status: "active" | "inactive";
 
-    code: string;
+  createdAt?: string;
 
-    description?: string;
-
-    manager?: {
-        _id: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-    } | null;
-
-    status: "active" | "inactive";
-
-    createdAt?: string;
-
-    updatedAt?: string;
-
+  updatedAt?: string;
 }
-
-
 
 export interface CreateDepartmentRequest {
+  name: string;
 
-    name: string;
+  code: string;
 
-    code: string;
+  description?: string;
 
-    description?: string;
+  manager?: string;
 
-    manager?: string;
-
-    status?: "active" | "inactive";
-
+  status?: "active" | "inactive";
 }
 
-
-
 export interface UpdateDepartmentRequest {
+  id: string;
 
-    id: string;
-
-    data: Partial<CreateDepartmentRequest>;
-
+  data: Partial<CreateDepartmentRequest>;
 }

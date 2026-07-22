@@ -6,55 +6,29 @@ import AdminDashboard from "./admin/AdminDashboard";
 import ManagerDashboard from "./manager/ManagerDashboard";
 import EmployeeDashboard from "./employee/EmployeeDashboard";
 
-
 const Dashboard = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log("AUTH USER:", user);
 
+  if (!user) {
+    return <div className="p-6">Loading dashboard...</div>;
+  }
 
-    const user = useSelector(
-        (state: RootState) => state.auth.user
-    );
-    console.log("AUTH USER:", user);
+  const role = user.role?.toLowerCase();
 
-    if (!user) {
+  if (role === "admin") {
+    return <AdminDashboard />;
+  }
 
-        return (
-            <div className="p-6">
-                Loading dashboard...
-            </div>
-        );
+  if (role === "manager") {
+    return <ManagerDashboard />;
+  }
 
-    }
+  if (role === "employee") {
+    return <EmployeeDashboard />;
+  }
 
-
-    const role = user.role?.toLowerCase();
-
-
-
-    if (role === "admin") {
-        return <AdminDashboard />;
-    }
-
-
-    if (role === "manager") {
-        return <ManagerDashboard />;
-    }
-
-
-    if (role === "employee") {
-        return <EmployeeDashboard />;
-    }
-
-
-
-    return (
-
-        <div className="p-6">
-            Invalid user role
-        </div>
-
-    );
-
+  return <div className="p-6">Invalid user role</div>;
 };
-
 
 export default Dashboard;

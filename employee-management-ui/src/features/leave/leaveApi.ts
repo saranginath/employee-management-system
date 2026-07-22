@@ -1,162 +1,98 @@
 import { baseApi } from "../../api/baseApi";
 
-import type {
-    Leave,
-    ApplyLeaveRequest
-} from "./types";
-
+import type { Leave, ApplyLeaveRequest } from "./types";
 
 export const leaveApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    createLeave: builder.mutation<
+      {
+        success: boolean;
+        message: string;
+        data: Leave;
+      },
+      ApplyLeaveRequest
+    >({
+      query: (data) => ({
+        url: "/leave",
 
-    endpoints: (builder) => ({
+        method: "POST",
 
-        createLeave:
+        body: data,
+      }),
 
-            builder.mutation<
-                {
-                    success: boolean;
-                    message: string;
-                    data: Leave
-                },
-                ApplyLeaveRequest
-            >({
+      invalidatesTags: ["Leave"],
+    }),
 
-                query: (data) => ({
+    getLeaves: builder.query<
+      {
+        success: boolean;
+        data: Leave[];
+      },
+      void
+    >({
+      query: () => "/leave",
 
-                    url: "/leave",
+      providesTags: ["Leave"],
+    }),
 
-                    method: "POST",
+    cancelLeave: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/leave/${id}/cancel`,
 
-                    body: data
+        method: "PATCH",
+      }),
 
-                }),
+      invalidatesTags: ["Leave"],
+    }),
 
-                invalidatesTags: ["Leave"]
+    getPendingLeaves: builder.query<
+      {
+        success: boolean;
+        data: Leave[];
+      },
+      void
+    >({
+      query: () => "/leave/pending",
+    }),
 
-            }),
+    approveLeave: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/leave/${id}/approve`,
 
+        method: "PATCH",
+      }),
+    }),
 
+    rejectLeave: builder.mutation<
+      any,
+      {
+        id: string;
+        reason: string;
+      }
+    >({
+      query: ({ id, reason }) => ({
+        url: `/leave/${id}/reject`,
 
-        getLeaves:
+        method: "PATCH",
 
-            builder.query<
-                {
-                    success: boolean;
-                    data: Leave[]
-                },
-                void
-            >({
-
-                query: () => "/leave",
-
-                providesTags: ["Leave"]
-
-            }),
-
-
-
-        cancelLeave:
-
-            builder.mutation<
-                any,
-                string
-            >({
-
-                query: (id) => ({
-
-                    url: `/leave/${id}/cancel`,
-
-                    method: "PATCH"
-
-                }),
-
-                invalidatesTags: ["Leave"]
-
-            }),
-
-
-
-
-        getPendingLeaves:
-
-            builder.query<
-                {
-                    success: boolean;
-                    data: Leave[]
-                },
-                void
-            >({
-
-                query: () => "/leave/pending"
-
-            }),
-
-
-
-
-        approveLeave:
-
-            builder.mutation<
-                any,
-                string
-            >({
-
-                query: (id) => ({
-
-                    url: `/leave/${id}/approve`,
-
-                    method: "PATCH"
-
-                })
-
-            }),
-
-
-
-
-        rejectLeave:
-
-            builder.mutation<
-                any,
-                {
-                    id: string;
-                    reason: string;
-                }
-            >({
-
-                query: ({ id, reason }) => ({
-
-                    url: `/leave/${id}/reject`,
-
-                    method: "PATCH",
-
-                    body: {
-                        rejectionReason: reason
-                    }
-
-                })
-
-            })
-
-
-    })
-
+        body: {
+          rejectionReason: reason,
+        },
+      }),
+    }),
+  }),
 });
 
-
 export const {
+  useCreateLeaveMutation,
 
-    useCreateLeaveMutation,
+  useGetLeavesQuery,
 
-    useGetLeavesQuery,
+  useCancelLeaveMutation,
 
-    useCancelLeaveMutation,
+  useGetPendingLeavesQuery,
 
-    useGetPendingLeavesQuery,
+  useApproveLeaveMutation,
 
-    useApproveLeaveMutation,
-
-    useRejectLeaveMutation
-
-
+  useRejectLeaveMutation,
 } = leaveApi;
