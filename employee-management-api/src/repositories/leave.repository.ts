@@ -46,7 +46,7 @@ export const getLeaveById = async (leaveId: string) => {
 export const getAllLeaves = async () => {
     const leaves = await Leave.find()
         .populate("employee", "firstName lastName email")
-    .populate("approvedBy", "firstName lastName email")
+        .populate("approvedBy", "firstName lastName email")
         .sort({ createdAt: -1 });
 
     return attachEmployeeDetails(leaves);
