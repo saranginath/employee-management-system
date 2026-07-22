@@ -3,19 +3,19 @@ import Navbar from "../components/layout/navbar/Navbar";
 import Sidebar from "../components/layout/sidebar/Sidebar";
 
 const DashboardLayout = () => {
-  return (
-    <div className="min-h-screen bg-slate-100">
-      <Navbar />
+    return (
+        <div className="min-h-screen bg-slate-100">
+            <Navbar />
 
-      <div className="pt-16">
-        <Sidebar />
+            <div className="pt-16">
+                <Sidebar />
 
-        <main className="p-4 lg:ml-72 lg:p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
+                <main className="p-4 lg:ml-72 lg:p-6">
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default DashboardLayout;

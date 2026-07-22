@@ -80,9 +80,9 @@ const MyLeaves = () => {
     } catch (error: unknown) {
       const message =
         typeof error === "object" &&
-        error !== null &&
-        "data" in error &&
-        typeof (error as { data?: { message?: string } }).data?.message ===
+          error !== null &&
+          "data" in error &&
+          typeof (error as { data?: { message?: string } }).data?.message ===
           "string"
           ? (error as { data: { message: string } }).data.message
           : "Failed to cancel leave";
@@ -110,9 +110,9 @@ const MyLeaves = () => {
     } catch (error: unknown) {
       const message =
         typeof error === "object" &&
-        error !== null &&
-        "data" in error &&
-        typeof (error as { data?: { message?: string } }).data?.message ===
+          error !== null &&
+          "data" in error &&
+          typeof (error as { data?: { message?: string } }).data?.message ===
           "string"
           ? (error as { data: { message: string } }).data.message
           : "Failed to update leave";

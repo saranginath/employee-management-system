@@ -1,169 +1,169 @@
 import { Request, Response } from "express";
 
 import {
-  createLeaveService,
-  getLeaveService,
-  updateLeaveService,
-  cancelLeaveService,
-  approveLeaveService,
-  rejectLeaveService,
-  getLeaveBalanceService,
-  getLeaveHistoryService,
-  getPendingLeaveService,
-  getLeaveCalendarService,
+    createLeaveService,
+    getLeaveService,
+    updateLeaveService,
+    cancelLeaveService,
+    approveLeaveService,
+    rejectLeaveService,
+    getLeaveBalanceService,
+    getLeaveHistoryService,
+    getPendingLeaveService,
+    getLeaveCalendarService,
 } from "../services/leave.service";
 
 export const createLeaveController = async (req: Request, res: Response) => {
-  const data = await createLeaveService(req.user!.id, req.body);
+    const data = await createLeaveService(req.user!.id, req.body);
 
-  res.status(201).json({
-    success: true,
+    res.status(201).json({
+        success: true,
 
-    message: "Leave applied successfully",
+        message: "Leave applied successfully",
 
-    data,
-  });
+        data,
+    });
 };
 
 export const getLeaveController = async (req: Request, res: Response) => {
-  const data = await getLeaveService(
-    req.user!.id,
+    const data = await getLeaveService(
+        req.user!.id,
 
-    req.user!.role,
-  );
+        req.user!.role,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    data,
-  });
+        data,
+    });
 };
 
 export const updateLeaveController = async (req: Request, res: Response) => {
-  const data = await updateLeaveService(
-    req.params.id,
+    const data = await updateLeaveService(
+        req.params.id,
 
-    req.user!.id,
+        req.user!.id,
 
-    req.body,
-  );
+        req.body,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    message: "Leave updated",
+        message: "Leave updated",
 
-    data,
-  });
+        data,
+    });
 };
 
 export const cancelLeaveController = async (req: Request, res: Response) => {
-  const data = await cancelLeaveService(
-    req.params.id,
+    const data = await cancelLeaveService(
+        req.params.id,
 
-    req.user!.id,
-  );
+        req.user!.id,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    message: "Leave cancelled",
+        message: "Leave cancelled",
 
-    data,
-  });
+        data,
+    });
 };
 
 export const approveLeaveController = async (req: Request, res: Response) => {
-  const data = await approveLeaveService(
-    req.params.id,
+    const data = await approveLeaveService(
+        req.params.id,
 
-    req.user!.id,
-  );
+        req.user!.id,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    message: "Leave approved",
+        message: "Leave approved",
 
-    data,
-  });
+        data,
+    });
 };
 
 export const rejectLeaveController = async (req: Request, res: Response) => {
-  const data = await rejectLeaveService(
-    req.params.id,
+    const data = await rejectLeaveService(
+        req.params.id,
 
-    req.user!.id,
+        req.user!.id,
 
-    req.body.reason,
-  );
+        req.body.reason,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    message: "Leave rejected",
+        message: "Leave rejected",
 
-    data,
-  });
+        data,
+    });
 };
 
 export const getLeaveBalanceController = async (
-  req: Request,
-  res: Response,
+    req: Request,
+    res: Response,
 ) => {
-  const data = await getLeaveBalanceService(req.user!.id);
+    const data = await getLeaveBalanceService(req.user!.id);
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    data,
-  });
+        data,
+    });
 };
 
 export const getLeaveHistoryController = async (
-  req: Request,
-  res: Response,
+    req: Request,
+    res: Response,
 ) => {
-  const data = await getLeaveHistoryService(req.user!.id);
+    const data = await getLeaveHistoryService(req.user!.id);
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    data,
-  });
+        data,
+    });
 };
 
 export const getPendingLeaveController = async (
-  req: Request,
-  res: Response,
+    req: Request,
+    res: Response,
 ) => {
-  const data = await getPendingLeaveService();
+    const data = await getPendingLeaveService();
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    data,
-  });
+        data,
+    });
 };
 
 export const getLeaveCalendarController = async (
-  req: Request,
-  res: Response,
+    req: Request,
+    res: Response,
 ) => {
-  const { start, end } = req.query;
+    const { start, end } = req.query;
 
-  const data = await getLeaveCalendarService(
-    req.user!.id,
-    req.user!.role,
+    const data = await getLeaveCalendarService(
+        req.user!.id,
+        req.user!.role,
 
-    start as string,
+        start as string,
 
-    end as string,
-  );
+        end as string,
+    );
 
-  res.json({
-    success: true,
+    res.json({
+        success: true,
 
-    data,
-  });
+        data,
+    });
 };
