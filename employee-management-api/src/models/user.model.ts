@@ -61,6 +61,11 @@ const userSchema = new Schema<IUser>(
             trim: true,
             default: null
         },
+        phone: {
+            type: Number,
+            trim: true,
+            required: true
+        },
         passwordResetExpires: {
             type: String
         },
@@ -71,7 +76,7 @@ const userSchema = new Schema<IUser>(
         profilePicture: {
             type: String,
             default: null
-        }
+        },
     },
     {
         timestamps: true

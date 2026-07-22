@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+
 import {
     FiUser,
     FiCamera,
     FiCheckCircle,
     FiAlertCircle,
+    FiPhone,
+    FiMapPin,
+    FiSave,
+    FiX
 } from "react-icons/fi";
 
 import {
@@ -13,17 +18,30 @@ import {
     useUploadProfilePictureMutation,
 } from "../../features/profile/profileApi";
 
+import { useNavigate } from "react-router-dom";
+
+
 
 type ProfileForm = {
+
     firstName: string;
+
     lastName: string;
+
     phone: string;
+
     address: string;
+
 };
 
 
 
+
 function EditProfile() {
+
+
+    const navigate = useNavigate();
+
 
 
     const {
@@ -32,15 +50,21 @@ function EditProfile() {
     } = useGetProfileQuery();
 
 
+
     const [
         updateProfile,
-        { isLoading: saving }
+        {
+            isLoading: saving
+        }
     ] = useUpdateProfileMutation();
+
 
 
     const [
         uploadImage,
-        { isLoading: uploading }
+        {
+            isLoading: uploading
+        }
     ] = useUploadProfilePictureMutation();
 
 
@@ -56,34 +80,29 @@ function EditProfile() {
         formState: {
             errors
         }
-    } = useForm<ProfileForm>({
-        defaultValues: {
-            firstName: "",
-            lastName: "",
-            phone: "",
-            address: ""
-        }
-    });
+
+    } = useForm<ProfileForm>();
 
 
 
-    const [preview, setPreview] =
-        useState<string | null>(null);
+    const [
+        preview,
+        setPreview
+    ] = useState<string | null>(null);
 
 
 
-    const [status, setStatus] =
-        useState<{
-            type: "success" | "error";
-            message: string;
-        } | null>(null);
+    const [
+        status,
+        setStatus
+    ] = useState<any>(null);
 
 
 
 
-    // Load API data into form
 
     useEffect(() => {
+
 
         if (user) {
 
@@ -101,7 +120,11 @@ function EditProfile() {
 
         }
 
+
     }, [user, reset]);
+
+
+
 
 
 
@@ -114,29 +137,42 @@ function EditProfile() {
 
         try {
 
+
             await updateProfile(data).unwrap();
 
 
             setStatus({
+
                 type: "success",
+
                 message: "Profile updated successfully"
+
             });
 
 
         }
         catch (error: any) {
 
+
             setStatus({
+
                 type: "error",
+
                 message:
                     error?.data?.message ||
-                    "Failed to update profile"
+                    "Profile update failed"
+
             });
+
 
         }
 
 
     };
+
+
+
+
 
 
 
@@ -161,65 +197,84 @@ function EditProfile() {
 
         const formData = new FormData();
 
+
         formData.append(
             "image",
             file
         );
 
 
+
         try {
+
 
             await uploadImage(formData).unwrap();
 
 
+
             setStatus({
+
                 type: "success",
+
                 message: "Profile picture updated"
+
             });
+
 
 
         }
         catch (error: any) {
 
+
             setStatus({
+
                 type: "error",
+
                 message:
                     error?.data?.message ||
                     "Image upload failed"
+
             });
+
 
         }
 
-    };
-
-
-
-
-    const cancel = () => {
-
-        reset({
-
-            firstName: user?.firstName || "",
-
-            lastName: user?.lastName || "",
-
-            phone: user?.phone || "",
-
-            address: user?.address || ""
-
-        });
 
     };
+
+
 
 
 
 
     if (profileLoading) {
 
+
         return (
-            <div className="flex min-h-screen items-center justify-center">
-                Loading profile...
+
+            <div className="
+                flex
+                min-h-screen
+                items-center
+                justify-center
+                bg-slate-50
+            ">
+
+
+                <div className="
+                    rounded-2xl
+                    bg-white
+                    p-8
+                    shadow
+                ">
+
+                    Loading profile...
+
+                </div>
+
+
             </div>
+
         );
 
     }
@@ -227,105 +282,58 @@ function EditProfile() {
 
 
 
+
+
     return (
 
-        <div className="min-h-screen bg-slate-50 p-6">
+
+        <div className="
+            min-h-screen
+            bg-slate-50
+            p-6
+        ">
 
 
             <div className="
-            mx-auto max-w-xl
-            rounded-3xl
-            bg-white
-            p-8
-            shadow
+                mx-auto
+                max-w-3xl
+                overflow-hidden
+                rounded-3xl
+                bg-white
+                shadow-xl
             ">
 
 
-                <h2 className="text-xl font-bold">
-                    Edit Profile
-                </h2>
+
+                {/* Header */}
+
+                <div className="
+                    bg-gradient-to-r
+                    from-blue-600
+                    to-indigo-600
+                    p-8
+                    text-white
+                ">
 
 
-                <p className="text-sm text-slate-500">
-                    Update your personal details
-                </p>
+                    <h1 className="
+                        text-3xl
+                        font-bold
+                    ">
+
+                        Edit Profile
+
+                    </h1>
 
 
+                    <p className="
+                        mt-2
+                        text-blue-100
+                    ">
 
-                {/* Avatar */}
+                        Manage your personal information
 
-                <div className="mt-6 flex items-center gap-5">
-
-
-                    <div className="relative">
-
-                        <div className="
-                        flex h-20 w-20
-                        items-center justify-center
-                        overflow-hidden
-                        rounded-full
-                        bg-blue-100
-                        text-blue-600
-                        ">
-
-
-                            {
-                                preview ||
-                                    user?.avatarUrl
-                                    ?
-                                    <img
-                                        src={
-                                            preview ||
-                                            user?.avatarUrl
-                                        }
-                                        className="h-full w-full object-cover"
-                                    />
-                                    :
-                                    <FiUser size={30} />
-                            }
-
-
-                        </div>
-
-
-
-                        <label
-                            htmlFor="image"
-                            className="
-                            absolute bottom-0 right-0
-                            flex h-7 w-7
-                            cursor-pointer
-                            items-center justify-center
-                            rounded-full
-                            bg-blue-600
-                            text-white
-                            "
-                        >
-                            <FiCamera size={14} />
-                        </label>
-
-
-
-                        <input
-                            id="image"
-                            hidden
-                            type="file"
-                            accept="image/*"
-                            onChange={imageUpload}
-                        />
-
-                    </div>
-
-
-                    <span className="text-sm text-gray-500">
-
-                        {
-                            uploading
-                                ? "Uploading..."
-                                : "Change profile picture"
-                        }
-
-                    </span>
+                    </p>
 
 
                 </div>
@@ -333,39 +341,114 @@ function EditProfile() {
 
 
 
-                <form
-                    onSubmit={handleSubmit(submit)}
-                    className="mt-8 space-y-5"
-                >
 
 
 
-                    <div className="grid gap-5 sm:grid-cols-2">
+                <div className="p-8">
 
 
-                        <div>
 
-                            <label>
-                                First Name
+
+
+                    {/* Avatar */}
+
+
+                    <div className="
+                        flex
+                        items-center
+                        gap-6
+                    ">
+
+
+
+                        <div className="relative">
+
+
+                            <div className="
+                                h-28
+                                w-28
+                                overflow-hidden
+                                rounded-full
+                                border-4
+                                border-white
+                                bg-blue-100
+                                shadow-lg
+                                flex
+                                items-center
+                                justify-center
+                            ">
+
+
+                                {
+                                    preview || user?.avatarUrl
+
+                                        ?
+
+                                        <img
+                                            src={
+                                                preview ||
+                                                user?.avatarUrl
+                                            }
+                                            className="
+                                        h-full
+                                        w-full
+                                        object-cover
+                                    "
+                                        />
+
+                                        :
+
+                                        <FiUser size={40} />
+
+                                }
+
+
+                            </div>
+
+
+
+
+
+                            <label
+                                htmlFor="image"
+                                className="
+                                    absolute
+                                    bottom-1
+                                    right-1
+                                    flex
+                                    h-9
+                                    w-9
+                                    cursor-pointer
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    bg-blue-600
+                                    text-white
+                                    shadow
+                                    hover:bg-blue-700
+                                "
+                            >
+
+                                <FiCamera size={18} />
+
                             </label>
 
+
+
                             <input
-                                className="input w-full"
-                                {...register(
-                                    "firstName",
-                                    {
-                                        required: "First name required"
-                                    }
-                                )}
+
+                                id="image"
+
+                                hidden
+
+                                type="file"
+
+                                accept="image/*"
+
+                                onChange={imageUpload}
+
                             />
 
-
-                            {
-                                errors.firstName &&
-                                <p className="text-xs text-red-500">
-                                    {errors.firstName.message}
-                                </p>
-                            }
 
 
                         </div>
@@ -373,69 +456,240 @@ function EditProfile() {
 
 
 
+
                         <div>
 
-                            <label>
-                                Last Name
+
+                            <h3 className="
+                                text-xl
+                                font-semibold
+                            ">
+
+                                {
+                                    user?.firstName
+                                }
+
+                                {" "}
+
+                                {
+                                    user?.lastName
+                                }
+
+                            </h3>
+
+
+                            <p className="
+                                text-sm
+                                text-slate-500
+                            ">
+
+                                {
+                                    uploading
+                                        ?
+                                        "Uploading image..."
+                                        :
+                                        "Click camera to change photo"
+                                }
+
+                            </p>
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <form
+                        onSubmit={
+                            handleSubmit(submit)
+                        }
+
+                        className="
+                            mt-10
+                            space-y-6
+                        "
+                    >
+
+
+
+
+                        <div className="
+                            grid
+                            gap-5
+                            md:grid-cols-2
+                        ">
+
+
+
+                            <div>
+
+
+                                <label className="label">
+                                    First Name
+                                </label>
+
+
+                                <input
+
+                                    className="
+                                        input
+                                        w-full
+                                        rounded-xl
+                                    "
+
+                                    {...register(
+                                        "firstName",
+                                        {
+                                            required:
+                                                "First name required"
+                                        }
+                                    )}
+
+                                />
+
+
+                                {
+                                    errors.firstName &&
+
+                                    <p className="text-xs text-red-500">
+
+                                        {
+                                            errors.firstName.message
+                                        }
+
+                                    </p>
+                                }
+
+
+                            </div>
+
+
+
+
+                            <div>
+
+                                <label className="label">
+                                    Last Name
+                                </label>
+
+
+                                <input
+
+                                    className="
+                                        input
+                                        w-full
+                                        rounded-xl
+                                    "
+
+                                    {...register(
+                                        "lastName"
+                                    )}
+
+                                />
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div>
+
+
+                            <label className="label flex gap-2">
+
+                                <FiPhone />
+
+                                Phone
+
                             </label>
 
 
                             <input
-                                className="input w-full"
-                                {...register("lastName")}
+
+                                className="
+                                    input
+                                    w-full
+                                    rounded-xl
+                                "
+
+                                {...register("phone")}
+
                             />
 
                         </div>
 
 
-                    </div>
 
 
 
 
-                    <div>
-
-                        <label>
-                            Phone
-                        </label>
+                        <div>
 
 
-                        <input
-                            className="input w-full"
-                            {...register("phone")}
-                        />
+                            <label className="label flex gap-2">
 
-                    </div>
+                                <FiMapPin />
 
+                                Address
 
-
-
-                    <div>
-
-                        <label>
-                            Address
-                        </label>
+                            </label>
 
 
-                        <textarea
-                            rows={3}
-                            className="input w-full"
-                            {...register("address")}
-                        />
+                            <textarea
 
-                    </div>
+                                rows={4}
+
+                                className="
+                                    input
+                                    w-full
+                                    rounded-xl
+                                "
+
+                                {...register("address")}
+
+                            />
+
+
+                        </div>
 
 
 
 
-                    {
-                        status && (
+
+
+
+
+                        {
+                            status &&
 
                             <div className={`
-                            flex gap-2 rounded-xl p-3 text-sm
-                            ${status.type === "success"
-                                    ? "bg-green-50 text-green-700"
-                                    : "bg-red-50 text-red-600"
+                                flex
+                                items-center
+                                gap-3
+                                rounded-xl
+                                p-4
+                                text-sm
+
+                                ${status.type === "success"
+                                    ?
+                                    "bg-green-50 text-green-700"
+                                    :
+                                    "bg-red-50 text-red-600"
                                 }
                             `}>
 
@@ -449,58 +703,104 @@ function EditProfile() {
                                 }
 
 
-                                {status.message}
+                                {
+                                    status.message
+                                }
 
 
                             </div>
 
-                        )
-                    }
+                        }
 
 
 
 
-                    <div className="flex gap-3">
-
-
-                        <button
-                            disabled={saving}
-                            className="
-                            rounded-xl
-                            bg-blue-600
-                            px-6 py-3
-                            text-white
-                            "
-                        >
-
-                            {
-                                saving
-                                    ? "Saving..."
-                                    : "Save Changes"
-                            }
-
-                        </button>
 
 
 
-                        <button
-                            type="button"
-                            onClick={cancel}
-                            className="
-                            rounded-xl
-                            border
-                            px-6 py-3
-                            "
-                        >
-                            Cancel
-                        </button>
+                        <div className="
+                            flex
+                            justify-end
+                            gap-4
+                        ">
 
 
-                    </div>
+                            <button
+
+                                type="button"
+
+                                onClick={() =>
+                                    navigate(
+                                        "/dashboard/profile"
+                                    )
+                                }
+
+                                className="
+                                    flex
+                                    items-center
+                                    gap-2
+                                    rounded-xl
+                                    border
+                                    px-6
+                                    py-3
+                                    hover:bg-slate-100
+                                "
+
+                            >
+
+                                <FiX />
+
+                                Cancel
+
+                            </button>
 
 
 
-                </form>
+
+
+                            <button
+
+                                disabled={saving}
+
+                                className="
+                                    flex
+                                    items-center
+                                    gap-2
+                                    rounded-xl
+                                    bg-blue-600
+                                    px-6
+                                    py-3
+                                    font-semibold
+                                    text-white
+                                    hover:bg-blue-700
+                                    disabled:opacity-50
+                                "
+
+                            >
+
+                                <FiSave />
+
+
+                                {
+                                    saving
+                                        ?
+                                        "Saving..."
+                                        :
+                                        "Save Changes"
+                                }
+
+
+                            </button>
+
+
+                        </div>
+
+
+
+                    </form>
+
+
+                </div>
 
 
             </div>
@@ -508,7 +808,9 @@ function EditProfile() {
 
         </div>
 
+
     );
+
 
 }
 

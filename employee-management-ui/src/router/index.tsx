@@ -34,6 +34,7 @@ import Profile from "../pages/profile/Profile";
 
 
 
+
 export const router = createBrowserRouter([
 
     {
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
                                 index: true,
                                 element: <Dashboard />
                             },
+                            {
+
+                            },
+
 
 
 

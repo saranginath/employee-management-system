@@ -14,7 +14,7 @@ import { FiUser, FiMail, FiBriefcase, FiDollarSign, FiArrowLeft } from "react-ic
 import { useNavigate, useParams } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../app/store";
+import type { RootState } from "../../api/store";
 export default function EmployeeFormPage() {
     const { user } = useSelector(
         (state: RootState) => state.auth

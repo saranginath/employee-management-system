@@ -342,8 +342,8 @@ export default function Landing() {
                             </p>
                         </div>
 
-                        <div className="col-span-2 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-6 text-white shadow-sm">
-                            <p className="text-2xl font-bold">2019</p>
+                        <div className="col-span-2 rounded-2xl bg-linear-to-br from-blue-600 to-purple-600 p-6 text-white shadow-sm">
+                            <p className="text-2xl font-bold">2026</p>
                             <p className="mt-1 text-sm text-blue-100">
                                 Founded, and still built by a small team that uses EMS every
                                 single day.
@@ -367,9 +367,9 @@ export default function Landing() {
                         {/* contact info */}
                         <div className="space-y-5 md:col-span-2">
                             {[
-                                { icon: <FiMail />, label: "Email", value: "hello@ems.io" },
-                                { icon: <FiPhone />, label: "Phone", value: "+1 (555) 010-2024" },
-                                { icon: <FiMapPin />, label: "Office", value: "Remote-first, worldwide" },
+                                { icon: <FiMail />, label: "Email", value: "ems@work.com" },
+                                { icon: <FiPhone />, label: "Phone", value: "+971 543650680" },
+                                { icon: <FiMapPin />, label: "Office", value: "Dubai" },
                             ].map((item) => (
                                 <div key={item.label} className="flex items-start gap-3">
                                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 text-blue-600">

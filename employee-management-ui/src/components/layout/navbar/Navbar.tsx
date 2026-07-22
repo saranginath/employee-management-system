@@ -302,7 +302,7 @@ function Navbar() {
                                 <button
                                     onClick={() => {
                                         setOpen(false);
-                                        navigate("/dashboard/change-password");
+                                        navigate("/dashboard/profile/change-password");
                                     }}
                                     className="flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50"
                                 >

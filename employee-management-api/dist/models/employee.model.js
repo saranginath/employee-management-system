@@ -34,7 +34,6 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const role_constant_1 = require("../constants/role.constant");
 const employeeSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -46,28 +45,33 @@ const employeeSchema = new mongoose_1.Schema({
     },
     email: {
         type: String,
-        unique: true,
-        required: true
+        required: true,
+        unique: true
     },
     phone: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     department: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "Department"
+        ref: "Department",
+        required: true
     },
     designation: {
-        type: String, required: true
-    },
-    role: {
         type: String,
-        enum: Object.values(role_constant_1.ROLES),
-        default: role_constant_1.ROLES.EMPLOYEE
+        required: true
     },
     salary: {
         type: Number,
         required: true
+    },
+    // Reference to login account
+    user: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        unique: true
     }
 }, {
     timestamps: true

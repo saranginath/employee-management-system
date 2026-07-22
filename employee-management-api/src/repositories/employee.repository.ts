@@ -10,8 +10,16 @@ export const createEmployee = async (
 
 };
 
-export const getEmployees = () => {
-    return Employee.find().populate("department").populate("user", "role email isActive");
+export const getEmployees = async (page: number, limit: number) => {
+    const skip = (page - 1) * limit;
+    const employees = await Employee.find().populate("department").populate("user", "role email isActive").skip(skip).limit(limit).sort({
+        createdAt: -1
+    });
+    const totalRecords = await Employee.countDocuments();
+    return {
+        employees,
+        totalRecords
+    }
 };
 
 export const getEmployeeById = (id: string) => {

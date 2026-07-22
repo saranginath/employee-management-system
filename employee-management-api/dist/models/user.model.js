@@ -51,7 +51,7 @@ const userSchema = new mongoose_1.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        trime: true
+        trim: true
     },
     password: {
         type: String,
@@ -86,8 +86,25 @@ const userSchema = new mongoose_1.Schema({
     passwordResetToken: {
         type: String
     },
+    address: {
+        type: String,
+        trim: true,
+        default: null
+    },
     passwordResetExpires: {
         type: String
+    },
+    isFirstLogin: {
+        type: Boolean,
+        default: true,
+    },
+    profilePicture: {
+        type: String,
+        default: null
+    },
+    tokenVersion: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true

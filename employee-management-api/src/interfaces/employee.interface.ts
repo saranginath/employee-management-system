@@ -6,13 +6,9 @@ export interface IEmployee {
     lastName: string;
     email: string;
     phone: string;
-
     department: Types.ObjectId;
-
     designation: string;
-
     salary: number;
-
     user: Types.ObjectId;
 }
 

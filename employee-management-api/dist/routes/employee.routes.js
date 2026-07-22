@@ -11,7 +11,7 @@ const role_constant_1 = require("../constants/role.constant");
 const router = (0, express_1.default)();
 /**
  * @openapi
- * /api/v1/employee:
+ * /api/v1/employees:
  *   post:
  *     summary: Create an employee
  *     tags: [Employee]
@@ -46,7 +46,7 @@ const router = (0, express_1.default)();
  *     responses:
  *       200:
  *         description: List of employees
- * /api/v1/employee/{id}:
+ * /api/v1/employees/{id}:
  *   get:
  *     summary: Get an employee by id
  *     tags: [Employee]
@@ -72,6 +72,24 @@ const router = (0, express_1.default)();
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               department:
+ *                 type: string
+ *               role:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Employee updated successfully

@@ -11,17 +11,22 @@ const user_respository_1 = require("../repositories/user.respository");
 const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        if (!authHeader ||
+            !authHeader.startsWith("Bearer ")) {
             throw new AppError_1.AppError("Access token is required", 401);
         }
         const token = authHeader.split(" ")[1];
         const decoded = jsonwebtoken_1.default.verify(token, env_1.ENV.JWT_SECRET);
-        const user = await (0, user_respository_1.findUserById)(decoded.id.toString());
+        const user = await (0, user_respository_1.findUserById)(decoded.id);
         if (!user) {
             throw new AppError_1.AppError("User not found", 401);
         }
         if (!user.isActive) {
             throw new AppError_1.AppError("Your account has been disabled", 403);
+        }
+        // 🔥 Important check
+        if (user.tokenVersion !== decoded.tokenVersion) {
+            throw new AppError_1.AppError("Password changed. Please login again", 401);
         }
         req.user = {
             id: user._id.toString(),
@@ -37,7 +42,7 @@ const authenticate = async (req, res, next) => {
         if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
             return next(new AppError_1.AppError("Invalid access token", 401));
         }
-        return next(error);
+        next(error);
     }
 };
 exports.authenticate = authenticate;

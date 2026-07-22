@@ -71,6 +71,19 @@ import { authorize } from "../middleware/authorize.middleare";
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               startTime:
+ *                 type: string
+ *               endTime:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Shift updated successfully

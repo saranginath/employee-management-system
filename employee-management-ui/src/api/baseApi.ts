@@ -49,7 +49,7 @@ const baseQueryWithReauth = async (args: any, api: any, extra: any
             await baseQuery(
 
                 {
-                    url: "/auth/refresh",
+                    url: "/auth/refresh-token",
                     method: "POST"
                 },
 

@@ -1,16 +1,14 @@
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { FiGrid } from "react-icons/fi";
-
 import { adminMenu } from "./AdminMenu";
 import { managerMenu } from "./ManagerMenu";
 import { employeeMenu } from "./EmployeeMenu";
-
 import type { RootState } from "../../../api/store";
 
 export default function Sidebar() {
     const user = useSelector((state: RootState) => state.auth.user);
-
+    console.log(user)
     const menu =
         user?.role === "admin"
             ? adminMenu
@@ -112,34 +110,7 @@ export default function Sidebar() {
                 </nav>
             </div>
 
-            {/* Bottom Card */}
-            <div className="border-t border-slate-200 p-4">
-                <div
-                    className="
-                        rounded-2xl
-                        bg-blue-700
-                        p-4
-                        text-white
-                        shadow-lg
-                    "
-                >
-                    <p className="text-sm font-semibold">
-                        Welcome 👋
-                    </p>
 
-                    <p className="mt-1 text-xs opacity-90">
-                        {user?.firstName} {user?.lastName}
-                    </p>
-
-                    <div className="mt-3 h-2 rounded-full bg-white/30">
-                        <div className="h-2 w-3/4 rounded-full bg-white" />
-                    </div>
-
-                    <p className="mt-2 text-[11px] opacity-80">
-                        Dashboard Ready
-                    </p>
-                </div>
-            </div>
         </aside >
     );
 }

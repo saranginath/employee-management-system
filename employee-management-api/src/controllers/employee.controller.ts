@@ -15,13 +15,16 @@ export const createEmployeeController = asyncHandler(async (req: Request, res: R
 
 });
 
-export const getEmployeeController = asyncHandler(async (req: Request, res: Response) => {
-    const employee = await getEmployeeService();
-    res.json({
+export const getEmployeesController = async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const result = await getEmployeeService(page, limit);
+    res.status(200).json({
         success: true,
-        data: employee
-    })
-})
+        data: result.employees,
+        pagination: result.pagination
+    });
+};
 
 export const getEmployeeByIdController = asyncHandler(async (req: Request, res: Response) => {
     const employee = await getEmployeeByIdService(req.params.id as string);

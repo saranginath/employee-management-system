@@ -1,73 +1,78 @@
 import { Request, Response } from "express";
+import { getAdminDashboardService } from "../services/dashboard.service";
 
 import {
-    getAdminDashboardService,
-    getManagerDashboardService,
     getEmployeeDashboardService
-} from "../services/dashboard.service";
-import { asyncHandler } from "../middleware/asyncHandler";
+}
+    from "../services/employeeDashboard.service";
+import { asyncHandler } from '../middleware/asyncHandler'
+import { getManagerDashboardService } from "../services/managerDashboard.service";
 
+export const getAdminDashboardController = asyncHandler(async (req: Request, res: Response) => {
+    const data = await getAdminDashboardService();
+    res.status(200).json({
+        success: true,
+        data
+    });
+})
 
-
-
-export const getAdminDashboardController = asyncHandler(
-    async (
+export const getEmployeeDashboardController =
+    asyncHandler(async (
         req: Request,
         res: Response
     ) => {
 
-        const dashboard =
-            await getAdminDashboardService();
+
+        const userId =
+            req.user!.id;
 
 
-        res.status(200).json({
-            success: true,
-            data: dashboard
-        });
-
-    }
-);
-
-
-
-export const getManagerDashboardController = asyncHandler(
-    async (
-        req: Request,
-        res: Response
-    ) => {
-
-        const dashboard =
-            await getManagerDashboardService(
-                req.user!.id
-            );
-
-
-        res.status(200).json({
-            success: true,
-            data: dashboard
-        });
-
-    }
-);
-
-
-
-export const getEmployeeDashboardController = asyncHandler(
-    async (
-        req: Request,
-        res: Response
-    ) => {
 
         const dashboard =
             await getEmployeeDashboardService(
-                req.user!.id
+                userId
             );
 
 
+
         res.status(200).json({
+
             success: true,
+
             data: dashboard
+
         });
 
-    }
-);
+
+    });
+
+
+export const getManagerDashboard =
+    async (
+        req: Request,
+        res: Response
+    ) => {
+
+
+        const userId =
+            req.user!.id;
+
+
+
+        const data =
+            await getManagerDashboardService(
+                userId
+            );
+
+
+
+        res.status(200).json({
+
+            success: true,
+
+            data
+
+        });
+
+
+    };

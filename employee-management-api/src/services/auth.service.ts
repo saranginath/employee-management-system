@@ -24,6 +24,7 @@ export const registerUser = async (data: any) => {
 };
 
 export const loginUser = async (data: LoginInput) => {
+    console.log("sarangic")
     const user = await findUserByEmail(data.email);
 
     if (!user) {
@@ -46,7 +47,8 @@ export const loginUser = async (data: LoginInput) => {
     const accessToken = generateAccessToken({
         id: user._id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        tokenVersion: user.tokenVersion
     })
     const refreshToken = generateRefreshToken({
         id: user._id
@@ -102,20 +104,26 @@ export const logoutUser = async (token: string) => {
     return true;
 }
 
-export const changepasswordService = async (userId: string, oldPassword: string, newPassword: string
+export const changepasswordService = async (
+    userId: string,
+    oldPassword: string,
+    newPassword: string
 ) => {
     const user = await findUserById(userId);
-
     if (!user) {
-        throw new AppError("User not found", 404)
+        throw new AppError(
+            "User not found",
+            404
+        );
     }
-
     const isPasswordValid = await comparePassword(oldPassword, user.password);
     if (!isPasswordValid) {
-        throw new AppError("Current password is incorrect", 401)
+        throw new AppError("Current password is incorrect", 401);
     }
     const hashedPassword = await hashedpassword(newPassword);
-    await updateChangePassword(user._id.toString(), hashedPassword);
+    user.password = hashedPassword;
+
+    await saveUser(user); return true;
 }
 
 export const forgotPasswordService = async (email: string) => {

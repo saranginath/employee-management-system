@@ -11,9 +11,9 @@ const findUserByEmail = async (email) => {
     }).select("+password");
 };
 exports.findUserByEmail = findUserByEmail;
-const createUser = async (data) => {
-    console.log(data);
-    return user_model_1.default.create(data);
+const createUser = async (data, session) => {
+    const user = await user_model_1.default.create([data], { session });
+    return user[0];
 };
 exports.createUser = createUser;
 const updateRefreshToken = async (userId, refreshToken) => {
@@ -25,11 +25,12 @@ const updateRefreshToken = async (userId, refreshToken) => {
 };
 exports.updateRefreshToken = updateRefreshToken;
 const findUserById = async (id) => {
-    return await user_model_1.default.findById(id).select("+password");
+    return user_model_1.default.findById(id)
+        .select("+password");
 };
 exports.findUserById = findUserById;
 const removeRefreshToken = async (id) => {
-    return await user_model_1.default.findByIdAndUpdate(id, {
+    return user_model_1.default.findByIdAndUpdate(id, {
         refreshToken: null
     }, {
         new: true
@@ -38,18 +39,19 @@ const removeRefreshToken = async (id) => {
 exports.removeRefreshToken = removeRefreshToken;
 const updateChangePassword = async (userId, newPassword) => {
     return user_model_1.default.findByIdAndUpdate(userId, {
-        password: newPassword
+        password: newPassword,
+        isFirstLogin: false
     }, {
         new: true
     });
 };
 exports.updateChangePassword = updateChangePassword;
 const saveUser = async (user) => {
-    return await user.save();
+    return user.save();
 };
 exports.saveUser = saveUser;
 const findUserByResetToken = async (hashedToken) => {
-    return await user_model_1.default.findOne({
+    return user_model_1.default.findOne({
         passwordResetToken: hashedToken,
         passwordResetExpires: {
             $gt: new Date()
@@ -58,12 +60,12 @@ const findUserByResetToken = async (hashedToken) => {
 };
 exports.findUserByResetToken = findUserByResetToken;
 const updatePassword = async (userId, hashedPassword) => {
-    return await user_model_1.default.findByIdAndUpdate(userId, {
+    return user_model_1.default.findByIdAndUpdate(userId, {
         password: hashedPassword,
         passwordResetToken: undefined,
         passwordResetExpires: undefined
     }, {
-        nre: true
+        new: true
     });
 };
 exports.updatePassword = updatePassword;

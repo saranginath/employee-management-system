@@ -1,329 +1,129 @@
-import Employee from "../models/employee.model";
-import Department from "../models/department.model";
-import Attendance from "../models/attendance.model";
-import Leave from "../models/leave.model";
-import Payroll from "../models/payroll.model";
+import {
+    getTotalEmployees,
+    getEmployeeStatus,
+    getTotalDepartments,
+    getPendingLeaves,
+    getTodayAttendance,
+    getEmployeeGrowth,
+    getDepartmentStats
+}
+    from "../repositories/dashboard.repository";
 
 
 
+export const getAdminDashboardService =
+    async () => {
 
 
-export const getAdminDashboardService = async () => {
+        const totalEmployees =
+            await getTotalEmployees();
 
 
-    const todayStart = new Date();
 
-    todayStart.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+        const employeeStatus =
+            await getEmployeeStatus();
+        console.log(employeeStatus)
 
 
-    const [
-        totalEmployees,
-        activeEmployees,
-        totalDepartments,
-        pendingLeaves,
-        todayAttendance,
-        totalPayrollRecords
-    ] = await Promise.all([
 
+        const totalDepartments =
+            await getTotalDepartments();
 
-        // Total employees
-        Employee.countDocuments(),
 
 
+        const pendingLeaves =
+            await getPendingLeaves();
 
-        // Active employees
-        Employee.countDocuments({
-            status: "active"
-        }),
 
 
+        const today = new Date();
 
-        // Departments count
-        Department.countDocuments(),
-
-
-
-        // Pending leave requests
-        Leave.countDocuments({
-
-            status: "pending"
-
-        }),
-
-
-
-        // Today's attendance
-        Attendance.countDocuments({
-
-            checkIn: {
-                $gte: todayStart
-            }
-
-        }),
-
-
-
-        // Payroll records
-        Payroll.countDocuments()
-
-
-    ]);
-
-
-
-    return {
-
-
-        employees: {
-
-            total: totalEmployees,
-
-            active: activeEmployees
-
-        },
-
-
-        departments: {
-
-            total: totalDepartments
-
-        },
-
-
-        leaves: {
-
-            pending: pendingLeaves
-
-        },
-
-
-        attendance: {
-
-            today: todayAttendance
-
-        },
-
-
-        payroll: {
-
-            records: totalPayrollRecords
-
-        }
-
-
-    };
-
-};
-
-
-
-
-
-// =============================
-// MANAGER DASHBOARD
-// =============================
-
-export const getManagerDashboardService = async (
-    managerId: string
-) => {
-
-
-    const manager =
-        await Employee.findById(
-            managerId
+        today.setHours(
+            0,
+            0,
+            0,
+            0
         );
 
 
 
-    if (!manager) {
-
-        throw new Error(
-            "Manager not found"
-        );
-
-    }
+        const attendance =
+            await getTodayAttendance(today);
 
 
 
-    const teamEmployees =
-        await Employee.countDocuments({
-
-            department:
-                manager.department
-
-        });
-
-
-
-    const teamAttendance =
-        await Attendance.countDocuments({
-
-            department:
-                manager.department
-
-        });
+        const attendanceRate =
+            attendance.total === 0
+                ? 0
+                :
+                Math.round(
+                    (attendance.present /
+                        attendance.total)
+                    * 100
+                );
 
 
 
-    const pendingLeaves =
-        await Leave.countDocuments({
-
-            status: "pending"
-
-        });
+        const employeeGrowth =
+            await getEmployeeGrowth();
 
 
 
-    return {
+        const departmentStats =
+            await getDepartmentStats();
 
 
-        team: {
 
-            employees:
-                teamEmployees
-
-        },
+        return {
 
 
-        attendance: {
+            employees: {
 
-            today:
-                teamAttendance
+                total: totalEmployees,
 
-        },
+                active:
+                    employeeStatus[0]?.active || 0,
+
+                inactive:
+                    employeeStatus[0]?.inactive || 0
+
+            },
 
 
-        leaves: {
 
-            pending:
-                pendingLeaves
+            departments: {
+                total: totalDepartments
+            },
 
-        }
+
+
+            leaves: {
+                pending: pendingLeaves
+            },
+
+
+
+            attendance: {
+
+                present: attendance.present,
+
+                absent:
+                    attendance.total -
+                    attendance.present,
+
+                rate: attendanceRate
+
+            },
+
+
+
+            employeeGrowth,
+
+            departmentStats
+
+
+
+        };
 
 
     };
-
-
-};
-
-
-
-
-
-// =============================
-// EMPLOYEE DASHBOARD
-// =============================
-
-export const getEmployeeDashboardService = async (
-    employeeId: string
-) => {
-
-
-    const employee =
-        await Employee.findById(
-            employeeId
-        )
-            .select(
-                "firstName lastName email designation department"
-            )
-            .populate(
-                "department",
-                "name code"
-            );
-
-
-
-    if (!employee) {
-
-        throw new Error(
-            "Employee not found"
-        );
-
-    }
-
-
-
-    const attendance =
-        await Attendance.find({
-
-            employee: employeeId
-
-        })
-            .sort({
-
-                createdAt: -1
-
-            })
-            .limit(5);
-
-
-
-
-
-    const leaves =
-        await Leave.find({
-
-            employee: employeeId
-
-        })
-            .sort({
-
-                createdAt: -1
-
-            })
-            .limit(5);
-
-
-
-
-
-    const payroll =
-        await Payroll.findOne({
-
-            employee: employeeId
-
-        })
-            .sort({
-
-                createdAt: -1
-
-            });
-
-
-
-    return {
-
-
-        profile: employee,
-
-
-        attendance: {
-
-
-            recent: attendance
-
-
-        },
-
-
-        leaves: {
-
-
-            recent: leaves
-
-
-        },
-
-
-        payroll
-
-
-    };
-
-
-};

@@ -111,6 +111,54 @@ router.post('/logout', auth_middleware_1.authenticate, auth_controller_1.logout)
  *         description: Password changed successfully
  */
 router.patch('/change-password', auth_middleware_1.authenticate, auth_controller_1.changePassword);
+/**
+ * @openapi
+ * /api/v1/auth/forgot-password:
+ *   post:
+ *     summary: Request a password reset email
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *     responses:
+ *       200:
+ *         description: Password reset request accepted
+ */
 router.post("/forgot-password", auth_controller_1.forgotPasswordController);
+/**
+ * @openapi
+ * /api/v1/auth/reset-password/{token}:
+ *   post:
+ *     summary: Reset password using token
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [password]
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ */
 router.post('/reset-password/:token', auth_controller_1.resetPasswordController);
 exports.default = router;

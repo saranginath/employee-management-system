@@ -3,10 +3,6 @@ import { CreateEmployeeDTO, IEmployee } from "../interfaces/employee.interface";
 import { createEmployee, deleteEmployee, getEmployeeById, getEmployeeByPhone, getEmployees, updateEmployee } from "../repositories/employee.repository";
 import { AppError } from "../utils/AppError";
 import { getDepartmentById, updateDepartment } from "../repositories/department.repository";
-
-
-import mongoose from "mongoose";
-
 import { createUser, findUserByEmail } from "../repositories/user.respository";
 import { hashedpassword } from "../utils/password";
 import { ROLES } from "../constants/role.constant";
@@ -70,6 +66,8 @@ export const createEmployeeService = async (
 
         role: data.role,
 
+        phone: Number(data.phone),
+
         isFirstLogin: true,
 
         isActive: true
@@ -119,8 +117,17 @@ export const createEmployeeService = async (
 
 
 
-export const getEmployeeService = async () => {
-    return await getEmployees()
+export const getEmployeeService = async (page: number, limit: number, search?: string) => {
+
+    const { employees, totalRecords } = await getEmployees(page, limit);
+    return {
+        employees, pagination: {
+            currentPage: page,
+            totalpages: Math.ceil(totalRecords / limit),
+            totalRecords,
+            limit
+        }
+    }
 }
 
 export const getEmployeeByIdService = async (id: string) => {

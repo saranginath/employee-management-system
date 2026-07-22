@@ -42,7 +42,8 @@ const loginUser = async (data) => {
     const accessToken = (0, jwt_1.generateAccessToken)({
         id: user._id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        tokenVersion: user.tokenVersion
     });
     const refreshToken = (0, jwt_1.generateRefreshToken)({
         id: user._id
@@ -101,7 +102,13 @@ const changepasswordService = async (userId, oldPassword, newPassword) => {
         throw new AppError_1.AppError("Current password is incorrect", 401);
     }
     const hashedPassword = await (0, password_1.hashedpassword)(newPassword);
-    await (0, user_respository_1.updateChangePassword)(user._id.toString(), hashedPassword);
+    user.password = hashedPassword;
+    // invalidate all existing tokens
+    user.tokenVersion += 1;
+    // remove refresh token
+    user.refreshToken = null;
+    await (0, user_respository_1.saveUser)(user);
+    return true;
 };
 exports.changepasswordService = changepasswordService;
 const forgotPasswordService = async (email) => {

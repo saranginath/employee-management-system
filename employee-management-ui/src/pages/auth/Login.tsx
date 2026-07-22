@@ -41,17 +41,12 @@ function Login() {
 
 
     const onSubmit = async (data: LoginForm) => {
-
         try {
-
             const response = await login(data).unwrap();
-
-
             dispatch(
                 setCredentials({
                     user: response.data.user,
-                    accessToken: response.data.accessToken,
-                    rememberMe: data.rememberMe ?? false
+                    accessToken: response.data.accessToken
                 })
             );
             toast.success("Login successful");
