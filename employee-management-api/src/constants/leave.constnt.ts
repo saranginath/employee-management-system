@@ -24,7 +24,12 @@ export const LEAVE_STATUS = {
 
 export type LeaveStatus = (typeof LEAVE_STATUS)[keyof typeof LEAVE_STATUS];
 
-export const LEAVE_ALLOWANCE_DAYS = 20;
+export const LEAVE_ALLOWANCE_DAYS = {
+  casual: 12,
+  sick: 10,
+  earned: 15,
+  unpaid: 365,
+} as const;
 
 export const LEAVE_TYPES = {
   CASUAL: "casual",

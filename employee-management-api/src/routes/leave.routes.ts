@@ -9,7 +9,7 @@ import {
   getLeaveController,
   updateLeaveController,
   cancelLeaveController,
-  approveleaveController,
+  approveLeaveController,
   rejectLeaveController,
   getLeaveBalanceController,
   getLeaveHistoryController,
@@ -23,10 +23,32 @@ const router = Router();
 
 /**
  * @openapi
+ * components:
+ *   schemas:
+ *     LeaveRequestBody:
+ *       type: object
+ *       required:
+ *         - startDate
+ *         - endDate
+ *         - type
+ *         - reason
+ *       properties:
+ *         startDate:
+ *           type: string
+ *           format: date
+ *         endDate:
+ *           type: string
+ *           format: date
+ *         type:
+ *           type: string
+ *           enum: [casual, sick, earned, unpaid]
+ *         reason:
+ *           type: string
+ *
  * /api/v1/leave:
  *   post:
- *     summary: Apply for leave
  *     tags: [Leave]
+ *     summary: Apply for leave
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -34,33 +56,90 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               startDate:
- *                 type: string
- *                 format: date
- *               endDate:
- *                 type: string
- *                 format: date
- *               reason:
- *                 type: string
- *               type:
- *                 type: string
+ *             $ref: '#/components/schemas/LeaveRequestBody'
  *     responses:
  *       201:
- *         description: Leave request created successfully
+ *         description: Leave applied successfully
+ *       400:
+ *         description: Invalid request or overlapping leave
+ *       401:
+ *         description: Unauthorized
  *   get:
- *     summary: Get own leave requests
  *     tags: [Leave]
+ *     summary: Get leaves
+ *     description: Employee gets own leaves, manager/admin gets all leaves
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: List of leave requests
+ *         description: Leave list
+ *       401:
+ *         description: Unauthorized
+ *
  * /api/v1/leave/{id}:
  *   patch:
- *     summary: Update a pending leave request
  *     tags: [Leave]
+ *     summary: Update pending leave
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LeaveRequestBody'
+ *     responses:
+ *       200:
+ *         description: Leave updated
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Leave not found
+ *
+ * /api/v1/leave/{id}/cancel:
+ *   patch:
+ *     tags: [Leave]
+ *     summary: Cancel pending leave
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Leave cancelled
+ *
+ * /api/v1/leave/{id}/approve:
+ *   patch:
+ *     tags: [Leave]
+ *     summary: Approve leave (manager/admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Leave approved
+ *       403:
+ *         description: Forbidden
+ *
+ * /api/v1/leave/{id}/reject:
+ *   patch:
+ *     tags: [Leave]
+ *     summary: Reject leave (manager/admin)
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -75,168 +154,94 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - reason
  *             properties:
- *               startDate:
- *                 type: string
- *                 format: date
- *               endDate:
- *                 type: string
- *                 format: date
  *               reason:
  *                 type: string
- *               type:
- *                 type: string
  *     responses:
  *       200:
- *         description: Leave updated successfully
- * /api/v1/leave/{id}/cancel:
- *   patch:
- *     summary: Cancel own leave request
- *     tags: [Leave]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Leave cancelled successfully
- * /api/v1/leave/{id}/approve:
- *   patch:
- *     summary: Approve a leave request
- *     tags: [Leave]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Leave approved successfully
- * /api/v1/leave/{id}/reject:
- *   patch:
- *     summary: Reject a leave request
- *     tags: [Leave]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Leave rejected successfully
+ *         description: Leave rejected
+ *       403:
+ *         description: Forbidden
+ *
  * /api/v1/leave/pending:
  *   get:
- *     summary: Get pending leave requests (manager/admin)
  *     tags: [Leave]
+ *     summary: Get pending leaves (manager/admin)
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: List of pending leave requests
+ *         description: Pending leaves
+ *       403:
+ *         description: Forbidden
+ *
  * /api/v1/leave/balance:
  *   get:
- *     summary: Get leave balance
  *     tags: [Leave]
+ *     summary: Get leave balance
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Leave balance details
+ *
  * /api/v1/leave/history:
  *   get:
- *     summary: Get leave history
  *     tags: [Leave]
+ *     summary: Get leave history
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Leave history
+ *
  * /api/v1/leave/calendar:
  *   get:
- *     summary: Get leave calendar
  *     tags: [Leave]
+ *     summary: Get leave calendar
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: end
+ *         schema:
+ *           type: string
+ *           format: date
  *     responses:
  *       200:
- *         description: Leave calendar data
- */
-
-/**
- * Employee Apply Leave
+ *         description: Calendar leaves
  */
 router.post("/", authenticate, createLeaveController);
-
-/**
- * Get Own Leaves
- */
 router.get("/", authenticate, getLeaveController);
-
-/**
- * Update Pending Leave
- */
 router.patch("/:id", authenticate, updateLeaveController);
-
-/**
- * Cancel Own Leave
- */
 router.patch("/:id/cancel", authenticate, cancelLeaveController);
-
-/**
- * Approve Leave
- * Manager/Admin only
- */
 router.patch(
   "/:id/approve",
   authenticate,
   authorize(ROLES.ADMIN, ROLES.MANAGER),
-  approveleaveController,
+  approveLeaveController,
 );
-
-/**
- * Reject Leave
- * Manager/Admin only
- */
 router.patch(
   "/:id/reject",
   authenticate,
   authorize(ROLES.ADMIN, ROLES.MANAGER),
   rejectLeaveController,
 );
-
-/**
- * Manager Pending Requests
- */
 router.get(
   "/pending",
   authenticate,
   authorize(ROLES.ADMIN, ROLES.MANAGER),
   getPendingLeaveController,
 );
-
-/**
- * Leave Balance
- */
 router.get("/balance", authenticate, getLeaveBalanceController);
-
-/**
- * Leave History
- */
 router.get("/history", authenticate, getLeaveHistoryController);
-
-/**
- * Leave Calendar
- */
 router.get("/calendar", authenticate, getLeaveCalendarController);
 
 export default router;

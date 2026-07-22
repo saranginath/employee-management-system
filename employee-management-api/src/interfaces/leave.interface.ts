@@ -1,15 +1,23 @@
 import { Types } from "mongoose";
-import { LeaveStatus, LeaveType } from "../constants/leave.constnt";
 
 export interface ILeave {
   employee: Types.ObjectId;
+
+  type: "casual" | "sick" | "earned" | "unpaid";
+
   startDate: Date;
+
   endDate: Date;
-  type: LeaveType;
+
   reason: string;
-  status: LeaveStatus;
+
+  status: "pending" | "approved" | "rejected" | "cancelled";
+
   approvedBy?: Types.ObjectId;
+
   rejectionReason?: string;
-  createdAt: Date;
-  updatedAt: Date;
+
+  createdAt?: Date;
+
+  updatedAt?: Date;
 }

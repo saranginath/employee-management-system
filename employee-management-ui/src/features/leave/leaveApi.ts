@@ -1,17 +1,8 @@
 import { baseApi } from "../../api/baseApi";
 
-import type { Leave, ApplyLeaveRequest } from "./types";
-
 export const leaveApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createLeave: builder.mutation<
-      {
-        success: boolean;
-        message: string;
-        data: Leave;
-      },
-      ApplyLeaveRequest
-    >({
+    applyLeave: builder.mutation({
       query: (data) => ({
         url: "/leave",
 
@@ -23,19 +14,29 @@ export const leaveApi = baseApi.injectEndpoints({
       invalidatesTags: ["Leave"],
     }),
 
-    getLeaves: builder.query<
-      {
-        success: boolean;
-        data: Leave[];
-      },
-      void
-    >({
-      query: () => "/leave",
+    getLeaves: builder.query({
+      query: () => ({
+        url: "/leave",
+
+        method: "GET",
+      }),
 
       providesTags: ["Leave"],
     }),
 
-    cancelLeave: builder.mutation<any, string>({
+    updateLeave: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/leave/${id}`,
+
+        method: "PATCH",
+
+        body: data,
+      }),
+
+      invalidatesTags: ["Leave"],
+    }),
+
+    cancelLeave: builder.mutation({
       query: (id) => ({
         url: `/leave/${id}/cancel`,
 
@@ -45,54 +46,102 @@ export const leaveApi = baseApi.injectEndpoints({
       invalidatesTags: ["Leave"],
     }),
 
-    getPendingLeaves: builder.query<
-      {
-        success: boolean;
-        data: Leave[];
-      },
-      void
-    >({
-      query: () => "/leave/pending",
-    }),
-
-    approveLeave: builder.mutation<any, string>({
+    approveLeave: builder.mutation({
       query: (id) => ({
         url: `/leave/${id}/approve`,
 
         method: "PATCH",
       }),
+
+      invalidatesTags: ["Leave"],
     }),
 
-    rejectLeave: builder.mutation<
-      any,
-      {
-        id: string;
-        reason: string;
-      }
-    >({
+    rejectLeave: builder.mutation({
       query: ({ id, reason }) => ({
         url: `/leave/${id}/reject`,
 
         method: "PATCH",
 
         body: {
-          rejectionReason: reason,
+          reason,
         },
       }),
+
+      invalidatesTags: ["Leave"],
+    }),
+
+    getLeaveBalance: builder.query({
+      query: () => ({
+        url: "/leave/balance",
+
+        method: "GET",
+      }),
+    }),
+
+    getLeaveHistory: builder.query({
+      query: () => ({
+        url: "/leave/history",
+
+        method: "GET",
+      }),
+
+      providesTags: ["Leave"],
+    }),
+
+    getPendingLeaves: builder.query({
+      query: () => ({
+        url: "/leave/pending",
+
+        method: "GET",
+      }),
+
+      providesTags: ["Leave"],
+    }),
+
+    getLeaveCalendar: builder.query({
+      query: ({
+        start,
+        end,
+      }: {
+        start?: string;
+        end?: string;
+      } = {}) => {
+        let url = "/leave/calendar";
+
+        if (start && end) {
+          url += `?start=${start}&end=${end}`;
+        }
+
+        return {
+          url,
+
+          method: "GET",
+        };
+      },
+
+      providesTags: ["Leave"],
     }),
   }),
 });
 
 export const {
-  useCreateLeaveMutation,
+  useApplyLeaveMutation,
 
   useGetLeavesQuery,
 
-  useCancelLeaveMutation,
+  useUpdateLeaveMutation,
 
-  useGetPendingLeavesQuery,
+  useCancelLeaveMutation,
 
   useApproveLeaveMutation,
 
   useRejectLeaveMutation,
+
+  useGetLeaveBalanceQuery,
+
+  useGetLeaveHistoryQuery,
+
+  useGetPendingLeavesQuery,
+
+  useGetLeaveCalendarQuery,
 } = leaveApi;

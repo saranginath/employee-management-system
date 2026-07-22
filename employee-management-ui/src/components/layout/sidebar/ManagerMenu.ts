@@ -51,7 +51,7 @@ export const managerMenu = [
   // Leave
   {
     name: "Leave Approval",
-    path: "/leave-approval",
+    path: "/dashboard/leaves/manage",
     icon: FiCalendar,
   },
 

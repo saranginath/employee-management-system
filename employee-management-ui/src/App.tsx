@@ -3,10 +3,11 @@ import { RouterProvider } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { router } from "./router";
 import { useRefreshTokenMutation } from "./features/auth/authApi";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { setAccessToken, setInitialized } from "./features/auth/authSlice";
 
-import type { RootState } from "./app/store";
+import type { RootState } from "./api/store";
 
 function App() {
   const dispatch = useDispatch();

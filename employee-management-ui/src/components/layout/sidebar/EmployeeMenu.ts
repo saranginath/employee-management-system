@@ -1,90 +1,120 @@
 import {
-  FiGrid,
-  FiUser,
-  FiClock,
-  FiCalendar,
-  FiDollarSign,
-  FiFolder,
-  FiBell,
-  FiAward,
-  FiMessageSquare,
-  FiFileText,
-  FiSettings,
+    FiGrid,
+    FiUser,
+    FiClock,
+    FiCalendar,
+    FiDollarSign,
+    FiFolder,
+    FiBell,
+    FiAward,
+    FiMessageSquare,
+    FiFileText,
 } from "react-icons/fi";
 
+
 export const employeeMenu = [
-  // Dashboard
-  {
-    name: "Dashboard",
-    path: "/dashboard",
-    icon: FiGrid,
-  },
 
-  // Profile
-  {
-    name: "My Profile",
-    path: "/dashboard/profile",
-    icon: FiUser,
-  },
+    // Dashboard
+    {
+        name: "Dashboard",
+        path: "/dashboard",
+        icon: FiGrid,
+    },
 
-  // Attendance
-  {
-    name: "My Attendance",
-    path: "/dashboard/attendance",
-    icon: FiClock,
-  },
 
-  // Leave
-  {
-    name: "My Leaves",
-    path: "/dashboard/leaves",
-    icon: FiCalendar,
-  },
+    // Profile
+    {
+        name: "My Profile",
+        path: "/dashboard/profile",
+        icon: FiUser,
+    },
 
-  {
-    name: "Leave Calendar",
-    path: "/dashboard/leave-calendar",
-    icon: FiCalendar,
-  },
 
-  // Payroll
-  {
-    name: "My Payslips",
-    path: "/dashboard/payslips",
-    icon: FiDollarSign,
-  },
+    // Attendance
+    {
+        name: "My Attendance",
+        path: "/dashboard/attendance",
+        icon: FiClock,
+    },
 
-  // Documents
-  {
-    name: "My Documents",
-    path: "/dashboard/documents",
-    icon: FiFolder,
-  },
 
-  // Performance
-  {
-    name: "My Performance",
-    path: "/dashboard/performance",
-    icon: FiAward,
-  },
+    // =====================
+    // Leave Management
+    // =====================
 
-  // Communication
-  {
-    name: "Announcements",
-    path: "/dashboard/announcements",
-    icon: FiBell,
-  },
+    {
+        name: "Apply Leave",
+        path: "/dashboard/leaves/apply",
+        icon: FiCalendar,
+    },
 
-  {
-    name: "Messages",
-    path: "/dashboard/messages",
-    icon: FiMessageSquare,
-  },
 
-  // Requests
-  {
-    name: "My Requests",
-    path: "/dashboard/requests",
-    icon: FiFileText,
-  },
+    {
+        name: "My Leaves",
+        path: "/dashboard/leaves/history",
+        icon: FiCalendar,
+    },
+
+
+    {
+        name: "Leave Balance",
+        path: "/dashboard/leaves/balance",
+        icon: FiCalendar,
+    },
+
+
+    {
+        name: "Leave Calendar",
+        path: "/dashboard/leaves/calendar",
+        icon: FiCalendar,
+    },
+
+
+
+    // Payroll
+    {
+        name: "My Payslips",
+        path: "/dashboard/payslips",
+        icon: FiDollarSign,
+    },
+
+
+    // Documents
+    {
+        name: "My Documents",
+        path: "/dashboard/documents",
+        icon: FiFolder,
+    },
+
+
+    // Performance
+    {
+        name: "My Performance",
+        path: "/dashboard/performance",
+        icon: FiAward,
+    },
+
+
+    // Communication
+    {
+        name: "Announcements",
+        path: "/dashboard/announcements",
+        icon: FiBell,
+    },
+
+
+    {
+        name: "Messages",
+        path: "/dashboard/messages",
+        icon: FiMessageSquare,
+    },
+
+
+    // Requests
+    {
+        name: "My Requests",
+        path: "/dashboard/requests",
+        icon: FiFileText,
+    },
+
 ];

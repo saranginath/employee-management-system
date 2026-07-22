@@ -12,14 +12,22 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
-        description: "Local server",
+        url: "http://localhost:5000",
+        description: "Local API server",
+      },
+      {
+        url: "http://localhost:5001",
+        description: "Docker-mapped API server",
       },
     ],
     tags: [
       {
         name: "Auth",
         description: "Authentication and session management",
+      },
+      {
+        name: "Leave",
+        description: "Leave management APIs",
       },
     ],
     components: {

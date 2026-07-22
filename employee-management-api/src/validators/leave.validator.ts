@@ -1,59 +1,26 @@
 import { z } from "zod";
-import { LEAVE_TYPES } from "../constants/leave.constnt";
 
-const leaveSchema = z.object({
-  startDate: z.coerce.date({
-    message: "Start date is required",
-  }),
+export const createLeaveSchema = z
+  .object({
+    type: z.enum(["casual", "sick", "earned", "unpaid"]),
 
-  endDate: z.coerce.date({
-    message: "End date is required",
-  }),
+    startDate: z.coerce.date(),
 
-  type: z.enum([
-    LEAVE_TYPES.CASUAL,
-    LEAVE_TYPES.EARNED,
-    LEAVE_TYPES.SICK,
-    LEAVE_TYPES.UNPAID,
-  ]),
+    endDate: z.coerce.date(),
 
-  reason: z
-    .string()
-    .min(5, "Reason must be at least 5 characters")
-    .max(500, "Reason cannot exceed 500 characters"),
-});
-
-export const createLeaveSchema = leaveSchema.refine(
-  (data) => data.endDate >= data.startDate,
-  {
-    message: "End date must be after or equal to start date",
+    reason: z.string().min(5, "Reason required"),
+  })
+  .refine((data) => data.endDate >= data.startDate, {
+    message: "Invalid date range",
     path: ["endDate"],
-  },
-);
+  });
 
-export const updateLeaveSchema = leaveSchema.partial().refine(
-  (data) => {
-    if (data.startDate && data.endDate) {
-      return data.endDate >= data.startDate;
-    }
+export const updateLeaveSchema = z.object({
+  type: z.enum(["casual", "sick", "earned", "unpaid"]).optional(),
 
-    return true;
-  },
-  {
-    message: "End date must be after or equal to start date",
-    path: ["endDate"],
-  },
-);
+  startDate: z.coerce.date().optional(),
 
-export const rejectLeaveSchema = z.object({
-  reason: z
-    .string()
-    .min(5, "Rejection reason must be at least 5 characters")
-    .max(500, "Rejection reason cannot exceed 500 characters"),
+  endDate: z.coerce.date().optional(),
+
+  reason: z.string().min(5).optional(),
 });
-
-export type CreateLeaveInput = z.infer<typeof createLeaveSchema>;
-
-export type UpdateLeaveInput = z.infer<typeof updateLeaveSchema>;
-
-export type RejectLeaveSchema = z.infer<typeof rejectLeaveSchema>;

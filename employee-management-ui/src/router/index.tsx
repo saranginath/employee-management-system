@@ -21,157 +21,177 @@ import CreateDepartment from "../pages/department/CreateDepartment";
 
 import Settings from "../pages/settings/Settings";
 
-// Leave imports
-import LeaveDashboard from "../pages/leave/LeaveDashboard";
 import ApplyLeave from "../pages/leave/ApplyLeave";
-import LeaveRequests from "../pages/leave/LeaveRequests";
-import LeaveHistory from "../pages/leave/LeaveHistory";
+import MyLeaves from "../pages/leave/MyLeaves";
+import LeaveBalance from "../pages/leave/LeaveBalance";
+import LeaveCalendar from "../pages/leave/LeaveCalendar";
+import ManageLeaves from "../pages/leave/ManageLeaves";
 import Landing from "../features/landing/Landing";
 import EditProfile from "../pages/profile/EditProfile";
 import ChangePassword from "../pages/profile/ChangePassword";
 import Profile from "../pages/profile/Profile";
 
+
 export const router = createBrowserRouter([
-  {
-    path: "/",
-
-    element: <RootLayout />,
-
-    errorElement: <ErrorPage />,
-
-    children: [
-      {
+    {
         path: "/",
-        element: <Landing />,
-      },
-      {
-        path: "login",
-        element: <Login />,
-      },
 
-      {
-        path: "register",
-        element: <Register />,
-      },
+        element: <RootLayout />,
 
-      {
-        path: "recovery",
-        element: <ForgotPassword />,
-      },
-
-      {
-        path: "reset-Password/:token",
-        element: <Resetpassword />,
-      },
-
-      {
-        element: <ProtectedRoute />,
+        errorElement: <ErrorPage />,
 
         children: [
-          {
-            path: "dashboard",
+            {
+                path: "/",
+                element: <Landing />,
+            },
+            {
+                path: "login",
+                element: <Login />,
+            },
 
-            element: <DashboardLayout />,
+            {
+                path: "register",
+                element: <Register />,
+            },
 
-            children: [
-              {
-                index: true,
-                element: <Dashboard />,
-              },
-              {},
+            {
+                path: "recovery",
+                element: <ForgotPassword />,
+            },
 
-              // Employee
+            {
+                path: "reset-Password/:token",
+                element: <Resetpassword />,
+            },
 
-              {
-                path: "employees",
-                element: <Employee />,
-              },
+            {
+                element: <ProtectedRoute />,
 
-              {
-                path: "employees/create",
-                element: <EmployeeFormPage />,
-              },
+                children: [
+                    {
+                        path: "dashboard",
 
-              {
-                path: "employees/:id/edit",
-                element: <EmployeeFormPage />,
-              },
+                        element: <DashboardLayout />,
 
-              {
-                path: "employees/:id",
-                element: <EmployeeDetails />,
-              },
+                        children: [
+                            {
+                                index: true,
+                                element: <Dashboard />,
+                            },
+                            {},
 
-              // Department
+                            {
+                                path: "employees",
+                                element: <Employee />,
+                            },
 
-              {
-                path: "departments",
-                element: <DepartmentList />,
-              },
+                            {
+                                path: "employees/create",
+                                element: <EmployeeFormPage />,
+                            },
 
-              {
-                path: "departments/create",
-                element: <CreateDepartment />,
-              },
+                            {
+                                path: "employees/:id/edit",
+                                element: <EmployeeFormPage />,
+                            },
 
-              {
-                path: "departments/:id/edit",
-                element: <CreateDepartment />,
-              },
+                            {
+                                path: "employees/:id",
+                                element: <EmployeeDetails />,
+                            },
 
-              // Settings
+                            {
+                                path: "departments",
+                                element: <DepartmentList />,
+                            },
 
-              {
-                path: "settings",
-                element: <Settings />,
-              },
+                            {
+                                path: "departments/create",
+                                element: <CreateDepartment />,
+                            },
 
-              // =====================
-              // Leave Management
-              // =====================
+                            {
+                                path: "departments/:id/edit",
+                                element: <CreateDepartment />,
+                            },
 
-              {
-                path: "leaves",
+                            {
+                                path: "settings",
+                                element: <Settings />,
+                            },
 
-                element: <LeaveDashboard />,
-              },
 
-              {
-                path: "leaves/apply",
+                            {
+                                path: "leaves",
 
-                element: <ApplyLeave />,
-              },
+                                element: <MyLeaves />
 
-              {
-                path: "leaves/history",
+                            },
 
-                element: <LeaveHistory />,
-              },
 
-              {
-                path: "leaves/requests",
 
-                element: <LeaveRequests />,
-              },
+                            {
+                                path: "leaves/apply",
 
-              {
-                path: "profile",
-                element: <Profile />,
-              },
+                                element: <ApplyLeave />
 
-              {
-                path: "profile/edit",
-                element: <EditProfile />,
-              },
+                            },
 
-              {
-                path: "profile/change-password",
-                element: <ChangePassword />,
-              },
-            ],
-          },
+
+
+                            {
+                                path: "leaves/history",
+
+                                element: <MyLeaves />
+
+                            },
+
+
+
+                            {
+                                path: "leaves/balance",
+
+                                element: <LeaveBalance />
+
+                            },
+
+
+
+                            {
+                                path: "leaves/calendar",
+
+                                element: <LeaveCalendar />
+
+                            },
+
+
+
+                            {
+                                path: "leaves/manage",
+
+                                element: <ManageLeaves />
+
+                            },
+
+                            {
+                                path: "profile",
+                                element: <Profile />,
+                            },
+
+                            {
+                                path: "profile/edit",
+                                element: <EditProfile />,
+                            },
+
+                            {
+                                path: "profile/change-password",
+                                element: <ChangePassword />,
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
-      },
-    ],
-  },
+    },
 ]);

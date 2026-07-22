@@ -1,43 +1,45 @@
 import { Types } from "mongoose";
-import { ILeave } from "./leave.types";
-import Leave from "./leave.model";
-import { LEAVE_STATUS } from "../../constants/leave.constnt";
 
-export const createLeave = async (data: Partial<ILeave>) => {
+import Leave from "../models/leave.model";
+
+import { LEAVE_STATUS } from "../constants/leave.constant";
+
+export const createLeave = async (data: any) => {
   return Leave.create(data);
 };
 
-export const getLeaveById = async (leaveId: string) => {
-  return Leave.findById(leaveId);
+export const getLeaveById = async (id: string) => {
+  return Leave.findById(id);
 };
 
 export const getAllLeaves = async () => {
   return Leave.find()
-    .populate("employee", "name email")
-    .populate("approvedBy", "name email")
-    .sort({ createdAt: -1 });
+
+    .populate("employee", "firstName lastName email department")
+
+    .populate("approvedBy", "firstName lastName email")
+
+    .sort({
+      createdAt: -1,
+    });
 };
 
 export const getLeaveByEmployee = async (employeeId: string) => {
   return Leave.find({
     employee: new Types.ObjectId(employeeId),
-  }).sort({ createdAt: -1 });
+  })
+
+    .sort({
+      createdAt: -1,
+    });
 };
 
-export const updateLeave = async (leaveId: string, data: Partial<ILeave>) => {
-  return Leave.findByIdAndUpdate(leaveId, data, {
-    new: true,
-    runValidators: true,
-  });
-};
-
-export const cancelLeave = async (leaveId: string) => {
+export const updateLeave = async (id: string, data: any) => {
   return Leave.findByIdAndUpdate(
-    leaveId,
-    {
-      status: LEAVE_STATUS.CANCELLED,
-      rejectionReason: "Cancelled by employee",
-    },
+    id,
+
+    data,
+
     {
       new: true,
       runValidators: true,
@@ -45,68 +47,112 @@ export const cancelLeave = async (leaveId: string) => {
   );
 };
 
-export const approveLeave = async (
-  leaveId: string,
-  approvedBy: Types.ObjectId,
-) => {
+export const cancelLeave = async (id: string) => {
   return Leave.findByIdAndUpdate(
-    leaveId,
+    id,
+
     {
-      status: LEAVE_STATUS.APPROVED,
-      approvedBy,
-      rejectionReason: null,
+      status: LEAVE_STATUS.CANCELLED,
+
+      rejectionReason: "Cancelled by employee",
     },
+
     {
       new: true,
-      runValidators: true,
+    },
+  );
+};
+
+export const approveLeave = async (id: string, approvedBy: Types.ObjectId) => {
+  return Leave.findByIdAndUpdate(
+    id,
+
+    {
+      status: LEAVE_STATUS.APPROVED,
+
+      approvedBy,
+
+      rejectionReason: null,
+    },
+
+    {
+      new: true,
     },
   );
 };
 
 export const rejectLeave = async (
-  leaveId: string,
+  id: string,
   approvedBy: Types.ObjectId,
-  rejectionReason: string,
+  reason: string,
 ) => {
   return Leave.findByIdAndUpdate(
-    leaveId,
+    id,
+
     {
       status: LEAVE_STATUS.REJECTED,
+
       approvedBy,
-      rejectionReason,
+
+      rejectionReason: reason,
     },
+
     {
       new: true,
-      runValidators: true,
     },
   );
 };
 
 export const getPendingLeaves = async () => {
-  return Leave.find({ status: LEAVE_STATUS.PENDING })
-    .populate("employee", "name email")
-    .sort({ createdAt: -1 });
+  return Leave.find({
+    status: LEAVE_STATUS.PENDING,
+  })
+
+    .populate("employee", "firstName lastName email")
+
+    .sort({
+      createdAt: -1,
+    });
 };
 
-export const getLeavesForCalendar = async (startDate: Date, endDate: Date) => {
+export const getCalendarLeaves = async (start: Date, end: Date) => {
   return Leave.find({
     status: LEAVE_STATUS.APPROVED,
-    startDate: { $lte: endDate },
-    endDate: { $gte: startDate },
+
+    startDate: {
+      $lte: end,
+    },
+
+    endDate: {
+      $gte: start,
+    },
   })
-    .populate("employee", "name email")
-    .sort({ startDate: 1 });
+
+    .populate("employee", "firstName lastName")
+
+    .sort({
+      startDate: 1,
+    });
 };
 
-export const getLeavesForEmployeeCalendar = async (
+export const checkOverlappingLeave = async (
   employeeId: string,
   startDate: Date,
   endDate: Date,
 ) => {
-  return Leave.find({
+  return Leave.findOne({
     employee: new Types.ObjectId(employeeId),
-    status: LEAVE_STATUS.APPROVED,
-    startDate: { $lte: endDate },
-    endDate: { $gte: startDate },
-  }).sort({ startDate: 1 });
+
+    status: {
+      $in: [LEAVE_STATUS.PENDING, LEAVE_STATUS.APPROVED],
+    },
+
+    startDate: {
+      $lte: endDate,
+    },
+
+    endDate: {
+      $gte: startDate,
+    },
+  });
 };

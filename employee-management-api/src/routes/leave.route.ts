@@ -2,14 +2,16 @@ import { Router } from "express";
 
 import { authenticate } from "../middleware/auth.middleware";
 
-import { authorize } from "../middleware/authorize.middleare";
+import { authorize } from "../middleware/authorize.middleware";
+
+import { ROLES } from "../constants/leave.constant";
 
 import {
   createLeaveController,
   getLeaveController,
   updateLeaveController,
   cancelLeaveController,
-  approveleaveController,
+  approveLeaveController,
   rejectLeaveController,
   getLeaveBalanceController,
   getLeaveHistoryController,
@@ -17,55 +19,18 @@ import {
   getLeaveCalendarController,
 } from "../controllers/leave.controller";
 
-import { ROLES } from "../constants/leave.constnt";
-
 const router = Router();
 
-/**
- * Employee Apply Leave
- */
 router.post("/", authenticate, createLeaveController);
 
-/**
- * Get Own Leaves
- */
 router.get("/", authenticate, getLeaveController);
 
-/**
- * Update Pending Leave
- */
-router.patch("/:id", authenticate, updateLeaveController);
+router.get("/balance", authenticate, getLeaveBalanceController);
 
-/**
- * Cancel Own Leave
- */
-router.patch("/:id/cancel", authenticate, cancelLeaveController);
+router.get("/history", authenticate, getLeaveHistoryController);
 
-/**
- * Approve Leave
- * Manager/Admin only
- */
-router.patch(
-  "/:id/approve",
-  authenticate,
-  authorize(ROLES.ADMIN, ROLES.MANAGER),
-  approveleaveController,
-);
+router.get("/calendar", authenticate, getLeaveCalendarController);
 
-/**
- * Reject Leave
- * Manager/Admin only
- */
-router.patch(
-  "/:id/reject",
-  authenticate,
-  authorize(ROLES.ADMIN, ROLES.MANAGER),
-  rejectLeaveController,
-);
-
-/**
- * Manager Pending Requests
- */
 router.get(
   "/pending",
   authenticate,
@@ -73,19 +38,22 @@ router.get(
   getPendingLeaveController,
 );
 
-/**
- * Leave Balance
- */
-router.get("/balance", authenticate, getLeaveBalanceController);
+router.patch("/:id", authenticate, updateLeaveController);
 
-/**
- * Leave History
- */
-router.get("/history", authenticate, getLeaveHistoryController);
+router.patch("/:id/cancel", authenticate, cancelLeaveController);
 
-/**
- * Leave Calendar
- */
-router.get("/calendar", authenticate, getLeaveCalendarController);
+router.patch(
+  "/:id/approve",
+  authenticate,
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  approveLeaveController,
+);
+
+router.patch(
+  "/:id/reject",
+  authenticate,
+  authorize(ROLES.ADMIN, ROLES.MANAGER),
+  rejectLeaveController,
+);
 
 export default router;

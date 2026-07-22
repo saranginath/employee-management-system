@@ -1,97 +1,23 @@
-export type LeaveType = "casual" | "sick" | "earned" | "unpaid";
-
-export type LeaveStatus = "pending" | "approved" | "rejected" | "cancelled";
-
-export interface Employee {
-  _id: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  email: string;
-}
-
 export interface Leave {
   _id: string;
 
-  employee: Employee | string;
+  type: "casual" | "sick" | "earned" | "unpaid";
 
   startDate: string;
 
   endDate: string;
 
-  type: LeaveType;
-
   reason: string;
 
-  status: LeaveStatus;
+  status: "pending" | "approved" | "rejected" | "cancelled";
 
-  approvedBy?: Employee | string | null;
+  employee?: {
+    firstName: string;
 
-  rejectionReason?: string | null;
+    lastName: string;
 
-  createdAt: string;
-
-  updatedAt: string;
-}
-
-export interface ApplyLeaveRequest {
-  startDate: string;
-
-  endDate: string;
-
-  type: LeaveType;
-
-  reason: string;
-}
-
-export interface UpdateLeaveRequest {
-  startDate?: string;
-
-  endDate?: string;
-
-  type?: LeaveType;
-
-  reason?: string;
-}
-
-export interface RejectLeaveRequest {
-  id: string;
-
-  rejectionReason: string;
-}
-
-export interface LeaveBalance {
-  casual: {
-    allocated: number;
-
-    used: number;
-
-    remaining: number;
+    email: string;
   };
 
-  sick: {
-    allocated: number;
-
-    used: number;
-
-    remaining: number;
-  };
-
-  earned: {
-    allocated: number;
-
-    used: number;
-
-    remaining: number;
-  };
-
-  unpaid?: {
-    allocated: number;
-
-    used: number;
-
-    remaining: number;
-  };
+  rejectionReason?: string;
 }
