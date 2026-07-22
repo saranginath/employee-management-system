@@ -6,6 +6,7 @@ interface Props {
   onEdit: (leave: Leave) => void;
   onCancel: (leaveId: string) => void;
   cancellingId?: string;
+  showActions?: boolean;
 }
 
 const formatDate = (date: string) =>
@@ -27,6 +28,7 @@ const LeaveTable = ({
   onEdit,
   onCancel,
   cancellingId,
+  showActions = true,
 }: Props) => {
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -45,9 +47,11 @@ const LeaveTable = ({
             <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
               Status
             </th>
-            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Actions
-            </th>
+            {showActions && (
+              <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Actions
+              </th>
+            )}
           </tr>
         </thead>
 
@@ -72,29 +76,31 @@ const LeaveTable = ({
                 <LeaveStatusBadge status={leave.status} />
               </td>
 
-              <td className="px-4 py-4">
-                {leave.status === "pending" ? (
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => onEdit(leave)}
-                      className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100"
-                    >
-                      Update
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onCancel(leave._id)}
-                      disabled={cancellingId === leave._id}
-                      className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100 disabled:opacity-50"
-                    >
-                      {cancellingId === leave._id ? "Cancelling..." : "Cancel"}
-                    </button>
-                  </div>
-                ) : (
-                  <span className="text-xs text-slate-400">No actions</span>
-                )}
-              </td>
+              {showActions && (
+                <td className="px-4 py-4">
+                  {leave.status === "pending" ? (
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => onEdit(leave)}
+                        className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100"
+                      >
+                        Update
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onCancel(leave._id)}
+                        disabled={cancellingId === leave._id}
+                        className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100 disabled:opacity-50"
+                      >
+                        {cancellingId === leave._id ? "Cancelling..." : "Cancel"}
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-slate-400">No actions</span>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

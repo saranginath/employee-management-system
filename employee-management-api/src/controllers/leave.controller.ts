@@ -45,6 +45,8 @@ export const updateLeaveController = async (req: Request, res: Response) => {
 
         req.user!.id,
 
+        req.user!.role,
+
         req.body,
     );
 

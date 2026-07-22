@@ -78,8 +78,8 @@ export const adminMenu = [
   // Leave
   {
     name: "Leave Management",
-    path: "/dashboard/leaves",
-    icon: FiCalendar,xp
+    path: "/dashboard/leaves/manage",
+    icon: FiCalendar,
   },
 
   // Payroll

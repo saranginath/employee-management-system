@@ -5,317 +5,317 @@ import { useGetAdminDashboardQuery } from "../../../features/dashboard/adminDash
 import StatCard from "../../../components/dashboard/StatCard";
 
 const AdminDashboard = () => {
-  const { data, isLoading, isError } = useGetAdminDashboardQuery();
+    const { data, isLoading, isError } = useGetAdminDashboardQuery();
 
-  if (isLoading) {
-    return <p className="p-6">Loading...</p>;
-  }
+    if (isLoading) {
+        return <p className="p-6">Loading...</p>;
+    }
 
-  if (isError) {
-    return <p className="p-6 text-red-500">Failed to load dashboard</p>;
-  }
+    if (isError) {
+        return <p className="p-6 text-red-500">Failed to load dashboard</p>;
+    }
 
-  const dashboard = data?.data;
+    const dashboard = data?.data;
 
-  if (!dashboard) {
-    return <p className="p-6">No dashboard data available</p>;
-  }
+    if (!dashboard) {
+        return <p className="p-6">No dashboard data available</p>;
+    }
 
-  console.log(dashboard);
+    console.log(dashboard);
 
-  return (
-    <div className="p-6 space-y-6">
-      <h1
-        className="
+    return (
+        <div className="p-6 space-y-6">
+            <h1
+                className="
                 text-3xl
                 font-bold
             "
-      >
-        Admin Dashboard 👑
-      </h1>
+            >
+                Admin Dashboard
+            </h1>
 
-      {/* KPI CARDS */}
+            {/* KPI CARDS */}
 
-      <div
-        className="
+            <div
+                className="
                 grid
                 grid-cols-1
                 md:grid-cols-4
                 gap-5
             "
-      >
-        <StatCard
-          title="Total Employees"
+            >
+                <StatCard
+                    title="Total Employees"
 
-          value={dashboard.employees.total}
+                    value={dashboard.employees.total}
 
-          icon={<FiUsers />}
-        />
+                    icon={<FiUsers />}
+                />
 
-        <StatCard
-          title="Active Employees"
+                <StatCard
+                    title="Active Employees"
 
-          value={dashboard.employees.active}
+                    value={dashboard.employees.active}
 
-          icon={<FiUserCheck />}
-        />
+                    icon={<FiUserCheck />}
+                />
 
-        <StatCard
-          title="Departments"
+                <StatCard
+                    title="Departments"
 
-          value={dashboard.departments.total}
+                    value={dashboard.departments.total}
 
-          icon={<FiBriefcase />}
-        />
+                    icon={<FiBriefcase />}
+                />
 
-        <StatCard
-          title="Pending Leaves"
+                <StatCard
+                    title="Pending Leaves"
 
-          value={dashboard.leaves.pending}
+                    value={dashboard.leaves.pending}
 
-          icon={<FiCalendar />}
-        />
-      </div>
+                    icon={<FiCalendar />}
+                />
+            </div>
 
-      {/* Attendance Card */}
+            {/* Attendance Card */}
 
-      <div
-        className="
+            <div
+                className="
                 bg-white
                 rounded-xl
                 shadow
                 p-5
             "
-      >
-        <h2
-          className="
+            >
+                <h2
+                    className="
                     font-semibold
                     mb-4
                 "
-        >
-          Attendance Overview
-        </h2>
+                >
+                    Attendance Overview
+                </h2>
 
-        <div
-          className="
+                <div
+                    className="
                     flex
                     gap-8
                 "
-        >
-          <div>
-            <p className="text-gray-500">Present</p>
+                >
+                    <div>
+                        <p className="text-gray-500">Present</p>
 
-            <p
-              className="
+                        <p
+                            className="
                             text-2xl
                             font-bold
                         "
-            >
-              {dashboard.attendance.present}
-            </p>
-          </div>
+                        >
+                            {dashboard.attendance.present}
+                        </p>
+                    </div>
 
-          <div>
-            <p className="text-gray-500">Absent</p>
+                    <div>
+                        <p className="text-gray-500">Absent</p>
 
-            <p
-              className="
+                        <p
+                            className="
                             text-2xl
                             font-bold
                         "
-            >
-              {dashboard.attendance.absent}
-            </p>
-          </div>
+                        >
+                            {dashboard.attendance.absent}
+                        </p>
+                    </div>
 
-          <div>
-            <p className="text-gray-500">Rate</p>
+                    <div>
+                        <p className="text-gray-500">Rate</p>
 
-            <p
-              className="
+                        <p
+                            className="
                             text-2xl
                             font-bold
                         "
-            >
-              {dashboard.attendance.rate}%
-            </p>
-          </div>
-        </div>
-      </div>
+                        >
+                            {dashboard.attendance.rate}%
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-      {/* Charts */}
+            {/* Charts */}
 
-      <div
-        className="
+            <div
+                className="
                 grid
                 md:grid-cols-2
                 gap-6
             "
-      >
-        <div
-          className="
+            >
+                <div
+                    className="
                     bg-white
                     p-5
                     rounded-xl
                     shadow
                 "
-        >
-          <h2
-            className="
+                >
+                    <h2
+                        className="
                         font-semibold
                         mb-4
                     "
-          >
-            Employee Growth
-          </h2>
+                    >
+                        Employee Growth
+                    </h2>
 
-          {/* Add Recharts Line Chart here */}
+                    {/* Add Recharts Line Chart here */}
 
-          {dashboard.employeeGrowth?.map((item: any) => (
-            <div key={item.month}>
-              {item.month} :{item.count}
+                    {dashboard.employeeGrowth?.map((item: any) => (
+                        <div key={item.month}>
+                            {item.month} :{item.count}
+                        </div>
+                    ))}
+                </div>
+
+                <div
+                    className="
+                    bg-white
+                    p-5
+                    rounded-xl
+                    shadow
+                "
+                >
+                    <h2
+                        className="
+                        font-semibold
+                        mb-4
+                    "
+                    >
+                        Attendance Overview
+                    </h2>
+
+                    <p>Present: {dashboard.attendance.present}</p>
+
+                    <p>Absent: {dashboard.attendance.absent}</p>
+                </div>
             </div>
-          ))}
-        </div>
 
-        <div
-          className="
-                    bg-white
-                    p-5
-                    rounded-xl
-                    shadow
-                "
-        >
-          <h2
-            className="
-                        font-semibold
-                        mb-4
-                    "
-          >
-            Attendance Overview
-          </h2>
+            {/* Department Statistics */}
 
-          <p>Present: {dashboard.attendance.present}</p>
-
-          <p>Absent: {dashboard.attendance.absent}</p>
-        </div>
-      </div>
-
-      {/* Department Statistics */}
-
-      <div
-        className="
+            <div
+                className="
                 bg-white
                 rounded-xl
                 shadow
                 p-5
             "
-      >
-        <h2
-          className="
+            >
+                <h2
+                    className="
                     font-semibold
                     mb-4
                 "
-        >
-          Department Statistics
-        </h2>
+                >
+                    Department Statistics
+                </h2>
 
-        {dashboard.departmentStats?.map((dep: any) => (
-          <div
-            key={dep.department}
-            className="
+                {dashboard.departmentStats?.map((dep: any) => (
+                    <div
+                        key={dep.department}
+                        className="
                                     flex
                                     justify-between
                                     border-b
                                     py-3
                                 "
-          >
-            <span>{dep.department}</span>
+                    >
+                        <span>{dep.department}</span>
 
-            <span>{dep.employees}</span>
-          </div>
-        ))}
-      </div>
+                        <span>{dep.employees}</span>
+                    </div>
+                ))}
+            </div>
 
-      {/* Quick Actions */}
+            {/* Quick Actions */}
 
-      <div>
-        <h2
-          className="
+            <div>
+                <h2
+                    className="
                     text-xl
                     font-bold
                     mb-4
                 "
-        >
-          Quick Actions
-        </h2>
+                >
+                    Quick Actions
+                </h2>
 
-        <div
-          className="
+                <div
+                    className="
                     grid
                     grid-cols-2
                     md:grid-cols-5
                     gap-4
                 "
-        >
-          <button
-            className="
+                >
+                    <button
+                        className="
                         bg-blue-600
                         text-white
                         p-4
                         rounded-lg
                     "
-          >
-            Create Employee
-          </button>
+                    >
+                        Create Employee
+                    </button>
 
-          <button
-            className="
+                    <button
+                        className="
                         bg-green-600
                         text-white
                         p-4
                         rounded-lg
                     "
-          >
-            Create Department
-          </button>
+                    >
+                        Create Department
+                    </button>
 
-          <button
-            className="
+                    <button
+                        className="
                         bg-purple-600
                         text-white
                         p-4
                         rounded-lg
                     "
-          >
-            Manage Roles
-          </button>
+                    >
+                        Manage Roles
+                    </button>
 
-          <button
-            className="
+                    <button
+                        className="
                         bg-orange-600
                         text-white
                         p-4
                         rounded-lg
                     "
-          >
-            Approve Leaves
-          </button>
+                    >
+                        Approve Leaves
+                    </button>
 
-          <button
-            className="
+                    <button
+                        className="
                         bg-gray-700
                         text-white
                         p-4
                         rounded-lg
                     "
-          >
-            Reports
-          </button>
+                    >
+                        Reports
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AdminDashboard;

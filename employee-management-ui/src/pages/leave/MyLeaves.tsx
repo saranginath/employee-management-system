@@ -1,5 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 import {
   useCancelLeaveMutation,
@@ -14,8 +15,12 @@ import LeaveForm from "../../components/leave/LeaveForm";
 import LeaveFilter from "../../components/leave/LeaveFilter";
 
 import LeaveEmptyState from "../../components/leave/LeaveEmptyState";
+import type { RootState } from "../../api/store";
 
 const MyLeaves = () => {
+  const userRole = useSelector((state: RootState) => state.auth.user?.role);
+  const canManageOwnLeave = userRole === "employee";
+
   const [filter, setFilter] = useState("");
   const [editingLeave, setEditingLeave] = useState<Leave | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
@@ -67,6 +72,11 @@ const MyLeaves = () => {
   ];
 
   const handleCancel = async (leaveId: string) => {
+    if (!canManageOwnLeave) {
+      toast.error("Only employees can cancel leave requests");
+      return;
+    }
+
     const shouldCancel = window.confirm(
       "Are you sure you want to cancel this leave request?",
     );
@@ -99,6 +109,11 @@ const MyLeaves = () => {
     reason: string;
   }) => {
     if (!editingLeave) return;
+
+    if (!canManageOwnLeave) {
+      toast.error("Only employees can update leave requests");
+      return;
+    }
 
     try {
       await updateLeave({
@@ -165,9 +180,10 @@ const MyLeaves = () => {
         ) : (
           <LeaveTable
             leaves={leaves}
-            onEdit={setEditingLeave}
+            onEdit={canManageOwnLeave ? setEditingLeave : () => undefined}
             onCancel={handleCancel}
             cancellingId={cancellingId ?? undefined}
+            showActions={canManageOwnLeave}
           />
         )}
       </div>

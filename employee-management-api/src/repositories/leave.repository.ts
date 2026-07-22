@@ -1,7 +1,39 @@
 import { Types } from "mongoose";
 import { ILeave } from "../interfaces/leave.interface";
 import Leave from "../models/leave.model";
+import Employee from "../models/employee.model";
 import { LEAVE_STATUS } from "../constants/leave.constnt";
+
+const attachEmployeeDetails = async (leaves: any[]) => {
+    return Promise.all(
+        leaves.map(async (leave) => {
+            const employeeRef = leave.employee;
+            const employeeRefId =
+                typeof employeeRef === "object" && employeeRef?._id
+                    ? employeeRef._id.toString()
+                    : employeeRef?.toString?.() ?? "";
+
+            if (!employeeRefId) {
+                return leave;
+            }
+
+            const employee = await Employee.findOne({
+                $or: [{ _id: employeeRefId }, { user: employeeRefId }],
+            })
+                .select("firstName lastName email")
+                .lean();
+
+            if (!employee) {
+                return leave;
+            }
+
+            return {
+                ...leave.toObject?.() ?? leave,
+                employee,
+            };
+        }),
+    );
+};
 
 export const createLeave = async (data: Partial<ILeave>) => {
     return Leave.create(data);
@@ -12,16 +44,20 @@ export const getLeaveById = async (leaveId: string) => {
 };
 
 export const getAllLeaves = async () => {
-    return Leave.find()
-        .populate("employee", "name email")
-        .populate("approvedBy", "name email")
+    const leaves = await Leave.find()
+        .populate("employee", "firstName lastName email")
+    .populate("approvedBy", "firstName lastName email")
         .sort({ createdAt: -1 });
+
+    return attachEmployeeDetails(leaves);
 };
 
 export const getLeaveByEmployee = async (employeeId: string) => {
-    return Leave.find({
+    const leaves = await Leave.find({
         employee: new Types.ObjectId(employeeId),
     }).sort({ createdAt: -1 });
+
+    return attachEmployeeDetails(leaves);
 };
 
 export const updateLeave = async (leaveId: string, data: Partial<ILeave>) => {
@@ -83,19 +119,23 @@ export const rejectLeave = async (
 };
 
 export const getPendingLeaves = async () => {
-    return Leave.find({ status: LEAVE_STATUS.PENDING })
-        .populate("employee", "name email")
+    const leaves = await Leave.find({ status: LEAVE_STATUS.PENDING })
+        .populate("employee", "firstName lastName email")
         .sort({ createdAt: -1 });
+
+    return attachEmployeeDetails(leaves);
 };
 
 export const getLeavesForCalendar = async (startDate: Date, endDate: Date) => {
-    return Leave.find({
+    const leaves = await Leave.find({
         status: LEAVE_STATUS.APPROVED,
         startDate: { $lte: endDate },
         endDate: { $gte: startDate },
     })
-        .populate("employee", "name email")
+        .populate("employee", "firstName lastName email")
         .sort({ startDate: 1 });
+
+    return attachEmployeeDetails(leaves);
 };
 
 export const getLeavesForEmployeeCalendar = async (
@@ -103,12 +143,14 @@ export const getLeavesForEmployeeCalendar = async (
     startDate: Date,
     endDate: Date,
 ) => {
-    return Leave.find({
+    const leaves = await Leave.find({
         employee: new Types.ObjectId(employeeId),
         status: { $in: [LEAVE_STATUS.PENDING, LEAVE_STATUS.APPROVED] },
         startDate: { $lte: endDate },
         endDate: { $gte: startDate },
     }).sort({ startDate: 1 });
+
+    return attachEmployeeDetails(leaves);
 };
 
 export const checkOverlappingLeave = async (
@@ -138,7 +180,7 @@ export const checkOverlappingLeave = async (
 };
 
 export const getCalendarLeaves = async (startDate: Date, endDate: Date) => {
-    return Leave.find({
+    const leaves = await Leave.find({
         status: LEAVE_STATUS.APPROVED,
 
         startDate: {
@@ -149,10 +191,9 @@ export const getCalendarLeaves = async (startDate: Date, endDate: Date) => {
             $gte: startDate,
         },
     })
-
-        .populate("employee", "firstName lastName email")
-
         .sort({
             startDate: 1,
         });
+
+    return attachEmployeeDetails(leaves);
 };

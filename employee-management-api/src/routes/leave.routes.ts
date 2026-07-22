@@ -218,10 +218,20 @@ const router = Router();
  *       200:
  *         description: Calendar leaves
  */
-router.post("/", authenticate, createLeaveController);
+router.post("/", authenticate, authorize(ROLES.EMPLOYEE), createLeaveController);
 router.get("/", authenticate, getLeaveController);
-router.patch("/:id", authenticate, updateLeaveController);
-router.patch("/:id/cancel", authenticate, cancelLeaveController);
+router.patch(
+  "/:id",
+  authenticate,
+  authorize(ROLES.EMPLOYEE),
+  updateLeaveController,
+);
+router.patch(
+  "/:id/cancel",
+  authenticate,
+  authorize(ROLES.EMPLOYEE),
+  cancelLeaveController,
+);
 router.patch(
   "/:id/approve",
   authenticate,
@@ -240,8 +250,18 @@ router.get(
   authorize(ROLES.ADMIN, ROLES.MANAGER),
   getPendingLeaveController,
 );
-router.get("/balance", authenticate, getLeaveBalanceController);
-router.get("/history", authenticate, getLeaveHistoryController);
+router.get(
+  "/balance",
+  authenticate,
+  authorize(ROLES.EMPLOYEE),
+  getLeaveBalanceController,
+);
+router.get(
+  "/history",
+  authenticate,
+  authorize(ROLES.EMPLOYEE),
+  getLeaveHistoryController,
+);
 router.get("/calendar", authenticate, getLeaveCalendarController);
 
 export default router;

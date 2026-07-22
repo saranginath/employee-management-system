@@ -70,6 +70,7 @@ export const getLeaveService = async (employeeId: string, role: string) => {
 export const updateLeaveService = async (
     leaveId: string,
     employeeId: string,
+    role: string,
     data: Partial<ILeave>,
 ) => {
     const leave = await getLeaveById(leaveId);
@@ -78,7 +79,7 @@ export const updateLeaveService = async (
         throw new AppError("Leave not found", 404);
     }
 
-    if (leave.employee.toString() !== employeeId) {
+    if (role !== ROLES.ADMIN && leave.employee.toString() !== employeeId) {
         throw new AppError("Unauthorized", 403);
     }
 

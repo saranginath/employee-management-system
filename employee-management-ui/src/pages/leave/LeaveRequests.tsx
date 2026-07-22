@@ -3,15 +3,18 @@ import {
   useApproveLeaveMutation,
   useRejectLeaveMutation,
 } from "../../features/leave/leaveApi";
+import type { Leave } from "../../features/leave/types";
 
-import LeaveStatus from "../../components/leave/LeaveStatus";
+import LeaveStatusBadge from "../../components/leave/LeaveStatusBadge";
 
 const LeaveRequests = () => {
-  const { data, isLoading } = useGetPendingLeavesQuery();
-
+  const { data, isLoading } = useGetPendingLeavesQuery(undefined);
+  console.log(data)
   const [approveLeave] = useApproveLeaveMutation();
 
   const [rejectLeave] = useRejectLeaveMutation();
+
+  const leaves: Leave[] = data?.data || [];
 
   const handleApprove = async (id: string) => {
     await approveLeave(id);
@@ -53,10 +56,10 @@ const LeaveRequests = () => {
           </thead>
 
           <tbody>
-            {data?.data.map((leave) => (
+            {leaves.map((leave) => (
               <tr key={leave._id} className="border-b">
                 <td className="p-3">
-                  {leave.employee.firstName} {leave.employee.lastName}
+                  {leave.employee?.firstName} {leave.employee?.lastName}
                 </td>
 
                 <td>{leave.type}</td>
@@ -68,7 +71,7 @@ const LeaveRequests = () => {
                 <td>{leave.reason}</td>
 
                 <td>
-                  <LeaveStatus status={leave.status} />
+                  <LeaveStatusBadge status={leave.status} />
                 </td>
 
                 <td className="space-x-2">

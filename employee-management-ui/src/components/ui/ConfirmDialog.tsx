@@ -159,7 +159,7 @@ const ConfirmDialog = ({
                             disabled:opacity-50
                         "
           >
-            {loading ? "Deleting..." : confirmText}
+            {loading ? "Processing..." : confirmText}
           </button>
         </div>
       </div>
